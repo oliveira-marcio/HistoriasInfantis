@@ -1,8 +1,8 @@
 package com.abobrinha.caixinha.ui;
 
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.content.Loader;
-import android.graphics.Movie;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,22 +11,23 @@ import android.widget.Toast;
 
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.History;
+import com.abobrinha.caixinha.network.WordPressConn;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List<History>>,
-        HistoryAdapter.HistoryAdapterOnItemClickListener {
+        HistoryGridAdapter.GridOnItemClickListener {
 
     private static final int HISTORY_LOADER_ID = 1;
 
     private RecyclerView mHistoriesList;
-    private HistoryAdapter mAdapter;
+    private HistoryGridAdapter mAdapter;
     private List<History> mHistoriesData = new ArrayList<>();
     // ToDo: implementar progressbar
     // ToDo: implementar refresh
-    // ToDo: implementar teste de conexão
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements
         mHistoriesList.setLayoutManager(layoutManager);
         mHistoriesList.setHasFixedSize(true);
 
-        mAdapter = new HistoryAdapter(mHistoriesData, this);
+        mAdapter = new HistoryGridAdapter(mHistoriesData, this);
         mHistoriesList.setAdapter(mAdapter);
 
         getLoaderManager().initLoader(HISTORY_LOADER_ID, null, this);
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public Loader<List<History>> onCreateLoader(int id, Bundle args) {
-        return new HistoryLoader(this);
+        return new HistoryGridLoader(this);
     }
 
     @Override
@@ -62,7 +63,11 @@ public class MainActivity extends AppCompatActivity implements
         } else {
 // ToDo: exibir erro
 //            showErrorMessage(R.string.no_movies);
-            Toast.makeText(this, "DEU RUIM COM AS HISTÓRIAS", Toast.LENGTH_SHORT).show();
+            if(!WordPressConn.isNetworkAvailable(this)){
+                Toast.makeText(this, "SEM INTERNET", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "DEU RUIM COM AS HISTÓRIAS", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -73,6 +78,9 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-        Toast.makeText(this, "" + clickedItemIndex, Toast.LENGTH_SHORT).show();
+        Gson gson = new Gson();
+        Intent intent = new Intent(this, HistoryActivity.class);
+        intent.putExtra(Intent.EXTRA_TEXT, gson.toJson(mHistoriesData.get(clickedItemIndex)));
+        startActivity(intent);
     }
 }

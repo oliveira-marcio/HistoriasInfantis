@@ -5,28 +5,24 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.abobrinha.caixinha.R;
-import com.abobrinha.caixinha.data.History;
+import com.abobrinha.caixinha.data.Paragraph;
 
 import java.util.List;
 
-public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
+import static com.abobrinha.caixinha.data.Paragraph.TYPE_AUTHOR;
+import static com.abobrinha.caixinha.data.Paragraph.TYPE_END;
+import static com.abobrinha.caixinha.data.Paragraph.TYPE_IMAGE;
 
-    final private HistoryAdapterOnItemClickListener mOnClickListener;
+public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<History> mHistory;
+    private List<Paragraph> mHistory;
     private Context mContext;
 
-    public interface HistoryAdapterOnItemClickListener {
-        void onListItemClick(int clickedItemIndex);
-    }
-
-    public HistoryAdapter(List<History> history, HistoryAdapterOnItemClickListener listener) {
+    public HistoryAdapter(List<Paragraph> history) {
         mHistory = history;
-        mOnClickListener = listener;
     }
 
     // Métodos clear() e addAll() criados para simular os equivalentes de um Adapter de ListView
@@ -35,27 +31,51 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         notifyDataSetChanged();
     }
 
-    public void addAll(List<History> history) {
+    public void addAll(List<Paragraph> history) {
         mHistory.clear();
         mHistory.addAll(history);
         notifyDataSetChanged();
     }
 
     @Override
-    public HistoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         mContext = viewGroup.getContext();
-        int layoutIdForListItem = R.layout.history_list_item;
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        boolean shouldAttachToParentImmediately = false;
 
-        View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
-        return new HistoryViewHolder(view);
+        RecyclerView.ViewHolder viewHolder;
+
+        if (viewType == TYPE_IMAGE) {
+            View view = inflater.inflate(R.layout.history_paragraph_image, viewGroup, false);
+            viewHolder = new ParagraphImageViewHolder(view);
+        } else {
+            View view = inflater.inflate(R.layout.history_paragraph_text, viewGroup, false);
+            viewHolder = new ParagraphTextViewHolder(view);
+        }
+
+        return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(HistoryViewHolder holder, int position) {
-        String title = mHistory.get(position).getTitle();
-        holder.historyTitle.setText(title);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        Paragraph paragraph = mHistory.get(position);
+        switch (holder.getItemViewType()) {
+            case Paragraph.TYPE_AUTHOR:
+                ParagraphTextViewHolder aHolder = (ParagraphTextViewHolder) holder;
+                aHolder.historyContent.setText("(AUTHOR) " + paragraph.getContent());
+                break;
+            case Paragraph.TYPE_END:
+                ParagraphTextViewHolder eHolder = (ParagraphTextViewHolder) holder;
+                eHolder.historyContent.setText("(END) " + paragraph.getContent());
+                break;
+            case Paragraph.TYPE_IMAGE:
+                ParagraphImageViewHolder iHolder = (ParagraphImageViewHolder) holder;
+                iHolder.historyImage.setText(paragraph.getContent());
+                break;
+            default:
+                ParagraphTextViewHolder tHolder = (ParagraphTextViewHolder) holder;
+                tHolder.historyContent.setText(paragraph.getContent());
+                break;
+        }
     }
 
     @Override
@@ -64,19 +84,28 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         return mHistory.size();
     }
 
-    public class HistoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    @Override
+    public int getItemViewType(int position) {
+        return mHistory.get(position).getType();
+    }
 
-        public TextView historyTitle;
+    public class ParagraphTextViewHolder extends RecyclerView.ViewHolder {
 
-        public HistoryViewHolder(View itemView) {
+        public TextView historyContent;
+
+        public ParagraphTextViewHolder(View itemView) {
             super(itemView);
-            historyTitle = (TextView) itemView.findViewById(R.id.title_text_view);
-            itemView.setOnClickListener(this);
+            historyContent = (TextView) itemView.findViewById(R.id.content_text_view);
         }
+    }
 
-        @Override
-        public void onClick(View v) {
-            mOnClickListener.onListItemClick(getAdapterPosition());
+    public class ParagraphImageViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView historyImage;
+
+        public ParagraphImageViewHolder(View itemView) {
+            super(itemView);
+            historyImage = (TextView) itemView.findViewById(R.id.image_text_view);
         }
     }
 }

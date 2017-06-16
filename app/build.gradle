@@ -27,6 +27,7 @@ ext {
     junitLibVersion = '4.12'
     glideLibVersion = '3.7.0'
     gsonLibVersion = '2.8.0'
+    jsoupLibVersion = '1.10.3'
 }
 
 dependencies {
@@ -40,6 +41,7 @@ dependencies {
     compile "com.android.support.constraint:constraint-layout:${constraintLayoutLibVersion}"
     compile "com.github.bumptech.glide:glide:${glideLibVersion}"
     compile "com.google.code.gson:gson:${gsonLibVersion}"
+    compile "org.jsoup:jsoup:${jsoupLibVersion}"
     compile "com.android.support.test.espresso:espresso-idling-resource:${espressoLibVersion}"
 
     testCompile "junit:junit:${junitLibVersion}"
@@ -51,4 +53,5 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-intents:${espressoLibVersion}"
     androidTestCompile "com.android.support.test:rules:${testLibVersion}"
     androidTestCompile "com.android.support.test:runner:${testLibVersion}"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }

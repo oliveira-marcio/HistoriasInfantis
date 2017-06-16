@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Historias Infantis</string>
+
+    <!-- Mensagens de erro a serem exibidas na tela principal -->
+    <string name="no_histories">Nenhuma história encontrada.</string>
+    <string name="no_internet_connection">Não há conexão internet.</string>
 </resources>
