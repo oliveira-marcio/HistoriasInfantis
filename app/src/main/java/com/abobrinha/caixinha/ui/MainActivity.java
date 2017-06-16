@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.abobrinha.caixinha.R;
@@ -19,12 +20,16 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List<History>>,
-        HistoryGridAdapter.GridOnItemClickListener {
+        HistoryGridAdAdapter.GridOnItemClickListener {
+//ToDo: Passar linha acima para free flavor
+//        HistoryGridAdapter.GridOnItemClickListener {
 
     private static final int HISTORY_LOADER_ID = 1;
 
     private RecyclerView mHistoriesList;
-    private HistoryGridAdapter mAdapter;
+    private HistoryGridAdAdapter mAdapter;
+    //ToDo: Passar linha acima para free flavor
+//    private HistoryGridAdapter mAdapter;
     private List<History> mHistoriesData = new ArrayList<>();
     // ToDo: implementar progressbar
     // ToDo: implementar refresh
@@ -40,7 +45,9 @@ public class MainActivity extends AppCompatActivity implements
         mHistoriesList.setLayoutManager(layoutManager);
         mHistoriesList.setHasFixedSize(true);
 
-        mAdapter = new HistoryGridAdapter(mHistoriesData, this);
+        mAdapter = new HistoryGridAdAdapter(mHistoriesData, this);
+        //ToDo: Passar linha acima para free flavor
+//        mAdapter = new HistoryGridAdapter(mHistoriesData, this);
         mHistoriesList.setAdapter(mAdapter);
 
         getLoaderManager().initLoader(HISTORY_LOADER_ID, null, this);
@@ -59,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements
 // ToDo: exibir lista
 //            showMoviesDataView();
             mHistoriesData = histories;
+            Log.v("Main.getItemCount()", "" + mHistoriesData.size());
             mAdapter.addAll(mHistoriesData);
         } else {
 // ToDo: exibir erro
