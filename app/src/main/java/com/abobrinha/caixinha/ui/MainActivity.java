@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements
         } else {
 // ToDo: exibir erro
 //            showErrorMessage(R.string.no_movies);
-            if(!WordPressConn.isNetworkAvailable(this)){
+            if (!WordPressConn.isNetworkAvailable(this)) {
                 Toast.makeText(this, "SEM INTERNET", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "DEU RUIM COM AS HISTÓRIAS", Toast.LENGTH_SHORT).show();

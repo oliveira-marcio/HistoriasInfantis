@@ -3,11 +3,8 @@ package com.abobrinha.caixinha.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.widget.TextView;
 
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.History;
@@ -17,10 +14,8 @@ import com.google.gson.Gson;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.safety.Whitelist;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class HistoryActivity extends AppCompatActivity {
@@ -43,7 +38,7 @@ public class HistoryActivity extends AppCompatActivity {
         Gson gson = new Gson();
         History history = gson.fromJson(HistoryJson, History.class);
 
-        setTitle(history.getTitle());
+        setTitle(Jsoup.parse(history.getTitle()).text());
 
         mHistoryData = JsoupParser(history.getContent());
 
@@ -75,10 +70,10 @@ public class HistoryActivity extends AppCompatActivity {
                 int paragraphKey;
                 boolean isAuthor = false;
 
-                if(paragraphString.trim().toLowerCase().equals(Paragraph.AUTHOR.toLowerCase())){
+                if (paragraphString.trim().toLowerCase().equals(Paragraph.AUTHOR.toLowerCase())) {
                     paragraphKey = Paragraph.TYPE_AUTHOR;
                     isAuthor = true;
-                } else if(paragraphString.trim().toLowerCase().equals(Paragraph.END.toLowerCase())){
+                } else if (paragraphString.trim().toLowerCase().equals(Paragraph.END.toLowerCase())) {
                     paragraphKey = Paragraph.TYPE_END;
                 } else {
                     paragraphKey = Paragraph.TYPE_TEXT;
@@ -88,7 +83,7 @@ public class HistoryActivity extends AppCompatActivity {
                 paragraphText.setContent(paragraphString);
                 historyData.add(paragraphText);
 
-                if(isAuthor) break;
+                if (isAuthor) break;
             }
             Paragraph paragraphImage = new Paragraph();
             for (Element img : p.select(TAG_IMG)) {

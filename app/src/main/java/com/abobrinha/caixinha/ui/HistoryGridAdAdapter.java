@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.History;
 
+import org.jsoup.Jsoup;
+
 import java.util.List;
 
 public class HistoryGridAdAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -20,7 +22,7 @@ public class HistoryGridAdAdapter extends RecyclerView.Adapter<RecyclerView.View
     private Context mContext;
 
     private final int AD_INTERVAL = 8;
-    private final int AD_INITIAL_OFFSET = 0;
+    private final int AD_INITIAL_OFFSET = 3;
 
     private final int ITEM_AD = 0;
     private final int ITEM_REGULAR = 1;
@@ -65,15 +67,16 @@ public class HistoryGridAdAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     private int getOffsetPosition(int position) {
-        return (position < AD_INITIAL_OFFSET) ? position :
+        return (position < AD_INITIAL_OFFSET || AD_INTERVAL <= 0) ? position :
                 position - (int) Math.ceil((position - AD_INITIAL_OFFSET) / (double) (AD_INTERVAL + 1));
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (mHistory.size() == 0) return;
         if (holder.getItemViewType() == ITEM_REGULAR) {
             int offsetPosition = getOffsetPosition(position);
-            String title = mHistory.get(offsetPosition).getTitle();
+            String title = Jsoup.parse(mHistory.get(offsetPosition).getTitle()).text();
             RegularViewHolder rHolder = (RegularViewHolder) holder;
             rHolder.historyTitle.setText("(" + offsetPosition + ") " + title);
         }
@@ -82,12 +85,15 @@ public class HistoryGridAdAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public int getItemCount() {
         if (mHistory == null) return 0;
-        return mHistory.size() + (int) Math.ceil((mHistory.size() - AD_INITIAL_OFFSET) / (double) AD_INTERVAL);
+        return mHistory.size() + (AD_INTERVAL > 0 && mHistory.size() > AD_INITIAL_OFFSET
+                ? (int) Math.ceil((mHistory.size() - AD_INITIAL_OFFSET) / (double) AD_INTERVAL)
+                : 0);
     }
 
     @Override
     public int getItemViewType(int position) {
         return (position >= AD_INITIAL_OFFSET &&
+                AD_INTERVAL > 0 &&
                 (position - AD_INITIAL_OFFSET) % (AD_INTERVAL + 1) == 0) ?
                 ITEM_AD : ITEM_REGULAR;
     }

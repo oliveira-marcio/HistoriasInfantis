@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.History;
 
+import org.jsoup.Jsoup;
+
 import java.util.List;
 
 public class HistoryGridAdapter extends RecyclerView.Adapter<HistoryGridAdapter.HistoryGridViewHolder> {
@@ -53,7 +55,7 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<HistoryGridAdapter.
 
     @Override
     public void onBindViewHolder(HistoryGridViewHolder holder, int position) {
-        String title = mHistory.get(position).getTitle();
+        String title = Jsoup.parse(mHistory.get(position).getTitle()).text();
         holder.historyTitle.setText(title);
     }
 
