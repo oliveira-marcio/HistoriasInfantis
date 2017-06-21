@@ -5,10 +5,19 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
-import static android.R.attr.key;
+import com.abobrinha.caixinha.R;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class HistoryProvider extends ContentProvider {
@@ -54,6 +63,11 @@ public class HistoryProvider extends ContentProvider {
                     error = "É necessário fornecer o título da história.";
                 }
 
+                String rawContent = values.getAsString(getContext().getString(R.string.history_raw_content));
+                if (rawContent == null) {
+                    error = "É necessário fornecer o conteúdo HTML da história.";
+                }
+
                 String url = values.getAsString(HistoryContract.HistoriesEntry.COLUMN_HISTORY_URL);
                 if (url == null) {
                     error = "É necessário fornecer a URL da história.";
@@ -65,8 +79,8 @@ public class HistoryProvider extends ContentProvider {
                 }
 
                 Integer favorite = values.getAsInteger(HistoryContract.HistoriesEntry.COLUMN_FAVORITE);
-                if (favorite < HistoryContract.IS_NOT_FAVORITE ||
-                        favorite > HistoryContract.IS_FAVORITE) {
+                if (favorite != null && (favorite < HistoryContract.IS_NOT_FAVORITE ||
+                        favorite > HistoryContract.IS_FAVORITE)) {
                     error = "Status de favorito da história inválido.";
                 }
 
@@ -88,7 +102,8 @@ public class HistoryProvider extends ContentProvider {
                     error = "É necessário fornecer o conteúdo do parágrafo";
                 }
 
-                break;        }
+                break;
+        }
 
         return error;
     }
@@ -99,26 +114,121 @@ public class HistoryProvider extends ContentProvider {
         return true;
     }
 
+    public static ContentValues[] historyContentParser(long id, String htmlContent) {
+
+        final String BR_TOKEN = "#!#br2n#!#";
+        final String TAG_P = "p";
+        final String TAG_IMG = "img";
+        final String TAG_SRC = "src";
+
+        List<ContentValues> historyValues = new ArrayList<>();
+
+        Document doc = Jsoup.parse(htmlContent.replaceAll("(?i)<br[^>]*>", BR_TOKEN));
+        for (Element p : doc.select(TAG_P)) {
+            if (!p.text().trim().isEmpty()) {
+                String paragraphString = p.text().replaceAll(BR_TOKEN, "\n");
+                int paragraphType;
+                boolean isAuthor = false;
+
+                if (paragraphString.trim().toLowerCase()
+                        .equals(HistoryContract.ParagraphsEntry.AUTHOR.toLowerCase())) {
+                    paragraphType = HistoryContract.ParagraphsEntry.TYPE_AUTHOR;
+                    isAuthor = true;
+                } else if (paragraphString.trim().toLowerCase()
+                        .equals(HistoryContract.ParagraphsEntry.END.toLowerCase())) {
+                    paragraphType = HistoryContract.ParagraphsEntry.TYPE_END;
+                } else {
+                    paragraphType = HistoryContract.ParagraphsEntry.TYPE_TEXT;
+                }
+
+                ContentValues paragraphText = new ContentValues();
+                paragraphText.put(HistoryContract.ParagraphsEntry.COLUMN_HISTORY_ID, id);
+                paragraphText.put(HistoryContract.ParagraphsEntry.COLUMN_PARAGRAPH_TYPE, paragraphType);
+                paragraphText.put(HistoryContract.ParagraphsEntry.COLUMN_PARAGRAPH_CONTENT, paragraphString);
+                historyValues.add(paragraphText);
+
+                if (isAuthor) break;
+            }
+
+            ContentValues paragraphImage = new ContentValues();
+            for (Element img : p.select(TAG_IMG)) {
+                String imageUrl = img.absUrl(TAG_SRC).contains("?") ?
+                        img.absUrl(TAG_SRC).substring(0, img.absUrl(TAG_SRC).indexOf("?")) :
+                        img.absUrl(TAG_SRC);
+
+                paragraphImage.put(HistoryContract.ParagraphsEntry.COLUMN_HISTORY_ID, id);
+                paragraphImage.put(HistoryContract.ParagraphsEntry.COLUMN_PARAGRAPH_TYPE,
+                        HistoryContract.ParagraphsEntry.TYPE_IMAGE);
+                paragraphImage.put(HistoryContract.ParagraphsEntry.COLUMN_PARAGRAPH_CONTENT, imageUrl);
+                historyValues.add(paragraphImage);
+            }
+        }
+        return historyValues.toArray(new ContentValues[0]);
+    }
+
     @Override
     public int bulkInsert(@NonNull Uri uri, ContentValues[] values) {
-
         switch (sUriMatcher.match(uri)) {
             case CODE_HISTORIES:
-                // Bulkinsert de histórias não deve alterar os status de favoritos existentes
-                for (ContentValues value : values) {
-                    if (value.containsKey(HistoryContract.HistoriesEntry.COLUMN_FAVORITE)) {
-                        value.remove(HistoryContract.HistoriesEntry.COLUMN_FAVORITE);
+                final String historyTableName = HistoryContract.HistoriesEntry.TABLE_NAME;
+                final String paragraphTableName = HistoryContract.ParagraphsEntry.TABLE_NAME;
+                final String idHistoryColumnName = HistoryContract.HistoriesEntry._ID;
+                final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+                final String historyRawContentColumnName =
+                        getContext().getString(R.string.history_raw_content);
+
+                db.beginTransaction();
+                int rowsInserted = 0;
+                try {
+                    for (ContentValues value : values) {
+                        String errorConstraints = checkTableConstraints(historyTableName, value);
+                        if (errorConstraints != null) {
+                            throw new IllegalArgumentException(errorConstraints);
+                        }
+
+                        if (value.size() == 0) {
+                            continue;
+                        }
+
+                        ContentValues[] paragraphValues =
+                                historyContentParser(value.getAsLong(idHistoryColumnName),
+                                        value.getAsString(historyRawContentColumnName));
+
+                        value.remove(historyRawContentColumnName);
+
+                        long _id = db.insert(historyTableName, null, value);
+
+                        if (_id != -1) {
+                            for (ContentValues paragraphValue : paragraphValues) {
+                                String paragraphErrorConstraints =
+                                        checkTableConstraints(paragraphTableName, paragraphValue);
+                                if (paragraphErrorConstraints != null) {
+                                    throw new IllegalArgumentException(paragraphErrorConstraints);
+                                }
+
+                                if (value.size() == 0) {
+                                    continue;
+                                }
+
+                                db.insert(paragraphTableName, null, paragraphValue);
+                            }
+                            rowsInserted++;
+                        }
                     }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
                 }
-                return bulkUpsertHistories(uri, values);
+
+                if (rowsInserted > 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
+
+                return rowsInserted;
 
             default:
                 throw new UnsupportedOperationException("URI desconhecida: " + uri);
         }
-    }
-
-    private int bulkUpsertHistories(Uri uri, ContentValues[] values) {
-        return 0;
     }
 
     @Override
@@ -169,13 +279,82 @@ public class HistoryProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+        int numRowsDeleted;
+        String tableName;
+
+        switch (sUriMatcher.match(uri)) {
+
+            case CODE_HISTORIES:
+                tableName = HistoryContract.HistoriesEntry.TABLE_NAME;
+//                selection = HistoryContract.HistoriesEntry.COLUMN_FAVORITE + "="
+//                        + HistoryContract.IS_NOT_FAVORITE;
+
+                numRowsDeleted = mOpenHelper.getWritableDatabase().delete(
+                        tableName,
+                        selection,
+                        selectionArgs);
+
+                if (numRowsDeleted != 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
+
+                return numRowsDeleted;
+
+            default:
+                throw new UnsupportedOperationException("URI desconhecida ou inválida para deleção: " + uri);
+        }
     }
 
     @Override
     public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        return 0;
+        ContentValues selectedValues = new ContentValues();
+        String favoriteColumnName = HistoryContract.HistoriesEntry.COLUMN_FAVORITE;
+
+        switch (sUriMatcher.match(uri)) {
+
+            case CODE_SINGLE_HISTORY:
+                // Update de uma história específica deverá ser apenas do status de favorito
+                selection = HistoryContract.HistoriesEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+
+                if (values.containsKey(favoriteColumnName)) {
+                    Integer favorite = values.getAsInteger(favoriteColumnName);
+                    if (favorite != null && (favorite < HistoryContract.IS_NOT_FAVORITE
+                            || favorite > HistoryContract.IS_FAVORITE)) {
+                        throw new IllegalArgumentException("Status de favorito inválido.");
+                    }
+
+                    selectedValues.put(favoriteColumnName, favorite);
+                }
+
+                break;
+
+            case CODE_FAVORITES_HISTORIES:
+                // Marca todas as histórias selecionadas como favoritas
+                selection = HistoryContract.HistoriesEntry._ID + " IN (" +
+                        TextUtils.join(",", selectionArgs) + ")";
+
+                selectedValues.put(favoriteColumnName, HistoryContract.IS_FAVORITE);
+                break;
+
+            default:
+                throw new UnsupportedOperationException("URI desconhecida: " + uri);
+        }
+
+        int rowsUpdated = mOpenHelper.getWritableDatabase().update(
+                HistoryContract.HistoriesEntry.TABLE_NAME,
+                selectedValues,
+                selection,
+                selectionArgs);
+
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+            Uri uriAllFavorites = HistoryContract.HistoriesEntry.buildFavoritesUri();
+            getContext().getContentResolver().notifyChange(uriAllFavorites, null);
+        }
+
+        return rowsUpdated;
     }
 
     @Override

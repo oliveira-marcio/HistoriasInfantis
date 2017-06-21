@@ -1,9 +1,11 @@
-package com.abobrinha.caixinha;
+package com.abobrinha.caixinha.data;
 
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 
+import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract.HistoriesEntry;
 import com.abobrinha.caixinha.data.HistoryContract.ParagraphsEntry;
 
@@ -17,7 +19,8 @@ public class TestDbUtilities {
     static int VALID_HISTORY_ID = 123;
     static int INVALID_HISTORY_ID = 1234;
 
-    static final int CONTENT_VALUES_QUANTITY = 5;
+    static final int CONTENT_VALUES_HIGHER_QUANTITY = 5;
+    static final int CONTENT_VALUES_LOWER_QUANTITY = 3;
 
     static void validateCurrentRecord(String error, Cursor valueCursor, ContentValues expectedValues) {
         Set<Map.Entry<String, Object>> valueSet = expectedValues.valueSet();
@@ -34,7 +37,7 @@ public class TestDbUtilities {
             String expectedValue = entry.getValue().toString();
             String actualValue = valueCursor.getString(index);
 
-            String valuesDontMatchError = "Valor atual '" + actualValue
+            String valuesDontMatchError = "[Coluna '" + columnName + "'] Valor atual '" + actualValue
                     + "' não bate com o valor esperado '" + expectedValue + "'. "
                     + error;
 
@@ -58,8 +61,8 @@ public class TestDbUtilities {
         return testHistoryValues;
     }
 
-    static ContentValues[] createBulkInsertTestHistoryContentValues() {
-        ContentValues[] testHistoryValues = new ContentValues[CONTENT_VALUES_QUANTITY];
+    static ContentValues[] createBulkInsertTestHistoryContentValues(Context context, int quantity, boolean addRawContent) {
+        ContentValues[] testHistoryValues = new ContentValues[quantity];
 
         for (int i = 0; i < testHistoryValues.length; i++) {
             testHistoryValues[i] = new ContentValues();
@@ -69,17 +72,25 @@ public class TestDbUtilities {
             testHistoryValues[i].put(HistoriesEntry.COLUMN_HISTORY_IMAGE, "http://www.teste.com/" + i + "/image.jpg");
             testHistoryValues[i].put(HistoriesEntry.COLUMN_HISTORY_DATE, i + 1000);
             testHistoryValues[i].put(HistoriesEntry.COLUMN_HISTORY_MODIFIED, i + 1500);
+            if (addRawContent) {
+                String rawContent = "<p>raw qualquer " + i + "</p>" +
+                        "<p>Mais uma linha</p>" +
+                        "<p><img src='http://www.teste.com/" + i + "/image.jpg'></p>" +
+                        "<p>" + ParagraphsEntry.END + "</p>" +
+                        "<p>" + ParagraphsEntry.AUTHOR + "</p>";
+                testHistoryValues[i].put(context.getString(R.string.history_raw_content), rawContent);
+            }
         }
 
         return testHistoryValues;
     }
 
-    static ContentValues[] createBulkInsertTestParagraphsContentValues() {
-        ContentValues[] testParagraphsValues = new ContentValues[CONTENT_VALUES_QUANTITY];
+    static ContentValues[] createBulkInsertTestParagraphsContentValues(long id, int quantity) {
+        ContentValues[] testParagraphsValues = new ContentValues[quantity];
 
         for (int i = 0; i < testParagraphsValues.length; i++) {
             testParagraphsValues[i] = new ContentValues();
-            testParagraphsValues[i].put(ParagraphsEntry.COLUMN_HISTORY_ID, VALID_HISTORY_ID);
+            testParagraphsValues[i].put(ParagraphsEntry.COLUMN_HISTORY_ID, id);
             testParagraphsValues[i].put(ParagraphsEntry.COLUMN_PARAGRAPH_TYPE, "Type " + i);
             testParagraphsValues[i].put(ParagraphsEntry.COLUMN_PARAGRAPH_CONTENT, "Paragraph " + i);
         }

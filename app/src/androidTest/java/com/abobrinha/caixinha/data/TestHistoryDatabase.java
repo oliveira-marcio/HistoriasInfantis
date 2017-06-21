@@ -1,4 +1,4 @@
-package com.abobrinha.caixinha;
+package com.abobrinha.caixinha.data;
 
 
 import android.content.ContentValues;
@@ -7,9 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-
-import com.abobrinha.caixinha.data.HistoryContract;
-import com.abobrinha.caixinha.data.HistoryDbHelper;
 
 import org.junit.After;
 import org.junit.Before;
@@ -160,7 +157,9 @@ public class TestHistoryDatabase {
     @Test
     public void testBulkInsertHistories() {
 
-        ContentValues[] historiesValues = TestDbUtilities.createBulkInsertTestHistoryContentValues();
+        ContentValues[] historiesValues =
+                TestDbUtilities.createBulkInsertTestHistoryContentValues(context,
+                        TestDbUtilities.CONTENT_VALUES_HIGHER_QUANTITY, false);
 
         int rowsInserted = 0;
         database.beginTransaction();
@@ -247,7 +246,9 @@ public class TestHistoryDatabase {
     public void testBulkInsertParagraphs() {
         testInsertSingleRecordIntoHistoryTable();
 
-        ContentValues[] paragraphsValues = TestDbUtilities.createBulkInsertTestParagraphsContentValues();
+        ContentValues[] paragraphsValues =
+                TestDbUtilities.createBulkInsertTestParagraphsContentValues(
+                        TestDbUtilities.VALID_HISTORY_ID, TestDbUtilities.CONTENT_VALUES_HIGHER_QUANTITY);
 
         int rowsInserted = 0;
         database.beginTransaction();

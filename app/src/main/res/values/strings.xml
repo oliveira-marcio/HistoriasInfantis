@@ -2,6 +2,7 @@
     <string name="app_name">Historias Infantis</string>
 
     <string name="content_authority" translatable="false">com.abobrinha.caixinha</string>
+    <string name="history_raw_content" translatable="false">history_raw_content</string>
 
     <!-- Mensagens de erro a serem exibidas na tela principal -->
     <string name="no_histories">Nenhuma história encontrada.</string>
