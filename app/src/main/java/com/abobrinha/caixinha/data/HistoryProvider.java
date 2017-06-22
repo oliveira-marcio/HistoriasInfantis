@@ -286,8 +286,6 @@ public class HistoryProvider extends ContentProvider {
 
             case CODE_HISTORIES:
                 tableName = HistoryContract.HistoriesEntry.TABLE_NAME;
-//                selection = HistoryContract.HistoriesEntry.COLUMN_FAVORITE + "="
-//                        + HistoryContract.IS_NOT_FAVORITE;
 
                 numRowsDeleted = mOpenHelper.getWritableDatabase().delete(
                         tableName,
@@ -334,7 +332,7 @@ public class HistoryProvider extends ContentProvider {
                 // Marca todas as histórias selecionadas como favoritas
                 selection = HistoryContract.HistoriesEntry._ID + " IN (" +
                         TextUtils.join(",", selectionArgs) + ")";
-
+                selectionArgs = null;
                 selectedValues.put(favoriteColumnName, HistoryContract.IS_FAVORITE);
                 break;
 
