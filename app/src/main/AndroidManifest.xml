@@ -33,6 +33,18 @@
             android:name=".data.HistoryProvider"
             android:authorities="@string/content_authority"
             android:exported="false" />
+
+        <service
+            android:name=".sync.HistorySyncIntentService"
+            android:exported="false" />
+
+        <service
+            android:name=".sync.HistoryFirebaseJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

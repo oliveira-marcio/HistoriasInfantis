@@ -1,31 +1,34 @@
 package com.abobrinha.caixinha.network;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.text.TextUtils;
 
-import com.abobrinha.caixinha.data.History;
+import com.abobrinha.caixinha.R;
+import com.abobrinha.caixinha.data.HistoryContract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class WordPressJson {
 
-    final static String WORDPRESS_POST_ID = "ID";
-    final static String WORDPRESS_POST_DATE = "date";
-    final static String WORDPRESS_POST_MODIFIED = "modified";
-    final static String WORDPRESS_POST_TITLE = "title";
-    final static String WORDPRESS_POST_URL = "URL";
-    final static String WORDPRESS_POST_IMAGE = "featured_image";
-    final static String WORDPRESS_POST_CONTENT = "content";
+    private final static String WORDPRESS_POST_ID = "ID";
+    private final static String WORDPRESS_POST_DATE = "date";
+    private final static String WORDPRESS_POST_MODIFIED = "modified";
+    private final static String WORDPRESS_POST_TITLE = "title";
+    private final static String WORDPRESS_POST_URL = "URL";
+    private final static String WORDPRESS_POST_IMAGE = "featured_image";
+    private final static String WORDPRESS_POST_CONTENT = "content";
 
     /*
      * Retorna os campos JSON referente a um post do WordPress. Útil para filtrar a String JSON
      * retornada pelo servidor na classe WordPressJson por apenas estes campos.
      */
-    public static String getJsonHistoryFields(){
+    public static String getJsonHistoryFields() {
         return WORDPRESS_POST_ID + "," +
                 WORDPRESS_POST_DATE + "," +
                 WORDPRESS_POST_MODIFIED + "," +
@@ -35,7 +38,7 @@ public class WordPressJson {
                 WORDPRESS_POST_CONTENT;
     }
 
-    public static List<History> getHistoriesFromJson(String historiesJsonStr)
+    public static ContentValues[] getHistoriesFromJson(Context context, String historiesJsonStr)
             throws JSONException {
 
         final String WORDPRESS_RESULTS = "posts";
@@ -53,22 +56,49 @@ public class WordPressJson {
             throw new JSONException(String.format("API Error (%s): %s", errorType, errorMessage));
         }
 
-        List<History> histories = new ArrayList<>();
-
         JSONArray historyArray = baseJsonResponse.getJSONArray(WORDPRESS_RESULTS);
+
+        ContentValues[] historiesValues = new ContentValues[historyArray.length()];
 
         for (int i = 0; i < historyArray.length(); i++) {
             JSONObject currentHistory = historyArray.getJSONObject(i);
-            //ToDo: Pegar ID, date e modified
+
+            long id = currentHistory.getLong(WORDPRESS_POST_ID);
             String title = currentHistory.getString(WORDPRESS_POST_TITLE);
             String urlHistory = currentHistory.getString(WORDPRESS_POST_URL);
             String urlImage = currentHistory.getString(WORDPRESS_POST_IMAGE);
             String content = currentHistory.getString(WORDPRESS_POST_CONTENT);
+            long dateCreatedInMillis = dateInMillis(currentHistory.getString(WORDPRESS_POST_DATE));
+            long dateModifiedInMillis =
+                    dateInMillis(currentHistory.optString(WORDPRESS_POST_MODIFIED));
 
-            History history = new History(title, urlHistory, urlImage, content);
-            histories.add(history);
+            ContentValues historyValues = new ContentValues();
+            historyValues.put(HistoryContract.HistoriesEntry._ID, id);
+            historyValues.put(HistoryContract.HistoriesEntry.COLUMN_HISTORY_TITLE, title);
+            historyValues.put(HistoryContract.HistoriesEntry.COLUMN_HISTORY_URL, urlHistory);
+            historyValues.put(HistoryContract.HistoriesEntry.COLUMN_HISTORY_IMAGE, urlImage);
+            historyValues.put(HistoryContract.HistoriesEntry.COLUMN_HISTORY_DATE, dateCreatedInMillis);
+            historyValues.put(HistoryContract.HistoriesEntry.COLUMN_HISTORY_MODIFIED, dateModifiedInMillis);
+            historyValues.put(context.getString(R.string.history_raw_content), content);
+
+            historiesValues[i] = historyValues;
         }
 
-        return histories;
+        return historiesValues;
+    }
+
+    /**
+     * Converte uma data em String para milisegundos
+     * Ex de data retornada pela API: "2017-05-06T08:00:19-03:00"
+     */
+    public static long dateInMillis(String dateString) {
+        SimpleDateFormat formatter;
+        formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ");
+        try {
+            Date date = formatter.parse(dateString.replaceFirst(":(?=[0-9]{2}$)", ""));
+            return date.getTime();
+        } catch (java.text.ParseException e) {
+            return -1;
+        }
     }
 }

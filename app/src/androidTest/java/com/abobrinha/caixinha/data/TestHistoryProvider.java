@@ -298,11 +298,15 @@ public class TestHistoryProvider {
                 TestDbUtilities.createBulkInsertTestHistoryContentValues(context,
                         TestDbUtilities.CONTENT_VALUES_LOWER_QUANTITY, true);
 
-        final String[] FAVORITE_INDEXES = new String[]{"1", "2"};
+        final String[] FAVORITE_INDEXES = new String[]{"1","2"};
+//      Usar linha abaixo, em vez da de cima, para testar sincronia sem favoritos
+//        final String[] FAVORITE_INDEXES = null;
 
-        for (int i = 0; i < FAVORITE_INDEXES.length; i++) {
-            oldHistoryValues[Integer.parseInt(FAVORITE_INDEXES[i])]
-                    .put(HistoryContract.HistoriesEntry.COLUMN_FAVORITE, HistoryContract.IS_FAVORITE);
+        if(FAVORITE_INDEXES != null) {
+            for (String index : FAVORITE_INDEXES) {
+                oldHistoryValues[Integer.parseInt(index)]
+                        .put(HistoryContract.HistoriesEntry.COLUMN_FAVORITE, HistoryContract.IS_FAVORITE);
+            }
         }
 
         int rowsInserted = context.getContentResolver().bulkInsert(uri, oldHistoryValues);
@@ -317,22 +321,21 @@ public class TestHistoryProvider {
         String[] projection = new String[]{HistoryContract.HistoriesEntry._ID};
         Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
 
-        String emptyQueryError = "Erro: Nenhuma linha retornada da consulta de histórias favoritas antigas.";
-        assertTrue(emptyQueryError,
-                cursor.moveToFirst());
+        String[] favoritesSaved = null;
+        if(cursor != null && cursor.moveToFirst()) {
+            int i = 0;
+            favoritesSaved = new String[cursor.getCount()];
+            do {
+                favoritesSaved[i++] = cursor.getString(0);
+            } while (cursor.moveToNext());
 
-        int i = 0;
-        String[] favoritesSaved = new String[FAVORITE_INDEXES.length];
-        do {
-            favoritesSaved[i++] = cursor.getString(0);
-        } while (cursor.moveToNext());
+            String expectedResultDidntMatchActual =
+                    "ID's de histórias favoritas antigas não batem com o esperado.";
+            assertEquals(expectedResultDidntMatchActual,
+                    TextUtils.join(",", FAVORITE_INDEXES),
+                    TextUtils.join(",", favoritesSaved));
+        }
         cursor.close();
-
-        String expectedResultDidntMatchActual =
-                "ID's de histórias favoritas antigas não batem com o esperado.";
-        assertEquals(expectedResultDidntMatchActual,
-                TextUtils.join(",", FAVORITE_INDEXES),
-                TextUtils.join(",", favoritesSaved));
 
         // 2) Deletar todas as histórias da base
 
@@ -355,33 +358,35 @@ public class TestHistoryProvider {
 
         // 4) Restaurar as marcações prévias de favoritos
 
-        uri = HistoryContract.HistoriesEntry.buildFavoritesUri();
-        int rowsUpdated = context.getContentResolver().update(uri, null, null, favoritesSaved);
+        if(favoritesSaved != null) {
+            uri = HistoryContract.HistoriesEntry.buildFavoritesUri();
+            int rowsUpdated = context.getContentResolver().update(uri, null, null, favoritesSaved);
 
-        String updateFailed = "Houveram falhas para atualizar as novas histórias no database.";
-        assertEquals(updateFailed, favoritesSaved.length, rowsUpdated);
+            String updateFailed = "Houveram falhas para atualizar as novas histórias no database.";
+            assertEquals(updateFailed, favoritesSaved.length, rowsUpdated);
 
-        cursor = context.getContentResolver().query(uri, projection, null, null, null);
+            cursor = context.getContentResolver().query(uri, projection, null, null, null);
 
-        updateFailed = "Quantidade incorreta de histórias favoritas no database.";
-        assertEquals(updateFailed, favoritesSaved.length, cursor.getCount());
+            updateFailed = "Quantidade incorreta de histórias favoritas no database.";
+            assertEquals(updateFailed, favoritesSaved.length, cursor.getCount());
 
-        emptyQueryError = "Erro: Nenhuma linha retornada da consulta de histórias favoritas novas.";
-        assertTrue(emptyQueryError,
-                cursor.moveToFirst());
+            String emptyQueryError = "Erro: Nenhuma linha retornada da consulta de histórias favoritas novas.";
+            assertTrue(emptyQueryError,
+                    cursor.moveToFirst());
 
-        i = 0;
-        String[] currentFavorites = new String[favoritesSaved.length];
-        do {
-            currentFavorites[i++] = cursor.getString(0);
-        } while (cursor.moveToNext());
-        cursor.close();
+            int i = 0;
+            String[] currentFavorites = new String[favoritesSaved.length];
+            do {
+                currentFavorites[i++] = cursor.getString(0);
+            } while (cursor.moveToNext());
+            cursor.close();
 
-        expectedResultDidntMatchActual =
-                "ID's de histórias favoritas novas não batem com o esperado.";
-        assertEquals(expectedResultDidntMatchActual,
-                TextUtils.join(",", favoritesSaved),
-                TextUtils.join(",", currentFavorites));
+            String expectedResultDidntMatchActual =
+                    "ID's de histórias favoritas novas não batem com o esperado.";
+            assertEquals(expectedResultDidntMatchActual,
+                    TextUtils.join(",", favoritesSaved),
+                    TextUtils.join(",", currentFavorites));
+        }
 
         // 5) Indicar quantidade de novas histórias
 

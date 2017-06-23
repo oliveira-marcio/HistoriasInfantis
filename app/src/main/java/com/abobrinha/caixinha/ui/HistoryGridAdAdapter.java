@@ -1,6 +1,8 @@
 package com.abobrinha.caixinha.ui;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +16,13 @@ import org.jsoup.Jsoup;
 
 import java.util.List;
 
+import static android.R.attr.id;
+
 public class HistoryGridAdAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     final private GridOnItemClickListener mOnClickListener;
 
-    private List<History> mHistory;
+    private Cursor mCursor;
     private Context mContext;
 
     private final int AD_INTERVAL = 8;
@@ -28,29 +32,21 @@ public class HistoryGridAdAdapter extends RecyclerView.Adapter<RecyclerView.View
     private final int ITEM_REGULAR = 1;
 
     public interface GridOnItemClickListener {
-        void onListItemClick(int clickedItemIndex);
+        void onListItemClick(long historyId);
     }
 
-    public HistoryGridAdAdapter(List<History> history, GridOnItemClickListener listener) {
-        mHistory = history;
+    public HistoryGridAdAdapter(@NonNull Context context, GridOnItemClickListener listener) {
+        mContext = context;
         mOnClickListener = listener;
     }
 
-    // Métodos clear() e addAll() criados para simular os equivalentes de um Adapter de ListView
-    public void clear() {
-        mHistory.clear();
-        notifyDataSetChanged();
-    }
-
-    public void addAll(List<History> history) {
-        mHistory.clear();
-        mHistory.addAll(history);
+    void swapCursor(Cursor newCursor) {
+        mCursor = newCursor;
         notifyDataSetChanged();
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        mContext = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
         RecyclerView.ViewHolder viewHolder;
@@ -73,10 +69,10 @@ public class HistoryGridAdAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (mHistory.size() == 0) return;
         if (holder.getItemViewType() == ITEM_REGULAR) {
             int offsetPosition = getOffsetPosition(position);
-            String title = Jsoup.parse(mHistory.get(offsetPosition).getTitle()).text();
+            mCursor.moveToPosition(offsetPosition);
+            String title = Jsoup.parse(mCursor.getString(MainActivity.INDEX_HISTORY_TITLE)).text();
             RegularViewHolder rHolder = (RegularViewHolder) holder;
             rHolder.historyTitle.setText("(" + offsetPosition + ") " + title);
         }
@@ -84,9 +80,9 @@ public class HistoryGridAdAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        if (mHistory == null) return 0;
-        return mHistory.size() + (AD_INTERVAL > 0 && mHistory.size() > AD_INITIAL_OFFSET
-                ? (int) Math.ceil((mHistory.size() - AD_INITIAL_OFFSET) / (double) AD_INTERVAL)
+        if (null == mCursor) return 0;
+        return mCursor.getCount() + (AD_INTERVAL > 0 && mCursor.getCount() > AD_INITIAL_OFFSET
+                ? (int) Math.ceil((mCursor.getCount() - AD_INITIAL_OFFSET) / (double) AD_INTERVAL)
                 : 0);
     }
 
@@ -110,7 +106,9 @@ public class HistoryGridAdAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         @Override
         public void onClick(View v) {
-            mOnClickListener.onListItemClick(getOffsetPosition(getAdapterPosition()));
+            int offsetPosition = getOffsetPosition(getAdapterPosition());
+            mCursor.moveToPosition(offsetPosition);
+            mOnClickListener.onListItemClick(mCursor.getLong(MainActivity.INDEX_HISTORY_ID));
         }
     }
 
