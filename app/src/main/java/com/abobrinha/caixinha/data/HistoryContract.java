@@ -58,11 +58,19 @@ public class HistoryContract {
         public static final String AUTHOR = "Rodrigo Lopes";
         public static final String END = "FIM";
 
-        public static Uri buildParagraphsFromHistoryUri(long historyId) {
+        public static Uri buildParagraphsFromHistoryId(long historyId) {
             return HistoriesEntry.CONTENT_URI.buildUpon()
                     .appendPath(Long.toString(historyId))
                     .appendPath(PATH_PARAGRAPHS)
                     .build();
+        }
+
+        public static boolean isValidType(int type) {
+            if (type == TYPE_TEXT || type == TYPE_IMAGE ||
+                    type == TYPE_AUTHOR || type == TYPE_END) {
+                return true;
+            }
+            return false;
         }
     }
 }

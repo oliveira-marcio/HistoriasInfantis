@@ -48,7 +48,7 @@ public class TestHistoryProvider {
         uriError = "Erro no parsing da Uri de uma única história.";
         assertEquals(uriError, HistoryProvider.CODE_SINGLE_HISTORY, matcher.match(uri));
 
-        uri = HistoryContract.ParagraphsEntry.buildParagraphsFromHistoryUri(0);
+        uri = HistoryContract.ParagraphsEntry.buildParagraphsFromHistoryId(0);
         uriError = "Erro no parsing da Uri de parágrafos de uma história.";
         assertEquals(uriError, HistoryProvider.CODE_PARAGRAPHS, matcher.match(uri));
     }
@@ -112,7 +112,7 @@ public class TestHistoryProvider {
                         TestDbUtilities.CONTENT_VALUES_HIGHER_QUANTITY, true);
 
         for (i = 0; i < historyValues.length; i++) {
-            uri = HistoryContract.ParagraphsEntry.buildParagraphsFromHistoryUri(i);
+            uri = HistoryContract.ParagraphsEntry.buildParagraphsFromHistoryId(i);
             ContentValues[] paragraphValues =
                     HistoryProvider.historyContentParser(i,
                             historyValues[i].getAsString(context.getString(R.string.history_raw_content)));

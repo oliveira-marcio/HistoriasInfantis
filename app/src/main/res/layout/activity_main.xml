@@ -18,7 +18,6 @@
         android:layout_gravity="center"
         android:text="@string/no_histories"
         android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="@android:color/white"
         android:textStyle="bold"
         android:visibility="invisible" />
 

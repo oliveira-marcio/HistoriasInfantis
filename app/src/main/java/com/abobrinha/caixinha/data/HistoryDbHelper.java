@@ -47,7 +47,7 @@ public class HistoryDbHelper extends SQLiteOpenHelper {
                         HistoryContract.ParagraphsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         HistoryContract.ParagraphsEntry.COLUMN_HISTORY_ID + " INTEGER REFERENCES " +
                         HistoryContract.HistoriesEntry.TABLE_NAME + " ON DELETE CASCADE, " +
-                        HistoryContract.ParagraphsEntry.COLUMN_PARAGRAPH_TYPE + " TEXT NOT NULL, " +
+                        HistoryContract.ParagraphsEntry.COLUMN_PARAGRAPH_TYPE + " INTEGER NOT NULL, " +
                         HistoryContract.ParagraphsEntry.COLUMN_PARAGRAPH_CONTENT + " TEXT NOT NULL);";
 
         db.execSQL(SQL_CREATE_PARAGRAPHS_TABLE);

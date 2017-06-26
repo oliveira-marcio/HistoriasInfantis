@@ -10,11 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.abobrinha.caixinha.R;
-import com.abobrinha.caixinha.data.History;
 
 import org.jsoup.Jsoup;
-
-import java.util.List;
 
 public class HistoryGridAdapter extends RecyclerView.Adapter<HistoryGridAdapter.HistoryGridViewHolder> {
 
@@ -32,7 +29,7 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<HistoryGridAdapter.
         mOnClickListener = listener;
     }
 
-    void swapCursor(Cursor newCursor) {
+    public void swapCursor(Cursor newCursor) {
         mCursor = newCursor;
         notifyDataSetChanged();
     }

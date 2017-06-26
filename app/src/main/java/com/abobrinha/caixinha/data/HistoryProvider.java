@@ -92,9 +92,9 @@ public class HistoryProvider extends ContentProvider {
                     error = "É necessário fornecer o ID da história (conforme Wordpress).";
                 }
 
-                String type = values.getAsString(HistoryContract.ParagraphsEntry.COLUMN_PARAGRAPH_TYPE);
-                if (type == null) {
-                    error = "É necessário fornecer o tipo do parágrafo";
+                Integer type = values.getAsInteger(HistoryContract.ParagraphsEntry.COLUMN_PARAGRAPH_TYPE);
+                if (type == null || !HistoryContract.ParagraphsEntry.isValidType(type)) {
+                    error = "É necessário fornecer um tipo válido de parágrafo";
                 }
 
                 String content = values.getAsString(HistoryContract.ParagraphsEntry.COLUMN_PARAGRAPH_CONTENT);

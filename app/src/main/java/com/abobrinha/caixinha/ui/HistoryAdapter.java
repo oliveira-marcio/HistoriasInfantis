@@ -1,6 +1,8 @@
 package com.abobrinha.caixinha.ui;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,43 +10,41 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.abobrinha.caixinha.R;
-import com.abobrinha.caixinha.data.Paragraph;
-
-import java.util.List;
-
-import static com.abobrinha.caixinha.data.Paragraph.TYPE_AUTHOR;
-import static com.abobrinha.caixinha.data.Paragraph.TYPE_END;
-import static com.abobrinha.caixinha.data.Paragraph.TYPE_IMAGE;
+import com.abobrinha.caixinha.data.HistoryContract;
 
 public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<Paragraph> mHistory;
+    private Cursor mCursor;
     private Context mContext;
 
-    public HistoryAdapter(List<Paragraph> history) {
-        mHistory = history;
+    private int mIndexParagraphType;
+    private int mIndexParagraphContent;
+
+    public HistoryAdapter(@NonNull Context context) {
+        mContext = context;
     }
 
-    // Métodos clear() e addAll() criados para simular os equivalentes de um Adapter de ListView
-    public void clear() {
-        mHistory.clear();
-        notifyDataSetChanged();
-    }
-
-    public void addAll(List<Paragraph> history) {
-        mHistory.clear();
-        mHistory.addAll(history);
+    void swapCursor(Cursor newCursor) {
+        mCursor = newCursor;
+        if (mCursor != null) {
+            mIndexParagraphType = mCursor.getColumnIndex(
+                    HistoryContract.ParagraphsEntry.COLUMN_PARAGRAPH_TYPE);
+            mIndexParagraphContent = mCursor.getColumnIndex(
+                    HistoryContract.ParagraphsEntry.COLUMN_PARAGRAPH_CONTENT);
+        } else {
+            mIndexParagraphType = -1;
+            mIndexParagraphContent = -1;
+        }
         notifyDataSetChanged();
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        mContext = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
         RecyclerView.ViewHolder viewHolder;
 
-        if (viewType == TYPE_IMAGE) {
+        if (viewType == HistoryContract.ParagraphsEntry.TYPE_IMAGE) {
             View view = inflater.inflate(R.layout.history_paragraph_image, viewGroup, false);
             viewHolder = new ParagraphImageViewHolder(view);
         } else {
@@ -57,36 +57,39 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Paragraph paragraph = mHistory.get(position);
+        mCursor.moveToPosition(position);
+        String paragraphContent = mCursor.getString(mIndexParagraphContent);
+
         switch (holder.getItemViewType()) {
-            case Paragraph.TYPE_AUTHOR:
+            case HistoryContract.ParagraphsEntry.TYPE_AUTHOR:
                 ParagraphTextViewHolder aHolder = (ParagraphTextViewHolder) holder;
-                aHolder.historyContent.setText("(AUTHOR) " + paragraph.getContent());
+                aHolder.historyContent.setText("(AUTHOR) " + paragraphContent);
                 break;
-            case Paragraph.TYPE_END:
+            case HistoryContract.ParagraphsEntry.TYPE_END:
                 ParagraphTextViewHolder eHolder = (ParagraphTextViewHolder) holder;
-                eHolder.historyContent.setText("(END) " + paragraph.getContent());
+                eHolder.historyContent.setText("(END) " + paragraphContent);
                 break;
-            case Paragraph.TYPE_IMAGE:
+            case HistoryContract.ParagraphsEntry.TYPE_IMAGE:
                 ParagraphImageViewHolder iHolder = (ParagraphImageViewHolder) holder;
-                iHolder.historyImage.setText(paragraph.getContent());
+                iHolder.historyImage.setText(paragraphContent);
                 break;
             default:
                 ParagraphTextViewHolder tHolder = (ParagraphTextViewHolder) holder;
-                tHolder.historyContent.setText(paragraph.getContent());
+                tHolder.historyContent.setText(paragraphContent);
                 break;
         }
     }
 
     @Override
     public int getItemCount() {
-        if (mHistory == null) return 0;
-        return mHistory.size();
+        if (null == mCursor) return 0;
+        return mCursor.getCount();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return mHistory.get(position).getType();
+        mCursor.moveToPosition(position);
+        return mCursor.getInt(mIndexParagraphType);
     }
 
     public class ParagraphTextViewHolder extends RecyclerView.ViewHolder {

@@ -1,29 +1,22 @@
 package com.abobrinha.caixinha.ui;
 
-import android.support.v4.app.LoaderManager;
 import android.content.Intent;
-import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.abobrinha.caixinha.R;
-import com.abobrinha.caixinha.data.History;
 import com.abobrinha.caixinha.data.HistoryContract;
 import com.abobrinha.caixinha.network.WordPressConn;
 import com.abobrinha.caixinha.sync.HistorySyncUtils;
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>,
@@ -111,11 +104,10 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mLoadingIndicator.setVisibility(View.GONE);
         mAdapter.swapCursor(data);
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
         mHistoriesList.smoothScrollToPosition(mPosition);
-        if (data.getCount() != 0) {
+        if (data != null && data.moveToFirst()) {
             showHistoriesDataView();
         } else {
             if (!WordPressConn.isNetworkAvailable(this)) {
@@ -134,7 +126,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onListItemClick(long historyId) {
         Intent intent = new Intent(this, HistoryActivity.class);
-        intent.putExtra(Intent.EXTRA_TEXT, historyId);
-//        startActivity(intent);
+        intent.setData(HistoryContract.HistoriesEntry.buildSingleHistoryUri(historyId));
+        startActivity(intent);
     }
 }
+
+// ToDo: Verificar se Gson ainda será utilizado e removê-lo.

@@ -91,7 +91,7 @@ public class TestDbUtilities {
         for (int i = 0; i < testParagraphsValues.length; i++) {
             testParagraphsValues[i] = new ContentValues();
             testParagraphsValues[i].put(ParagraphsEntry.COLUMN_HISTORY_ID, id);
-            testParagraphsValues[i].put(ParagraphsEntry.COLUMN_PARAGRAPH_TYPE, "Type " + i);
+            testParagraphsValues[i].put(ParagraphsEntry.COLUMN_PARAGRAPH_TYPE, ParagraphsEntry.TYPE_TEXT);
             testParagraphsValues[i].put(ParagraphsEntry.COLUMN_PARAGRAPH_CONTENT, "Paragraph " + i);
         }
 
@@ -103,7 +103,7 @@ public class TestDbUtilities {
 
         testParagraphValues.put(ParagraphsEntry.COLUMN_HISTORY_ID,
                 (validHistoryId ? VALID_HISTORY_ID : INVALID_HISTORY_ID));
-        testParagraphValues.put(ParagraphsEntry.COLUMN_PARAGRAPH_TYPE, "Text");
+        testParagraphValues.put(ParagraphsEntry.COLUMN_PARAGRAPH_TYPE, ParagraphsEntry.TYPE_TEXT);
         testParagraphValues.put(ParagraphsEntry.COLUMN_PARAGRAPH_CONTENT, "Parágrafo qualquer.");
 
         return testParagraphValues;
