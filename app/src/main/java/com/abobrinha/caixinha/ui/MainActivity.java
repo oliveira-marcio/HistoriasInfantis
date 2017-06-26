@@ -105,8 +105,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(data);
-        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
-        mHistoriesList.smoothScrollToPosition(mPosition);
+// ToDo: Avaliar melhor o uso desse mPosition
+//        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+//        mHistoriesList.smoothScrollToPosition(mPosition);
         if (data != null && data.moveToFirst()) {
             showHistoriesDataView();
         } else {
