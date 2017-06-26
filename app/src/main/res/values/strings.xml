@@ -3,8 +3,11 @@
 
     <string name="content_authority" translatable="false">com.abobrinha.caixinha</string>
     <string name="history_raw_content" translatable="false">history_raw_content</string>
+    <string name="pref_history_status_key" translatable="false">history_status</string>
 
     <!-- Mensagens de erro a serem exibidas na tela principal -->
-    <string name="no_histories">Nenhuma história encontrada.</string>
-    <string name="no_internet_connection">Não há conexão internet.</string>
+    <string name="empty_history_list">Nenhuma história encontrada.</string>
+    <string name="empty_history_list_no_network">Nenhuma história encontrada. Não há conexão internet.</string>
+    <string name="empty_history_list_server_down">Nenhuma história encontrada. O servidor não está retornando nenhum dado.</string>
+    <string name="empty_history_list_server_error">Nenhuma história encontrada. O servidor está retornando dados inválidos. Procure por uma nova versão de nosso app.</string>
 </resources>

@@ -27,7 +27,7 @@ public class HistoryGridAdAdapter extends RecyclerView.Adapter<RecyclerView.View
     private final int ITEM_REGULAR = 1;
 
     public interface GridOnItemClickListener {
-        void onListItemClick(long historyId);
+        void onListItemClick(long historyId, int position);
     }
 
     public HistoryGridAdAdapter(@NonNull Context context, GridOnItemClickListener listener) {
@@ -103,7 +103,8 @@ public class HistoryGridAdAdapter extends RecyclerView.Adapter<RecyclerView.View
         public void onClick(View v) {
             int offsetPosition = getOffsetPosition(getAdapterPosition());
             mCursor.moveToPosition(offsetPosition);
-            mOnClickListener.onListItemClick(mCursor.getLong(MainActivity.INDEX_HISTORY_ID));
+            mOnClickListener.onListItemClick(mCursor
+                    .getLong(MainActivity.INDEX_HISTORY_ID), getAdapterPosition());
         }
     }
 

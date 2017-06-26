@@ -1,14 +1,21 @@
 package com.abobrinha.caixinha.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,6 +23,7 @@ import android.widget.TextView;
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
 import com.abobrinha.caixinha.network.WordPressConn;
+import com.abobrinha.caixinha.sync.HistorySyncTask;
 import com.abobrinha.caixinha.sync.HistorySyncUtils;
 
 public class MainActivity extends AppCompatActivity implements
@@ -24,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements
 //ToDo: Passar linha acima para free flavor
 //        HistoryGridAdapter.GridOnItemClickListener {
 
+    private static final String SELECTED_KEY = "selected_position";
     private final int HISTORY_LOADER_ID = 1;
 
     public final String[] MAIN_HISTORIES_PROJECTION = {
@@ -72,6 +81,18 @@ public class MainActivity extends AppCompatActivity implements
 
         getSupportLoaderManager().initLoader(HISTORY_LOADER_ID, null, this);
         HistorySyncUtils.initialize(this);
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mPosition != RecyclerView.NO_POSITION) {
+            outState.putInt(SELECTED_KEY, mPosition);
+        }
+        super.onSaveInstanceState(outState);
     }
 
     private void showLoading() {
@@ -105,16 +126,16 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(data);
-// ToDo: Avaliar melhor o uso desse mPosition
-//        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
-//        mHistoriesList.smoothScrollToPosition(mPosition);
+        if (mPosition != RecyclerView.NO_POSITION)
+            mHistoriesList.smoothScrollToPosition(mPosition);
+
         if (data != null && data.moveToFirst()) {
             showHistoriesDataView();
         } else {
             if (!WordPressConn.isNetworkAvailable(this)) {
-                showErrorMessage(R.string.no_internet_connection);
+                showErrorMessage(R.string.empty_history_list_no_network);
             } else {
-                showErrorMessage(R.string.no_histories);
+                showErrorMessage(R.string.empty_history_list);
             }
         }
     }
@@ -125,10 +146,61 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onListItemClick(long historyId) {
+    public void onListItemClick(long historyId, int position) {
+        mPosition = position;
         Intent intent = new Intent(this, HistoryActivity.class);
         intent.setData(HistoryContract.HistoriesEntry.buildSingleHistoryUri(historyId));
         startActivity(intent);
+    }
+
+    private int getHistoryStatus(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        return sp.getInt(getString(R.string.pref_history_status_key),
+                HistorySyncTask.HISTORY_STATUS_UNKNOWN);
+    }
+
+    // Métodos para teste de sincronização e notificação.
+    // Deve ser deletado na versão final
+    // ToDo: REMOVER MENU
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.teste, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        Long lastId = null;
+        Long beforeLastId = null;
+
+        Uri uri = HistoryContract.HistoriesEntry.CONTENT_URI;
+        Cursor cursor = getContentResolver().query(uri,
+                MAIN_HISTORIES_PROJECTION,
+                null,
+                null,
+                HistoryContract.HistoriesEntry.COLUMN_HISTORY_DATE + " DESC");
+
+        if (cursor != null && cursor.moveToFirst()) {
+            lastId = cursor.getLong(INDEX_HISTORY_ID);
+
+            if (id == R.id.action_delete_two && cursor.moveToNext()) {
+                beforeLastId = cursor.getLong(INDEX_HISTORY_ID);
+            }
+        }
+        cursor.close();
+
+        if (lastId != null) {
+            getContentResolver().delete(uri, HistoryContract.HistoriesEntry._ID + "=" + lastId, null);
+            if (beforeLastId != null) {
+                getContentResolver().delete(uri, HistoryContract.HistoriesEntry._ID + "=" + beforeLastId, null);
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
 

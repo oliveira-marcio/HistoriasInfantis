@@ -16,6 +16,8 @@ import android.widget.ProgressBar;
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
 
+import org.jsoup.Jsoup;
+
 public class HistoryActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -108,7 +110,7 @@ public class HistoryActivity extends AppCompatActivity implements
 
         switch (loader.getId()) {
             case HISTORY_LOADER_ID:
-                setTitle(data.getString(INDEX_HISTORY_TITLE));
+                setTitle(Jsoup.parse(data.getString(INDEX_HISTORY_TITLE)).text());
                 break;
 
             case PARAGRAPH_LOADER_ID:
