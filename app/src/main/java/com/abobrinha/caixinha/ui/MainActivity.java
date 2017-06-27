@@ -26,8 +26,6 @@ import com.abobrinha.caixinha.network.WordPressConn;
 import com.abobrinha.caixinha.sync.HistorySyncTask;
 import com.abobrinha.caixinha.sync.HistorySyncUtils;
 
-import static android.R.id.message;
-
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>,
         SharedPreferences.OnSharedPreferenceChangeListener,
@@ -38,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final String SELECTED_KEY = "selected_position";
     private final int HISTORY_LOADER_ID = 1;
 
-    public final String[] MAIN_HISTORIES_PROJECTION = {
+    public static final String[] MAIN_HISTORIES_PROJECTION = {
             HistoryContract.HistoriesEntry._ID,
             HistoryContract.HistoriesEntry.COLUMN_HISTORY_TITLE,
             HistoryContract.HistoriesEntry.COLUMN_HISTORY_IMAGE,
@@ -218,9 +216,9 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        if(id == R.id.action_refresh){
+        if (id == R.id.action_refresh) {
             HistorySyncUtils.startImmediateSync(this);
-            if(mAdapter.getItemCount() == 0) showLoading();
+            if (mAdapter.getItemCount() == 0) showLoading();
             // ToDo: Na versão final, substituir toast por progressbar circular na appbar
             Toast.makeText(this, "Atualizando...", Toast.LENGTH_SHORT).show();
             return true;

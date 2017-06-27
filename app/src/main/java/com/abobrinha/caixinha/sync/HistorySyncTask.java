@@ -36,6 +36,7 @@ public class HistorySyncTask {
      * 5) Indicar quantidade de novas histórias     */
     synchronized public static void syncHistories(Context context) {
         try {
+            //ToDo: Remover LOGS
             Log.v("SYNC_HIST", "Sincronizando...");
 
             setHistoryStatus(context, HISTORY_STATUS_UNKNOWN);
@@ -79,18 +80,7 @@ public class HistorySyncTask {
 
             if (oldHistoryQuantity > 0 && newHistoryQuantity > oldHistoryQuantity) {
                 int newHistories = newHistoryQuantity - oldHistoryQuantity;
-                switch (newHistories) {
-                    case 1:
-                        Log.v("SYNC_HIST", "1 nova história adicionada");
-
-                        // ToDo: Implementar notificação para a história nova
-                        break;
-                    default:
-                        Log.v("SYNC_HIST", newHistories + " novas histórias adicionadas");
-
-                        // ToDo: Implementar notificação indicando "x" novas histórias
-                        break;
-                }
+                NotificationUtils.notifyUserOfNewHistories(context, newHistories);
             }
 
             setHistoryStatus(context, HISTORY_STATUS_OK);

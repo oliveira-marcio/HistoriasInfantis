@@ -1,11 +1,14 @@
-<resources>
-    <string name="app_name">Historias Infantis</string>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Histórias Infantis</string>
 
     <string name="content_authority" translatable="false">com.abobrinha.caixinha</string>
     <string name="history_raw_content" translatable="false">history_raw_content</string>
     <string name="pref_history_status_key" translatable="false">history_status</string>
 
     <string name="action_refresh">Atualizar</string>
+
+    <string name="notification_new_history">Nova história adicionada.</string>
+    <string name="notification_new_histories"><xliff:g id="history_number">%d</xliff:g> novas histórias adicionadas.</string>
 
     <!-- Mensagens de erro a serem exibidas na tela principal -->
     <string name="empty_history_list">Nenhuma história encontrada.</string>

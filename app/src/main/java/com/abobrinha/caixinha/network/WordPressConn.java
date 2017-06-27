@@ -14,19 +14,15 @@ import java.util.Scanner;
 
 public class WordPressConn {
 
-    private final static String WORDPRESS_BASE_URL = "https://public-api.wordpress.com/rest/v1.1/sites/";
-//    URL para testes de dados inválidos
-//    private final static String WORDPRESS_BASE_URL = "http://google.com/ping?";
-//    URL para testes de dados vazios
-//    private final static String WORDPRESS_BASE_URL = "http://google.com/?";
-    private final static String WORDPRESS_ABOBRINHA_ID = "113100833";
-    private final static String WORDPRESS_POSTS = "posts";
+    public final static String WORDPRESS_BASE_URL = "https://public-api.wordpress.com/rest/v1.1/sites/";
+    public final static String WORDPRESS_ABOBRINHA_ID = "113100833";
+    public final static String WORDPRESS_POSTS = "posts";
 
-    private final static String FIELDS_PARAM = "fields";
-    private final static String CATEGORY_PARAM = "category";
-    private final static String NUMBER_PARAM = "number";
+    public final static String FIELDS_PARAM = "fields";
+    public final static String CATEGORY_PARAM = "category";
+    public final static String NUMBER_PARAM = "number";
 
-    private final static String CATEGORY_VALUE = "historias-infantis-abobrinha";
+    public final static String CATEGORY_VALUE = "historias-infantis-abobrinha";
     private final static int NUMBER_VALUE = 100;
 
     /**
