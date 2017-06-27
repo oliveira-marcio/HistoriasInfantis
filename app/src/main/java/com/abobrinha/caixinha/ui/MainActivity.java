@@ -1,6 +1,5 @@
 package com.abobrinha.caixinha.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -19,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
@@ -26,8 +26,11 @@ import com.abobrinha.caixinha.network.WordPressConn;
 import com.abobrinha.caixinha.sync.HistorySyncTask;
 import com.abobrinha.caixinha.sync.HistorySyncUtils;
 
+import static android.R.id.message;
+
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>,
+        SharedPreferences.OnSharedPreferenceChangeListener,
         HistoryGridAdAdapter.GridOnItemClickListener {
 //ToDo: Passar linha acima para free flavor
 //        HistoryGridAdapter.GridOnItemClickListener {
@@ -54,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private TextView mEmptyStateTextView;
     private ProgressBar mLoadingIndicator;
-    // ToDo: implementar refresh
 
     private int mPosition = RecyclerView.NO_POSITION;
 
@@ -95,7 +97,29 @@ public class MainActivity extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onResume() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp.registerOnSharedPreferenceChangeListener(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp.unregisterOnSharedPreferenceChangeListener(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.pref_history_status_key))) {
+            showErrorMessage();
+        }
+    }
+
     private void showLoading() {
+        mEmptyStateTextView.setVisibility(View.INVISIBLE);
         mHistoriesList.setVisibility(View.INVISIBLE);
         mLoadingIndicator.setVisibility(View.VISIBLE);
     }
@@ -106,11 +130,45 @@ public class MainActivity extends AppCompatActivity implements
         mLoadingIndicator.setVisibility(View.INVISIBLE);
     }
 
-    private void showErrorMessage(int errorId) {
-        mEmptyStateTextView.setText(errorId);
-        mEmptyStateTextView.setVisibility(View.VISIBLE);
-        mLoadingIndicator.setVisibility(View.INVISIBLE);
-        mHistoriesList.setVisibility(View.INVISIBLE);
+    private void showErrorMessage() {
+        int historyStatus = getHistoryStatus();
+        if (historyStatus == HistorySyncTask.HISTORY_STATUS_UNKNOWN &&
+                WordPressConn.isNetworkAvailable(this)) return;
+
+        int message;
+        switch (historyStatus) {
+            case HistorySyncTask.HISTORY_STATUS_OK:
+                return;
+            case HistorySyncTask.HISTORY_STATUS_SERVER_DOWN:
+                message = R.string.empty_history_list_server_down;
+                if (!WordPressConn.isNetworkAvailable(this)) {
+                    message = R.string.empty_history_list_no_network;
+                }
+                break;
+            case HistorySyncTask.HISTORY_STATUS_SERVER_INVALID:
+                message = R.string.empty_history_list_server_error;
+                break;
+            default:
+                message = R.string.empty_history_list;
+                if (!WordPressConn.isNetworkAvailable(this)) {
+                    message = R.string.empty_history_list_no_network;
+                }
+        }
+
+        if (mAdapter.getItemCount() > 0) {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        } else {
+            mEmptyStateTextView.setText(message);
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            mEmptyStateTextView.setVisibility(View.VISIBLE);
+            mHistoriesList.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private int getHistoryStatus() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        return sp.getInt(getString(R.string.pref_history_status_key),
+                HistorySyncTask.HISTORY_STATUS_UNKNOWN);
     }
 
     @Override
@@ -132,11 +190,7 @@ public class MainActivity extends AppCompatActivity implements
         if (data != null && data.moveToFirst()) {
             showHistoriesDataView();
         } else {
-            if (!WordPressConn.isNetworkAvailable(this)) {
-                showErrorMessage(R.string.empty_history_list_no_network);
-            } else {
-                showErrorMessage(R.string.empty_history_list);
-            }
+            showErrorMessage();
         }
     }
 
@@ -153,19 +207,10 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    private int getHistoryStatus(){
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        return sp.getInt(getString(R.string.pref_history_status_key),
-                HistorySyncTask.HISTORY_STATUS_UNKNOWN);
-    }
-
-    // Métodos para teste de sincronização e notificação.
-    // Deve ser deletado na versão final
-    // ToDo: REMOVER MENU
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.teste, menu);
+        inflater.inflate(R.menu.main, menu);
         return true;
     }
 
@@ -173,6 +218,17 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
+        if(id == R.id.action_refresh){
+            HistorySyncUtils.startImmediateSync(this);
+            if(mAdapter.getItemCount() == 0) showLoading();
+            // ToDo: Na versão final, substituir toast por progressbar circular na appbar
+            Toast.makeText(this, "Atualizando...", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        // Métodos para teste de sincronização e notificação.
+        // Deve ser deletado na versão final
+        // ToDo: Remover código abaixo até o return super e remover entradas do menu
         Long lastId = null;
         Long beforeLastId = null;
 

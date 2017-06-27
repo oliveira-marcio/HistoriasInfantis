@@ -38,6 +38,8 @@ public class HistorySyncTask {
         try {
             Log.v("SYNC_HIST", "Sincronizando...");
 
+            setHistoryStatus(context, HISTORY_STATUS_UNKNOWN);
+
             String wordPressSearchResults = WordPressConn.getResponseFromAPI();
             if (wordPressSearchResults == null) {
                 setHistoryStatus(context, HISTORY_STATUS_SERVER_DOWN);
@@ -72,8 +74,7 @@ public class HistorySyncTask {
                     .bulkInsert(allHistoriesUri, historiesValues);
 
             if (favoritesSaved != null) {
-                int rowsUpdated = context.getContentResolver()
-                        .update(favoritesUri, null, null, favoritesSaved);
+                context.getContentResolver().update(favoritesUri, null, null, favoritesSaved);
             }
 
             if (oldHistoryQuantity > 0 && newHistoryQuantity > oldHistoryQuantity) {

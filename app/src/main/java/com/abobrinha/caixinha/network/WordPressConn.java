@@ -15,6 +15,10 @@ import java.util.Scanner;
 public class WordPressConn {
 
     private final static String WORDPRESS_BASE_URL = "https://public-api.wordpress.com/rest/v1.1/sites/";
+//    URL para testes de dados inválidos
+//    private final static String WORDPRESS_BASE_URL = "http://google.com/ping?";
+//    URL para testes de dados vazios
+//    private final static String WORDPRESS_BASE_URL = "http://google.com/?";
     private final static String WORDPRESS_ABOBRINHA_ID = "113100833";
     private final static String WORDPRESS_POSTS = "posts";
 
