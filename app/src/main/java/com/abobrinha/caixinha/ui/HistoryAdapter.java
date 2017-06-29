@@ -82,8 +82,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        if (null == mCursor) return 0;
-        return mCursor.getCount();
+        return (mCursor == null) ? 0 : mCursor.getCount();
     }
 
     @Override

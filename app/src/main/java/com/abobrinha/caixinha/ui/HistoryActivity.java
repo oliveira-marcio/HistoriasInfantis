@@ -1,43 +1,36 @@
 package com.abobrinha.caixinha.ui;
 
-import android.content.ContentUris;
+import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.ProgressBar;
 
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
 
-import org.jsoup.Jsoup;
-
 public class HistoryActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    private Uri mHistoryUri;
-    private Uri mParagraphsUri;
+    private HistoryFragmentAdapter mAdapter;
+    private long mHistoryId;
 
-    private RecyclerView mHistoryView;
-    private HistoryAdapter mAdapter;
-    private ProgressBar mLoadingIndicator;
+    ViewPager viewPager;
 
     private final int HISTORY_LOADER_ID = 1;
-    private final int PARAGRAPH_LOADER_ID = 2;
 
-    public final String[] MAIN_HISTORY_PROJECTION = {
-            HistoryContract.HistoriesEntry.COLUMN_HISTORY_TITLE,
-            HistoryContract.HistoriesEntry.COLUMN_HISTORY_IMAGE
+    public static final String[] MAIN_HISTORIES_PROJECTION = {
+            HistoryContract.HistoriesEntry._ID,
+            HistoryContract.HistoriesEntry.COLUMN_HISTORY_DATE
     };
 
-    public static final int INDEX_HISTORY_TITLE = 0;
-    public static final int INDEX_HISTORY_IMAGE = 1;
+    public static final int INDEX_HISTORY_ID = 0;
+    public static final int INDEX_HISTORY_DATE = 1;
+
+    private final int INVALID_ID = -1;
 
 
     @Override
@@ -45,79 +38,43 @@ public class HistoryActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        mHistoryUri = getIntent().getData();
-        if (mHistoryUri == null) throw
-                new NullPointerException("URI para HistoryActivity não pode ser nula.");
+        mHistoryId = getIntent().getLongExtra(Intent.EXTRA_TEXT, INVALID_ID);
 
-        long historyId = ContentUris.parseId(mHistoryUri);
-        mParagraphsUri = HistoryContract.ParagraphsEntry.buildParagraphsFromHistoryId(historyId);
+        if (mHistoryId == INVALID_ID) throw
+                new NullPointerException("id da história inválido.");
 
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
-
-        mHistoryView = (RecyclerView) findViewById(R.id.rv_history);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-
-        mHistoryView.setLayoutManager(layoutManager);
-        mHistoryView.setHasFixedSize(true);
-
-        mAdapter = new HistoryAdapter(this);
-        mHistoryView.setAdapter(mAdapter);
-
-        showLoading();
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        mAdapter = new HistoryFragmentAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(mAdapter);
 
         getSupportLoaderManager().initLoader(HISTORY_LOADER_ID, null, this);
-        getSupportLoaderManager().initLoader(PARAGRAPH_LOADER_ID, null, this);
-    }
-
-    private void showLoading() {
-        mHistoryView.setVisibility(View.INVISIBLE);
-        mLoadingIndicator.setVisibility(View.VISIBLE);
-    }
-
-    private void showHistoryDataView() {
-        mHistoryView.setVisibility(View.VISIBLE);
-        mLoadingIndicator.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
-        switch (loaderId) {
-            case HISTORY_LOADER_ID:
-                return new CursorLoader(this,
-                        mHistoryUri,
-                        MAIN_HISTORY_PROJECTION,
-                        null,
-                        null,
-                        null);
-
-            case PARAGRAPH_LOADER_ID:
-                return new CursorLoader(this,
-                        mParagraphsUri,
-                        null,
-                        null,
-                        null,
-                        null);
-
-            default:
-                throw new RuntimeException("Loader não implementado: " + loaderId);
-        }
+        return new CursorLoader(this,
+                HistoryContract.HistoriesEntry.CONTENT_URI,
+                MAIN_HISTORIES_PROJECTION,
+                null,
+                null,
+                HistoryContract.HistoriesEntry.COLUMN_HISTORY_DATE + " DESC");
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (data == null || !data.moveToFirst()) throw
-                new NullPointerException("URI para HistoryActivity não pode ser nula.");
+        if (data == null || data.getCount() == 0) throw
+                new NullPointerException("Dados inválidos.");
 
-        switch (loader.getId()) {
-            case HISTORY_LOADER_ID:
-                setTitle(Jsoup.parse(data.getString(INDEX_HISTORY_TITLE)).text());
-                break;
+        mAdapter.swapCursor(data);
 
-            case PARAGRAPH_LOADER_ID:
-                mAdapter.swapCursor(data);
-                showHistoryDataView();
-                break;
-        }
+        int position = 0;
+        data.moveToFirst();
+        do {
+            if (data.getLong(INDEX_HISTORY_ID) == mHistoryId) break;
+            position++;
+        } while (data.moveToNext());
+
+        viewPager.setCurrentItem(position);
     }
 
     @Override

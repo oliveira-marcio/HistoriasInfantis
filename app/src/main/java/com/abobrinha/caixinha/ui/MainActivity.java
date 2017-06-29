@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onListItemClick(long historyId, int position) {
         mPosition = position;
         Intent intent = new Intent(this, HistoryActivity.class);
-        intent.setData(HistoryContract.HistoriesEntry.buildSingleHistoryUri(historyId));
+        intent.putExtra(Intent.EXTRA_TEXT, historyId);
         startActivity(intent);
     }
 

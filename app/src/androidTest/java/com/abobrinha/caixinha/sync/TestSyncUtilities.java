@@ -24,9 +24,6 @@ import static com.abobrinha.caixinha.network.WordPressConn.PAGE_PARAM;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by upon on 28/06/2017.
- */
 
 public class TestSyncUtilities {
 

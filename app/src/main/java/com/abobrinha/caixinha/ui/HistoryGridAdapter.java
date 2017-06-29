@@ -53,8 +53,7 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<HistoryGridAdapter.
 
     @Override
     public int getItemCount() {
-        if (null == mCursor) return 0;
-        return mCursor.getCount();
+        return (mCursor == null) ? 0 : mCursor.getCount();
     }
 
     public class HistoryGridViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
