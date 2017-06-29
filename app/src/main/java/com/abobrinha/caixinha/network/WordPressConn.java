@@ -21,20 +21,24 @@ public class WordPressConn {
     public final static String FIELDS_PARAM = "fields";
     public final static String CATEGORY_PARAM = "category";
     public final static String NUMBER_PARAM = "number";
+    public final static String PAGE_PARAM = "page";
 
     public final static String CATEGORY_VALUE = "historias-infantis-abobrinha";
-    private final static int NUMBER_VALUE = 100;
+
+    private WordPressConn() {
+    }
 
     /**
      * Contrói a URL para consultar o WordPress API
      */
-    private static URL buildUrl() {
+    private static URL buildUrl(int results_per_page, int page) {
         Uri builtUri = Uri.parse(WORDPRESS_BASE_URL).buildUpon()
                 .appendPath(WORDPRESS_ABOBRINHA_ID)
                 .appendPath(WORDPRESS_POSTS)
                 .appendQueryParameter(FIELDS_PARAM, WordPressJson.getJsonHistoryFields())
                 .appendQueryParameter(CATEGORY_PARAM, CATEGORY_VALUE)
-                .appendQueryParameter(NUMBER_PARAM, Integer.toString(NUMBER_VALUE))
+                .appendQueryParameter(NUMBER_PARAM, Integer.toString(results_per_page))
+                .appendQueryParameter(PAGE_PARAM, Integer.toString(page))
                 .build();
 
         URL url = null;
@@ -48,10 +52,11 @@ public class WordPressConn {
     }
 
     /**
-     * Retorna a string JSON com o resultado da consulta ao WordPress.
+     * Retorna a string JSON com o resultado de uma página específica da consulta ao WordPress.
      */
-    public static String getResponseFromAPI() throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) buildUrl().openConnection();
+    public static String getResponseFromApiPage(int results_per_page, int page) throws IOException {
+        URL url = buildUrl(results_per_page, page);
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
             InputStream in = urlConnection.getInputStream();
 

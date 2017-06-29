@@ -12,7 +12,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class WordPressJson {
 
@@ -23,6 +25,9 @@ public class WordPressJson {
     private final static String WORDPRESS_POST_URL = "URL";
     private final static String WORDPRESS_POST_IMAGE = "featured_image";
     private final static String WORDPRESS_POST_CONTENT = "content";
+
+    private WordPressJson() {
+    }
 
     /*
      * Retorna os campos JSON referente a um post do WordPress. Útil para filtrar a String JSON
@@ -38,7 +43,7 @@ public class WordPressJson {
                 WORDPRESS_POST_CONTENT;
     }
 
-    public static ContentValues[] getHistoriesFromJson(Context context, String historiesJsonStr)
+    public static List<ContentValues> getHistoriesFromJson(Context context, String historiesJsonStr)
             throws JSONException {
 
         final String WORDPRESS_RESULTS = "posts";
@@ -58,7 +63,9 @@ public class WordPressJson {
 
         JSONArray historyArray = baseJsonResponse.getJSONArray(WORDPRESS_RESULTS);
 
-        ContentValues[] historiesValues = new ContentValues[historyArray.length()];
+        if (historyArray == null || historyArray.length() == 0) return null;
+
+        List<ContentValues> historiesValues = new ArrayList<>();
 
         for (int i = 0; i < historyArray.length(); i++) {
             JSONObject currentHistory = historyArray.getJSONObject(i);
@@ -81,7 +88,7 @@ public class WordPressJson {
             historyValues.put(HistoryContract.HistoriesEntry.COLUMN_HISTORY_MODIFIED, dateModifiedInMillis);
             historyValues.put(context.getString(R.string.history_raw_content), content);
 
-            historiesValues[i] = historyValues;
+            historiesValues.add(historyValues);
         }
 
         return historiesValues;

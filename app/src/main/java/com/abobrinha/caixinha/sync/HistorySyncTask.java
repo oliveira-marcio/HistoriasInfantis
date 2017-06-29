@@ -10,8 +10,7 @@ import android.util.Log;
 
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
-import com.abobrinha.caixinha.network.WordPressConn;
-import com.abobrinha.caixinha.network.WordPressJson;
+import com.abobrinha.caixinha.network.WordPressUtils;
 
 import org.json.JSONException;
 
@@ -41,14 +40,11 @@ public class HistorySyncTask {
 
             setHistoryStatus(context, HISTORY_STATUS_UNKNOWN);
 
-            String wordPressSearchResults = WordPressConn.getResponseFromAPI();
-            if (wordPressSearchResults == null) {
+            ContentValues[] historiesValues = WordPressUtils.getDataFromAllApiPages(context);
+            if (historiesValues == null) {
                 setHistoryStatus(context, HISTORY_STATUS_SERVER_DOWN);
                 return;
             }
-
-            ContentValues[] historiesValues =
-                    WordPressJson.getHistoriesFromJson(context, wordPressSearchResults);
 
             Uri allHistoriesUri = HistoryContract.HistoriesEntry.CONTENT_URI;
             Uri favoritesUri = HistoryContract.HistoriesEntry.buildFavoritesUri();
