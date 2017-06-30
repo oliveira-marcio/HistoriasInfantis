@@ -12,13 +12,9 @@ import com.abobrinha.caixinha.data.HistoryContract;
 public class HistoryFragmentAdapter extends FragmentStatePagerAdapter {
     private Cursor mCursor;
 
-    public HistoryFragmentAdapter(FragmentManager fm) {
+    public HistoryFragmentAdapter(FragmentManager fm, Cursor cursor) {
         super(fm);
-    }
-
-    public void swapCursor(Cursor newCursor) {
-        mCursor = newCursor;
-        notifyDataSetChanged();
+        mCursor = cursor;
     }
 
     @Override

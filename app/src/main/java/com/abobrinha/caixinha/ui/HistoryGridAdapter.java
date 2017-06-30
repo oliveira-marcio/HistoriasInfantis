@@ -47,13 +47,18 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<HistoryGridAdapter.
     @Override
     public void onBindViewHolder(HistoryGridViewHolder holder, int position) {
         mCursor.moveToPosition(position);
-        String title = Jsoup.parse(mCursor.getString(MainActivity.INDEX_HISTORY_TITLE)).text();
+        String title = Jsoup.parse(mCursor.getString(HistoryGridFragment.INDEX_HISTORY_TITLE)).text();
         holder.historyTitle.setText(title);
     }
 
     @Override
     public int getItemCount() {
         return (mCursor == null) ? 0 : mCursor.getCount();
+    }
+
+    public long getHistoryIdAtPosition(int position){
+        mCursor.moveToPosition(position);
+        return mCursor.getLong(HistoryGridFragment.INDEX_HISTORY_ID);
     }
 
     public class HistoryGridViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -70,7 +75,7 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<HistoryGridAdapter.
         public void onClick(View v) {
             mCursor.moveToPosition(getAdapterPosition());
             mOnClickListener.onListItemClick(mCursor
-                    .getLong(MainActivity.INDEX_HISTORY_ID), getAdapterPosition());
+                    .getLong(HistoryGridFragment.INDEX_HISTORY_ID), getAdapterPosition());
         }
     }
 }

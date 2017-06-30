@@ -67,7 +67,7 @@ public class HistoryGridAdAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (holder.getItemViewType() == ITEM_REGULAR) {
             int offsetPosition = getOffsetPosition(position);
             mCursor.moveToPosition(offsetPosition);
-            String title = Jsoup.parse(mCursor.getString(MainActivity.INDEX_HISTORY_TITLE)).text();
+            String title = Jsoup.parse(mCursor.getString(HistoryGridFragment.INDEX_HISTORY_TITLE)).text();
             RegularViewHolder rHolder = (RegularViewHolder) holder;
             rHolder.historyTitle.setText("(" + offsetPosition + ") " + title);
         }
@@ -89,6 +89,12 @@ public class HistoryGridAdAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ITEM_AD : ITEM_REGULAR;
     }
 
+    public long getHistoryIdAtPosition(int position) {
+        if (ITEM_AD == getItemViewType(position)) return -1;
+        mCursor.moveToPosition(getOffsetPosition(position));
+        return mCursor.getLong(HistoryGridFragment.INDEX_HISTORY_ID);
+    }
+
     public class RegularViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView historyTitle;
@@ -104,7 +110,7 @@ public class HistoryGridAdAdapter extends RecyclerView.Adapter<RecyclerView.View
             int offsetPosition = getOffsetPosition(getAdapterPosition());
             mCursor.moveToPosition(offsetPosition);
             mOnClickListener.onListItemClick(mCursor
-                    .getLong(MainActivity.INDEX_HISTORY_ID), getAdapterPosition());
+                    .getLong(HistoryGridFragment.INDEX_HISTORY_ID), getAdapterPosition());
         }
     }
 

@@ -38,6 +38,7 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
     private boolean mIsFavorite;
 
     private final String VISIBLE_POSITION = "visible_position";
+    private final String HISTORY_URI = "history_uri";
 
     private RecyclerView mHistoryView;
     private TextView mTitleTextView;
@@ -63,10 +64,15 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_history, container, false);
+        if (savedInstanceState != null) {
+            mPosition = savedInstanceState.getInt(VISIBLE_POSITION);
+            mHistoryUri = savedInstanceState.getParcelable(HISTORY_URI);
+        }
 
         if (mHistoryUri == null) throw
                 new NullPointerException("URI para HistoryFragment não pode ser nula.");
+
+        View rootView = inflater.inflate(R.layout.fragment_history, container, false);
 
         long historyId = ContentUris.parseId(mHistoryUri);
         mParagraphsUri = HistoryContract.ParagraphsEntry.buildParagraphsFromHistoryId(historyId);
@@ -96,10 +102,6 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         getLoaderManager().initLoader(HISTORY_LOADER_ID, null, this);
         getLoaderManager().initLoader(PARAGRAPH_LOADER_ID, null, this);
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(VISIBLE_POSITION)) {
-            mPosition = savedInstanceState.getInt(VISIBLE_POSITION);
-        }
-
         return rootView;
     }
 
@@ -109,6 +111,7 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         if (mPosition != RecyclerView.NO_POSITION) {
             outState.putInt(VISIBLE_POSITION, mPosition);
         }
+        outState.putParcelable(HISTORY_URI, mHistoryUri);
         super.onSaveInstanceState(outState);
     }
 
@@ -195,9 +198,10 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
                 null,
                 null);
 
-        if (updatedRows > 0)
+        if (updatedRows > 0) {
             Toast.makeText(getActivity(),
                     mIsFavorite ? getString(R.string.favorite_added) : getString(R.string.favorite_removed),
                     Toast.LENGTH_SHORT).show();
+        }
     }
 }

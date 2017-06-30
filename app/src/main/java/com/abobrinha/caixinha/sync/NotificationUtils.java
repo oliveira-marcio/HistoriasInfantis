@@ -17,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
 import com.abobrinha.caixinha.ui.HistoryActivity;
+import com.abobrinha.caixinha.ui.HistoryGridFragment;
 import com.abobrinha.caixinha.ui.MainActivity;
 import com.bumptech.glide.Glide;
 
@@ -55,7 +56,7 @@ public class NotificationUtils {
         } else if (quantity == 1) {
             Cursor cursor = context.getContentResolver().query(
                     HistoryContract.HistoriesEntry.CONTENT_URI,
-                    MainActivity.MAIN_HISTORIES_PROJECTION,
+                    HistoryGridFragment.MAIN_HISTORIES_PROJECTION,
                     null,
                     null,
                     HistoryContract.HistoriesEntry.COLUMN_HISTORY_DATE + " DESC"
@@ -63,9 +64,9 @@ public class NotificationUtils {
 
             if (cursor.moveToFirst()) {
                 Uri historyUri = HistoryContract.HistoriesEntry
-                        .buildSingleHistoryUri(cursor.getLong(MainActivity.INDEX_HISTORY_ID));
-                String historyTitle = cursor.getString(MainActivity.INDEX_HISTORY_TITLE);
-                String imageUrl = cursor.getString(MainActivity.INDEX_HISTORY_IMAGE);
+                        .buildSingleHistoryUri(cursor.getLong(HistoryGridFragment.INDEX_HISTORY_ID));
+                String historyTitle = cursor.getString(HistoryGridFragment.INDEX_HISTORY_TITLE);
+                String imageUrl = cursor.getString(HistoryGridFragment.INDEX_HISTORY_IMAGE);
 
                 try {
                     largeIcon = Glide.with(context).load(imageUrl).asBitmap().into(-1, -1).get();

@@ -1,33 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.abobrinha.caixinha.ui.MainActivity">
+    android:orientation="vertical"
+    tools:context=".ui.MainActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_histories"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabs"
+        style="@style/CategoryTab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- View para exibição de erros -->
-    <TextView
-        android:id="@+id/empty_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/empty_history_list"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:textStyle="bold"
-        android:visibility="invisible" />
-
-    <!-- Indicador de progresso de carregamento dos dados -->
-    <ProgressBar
-        android:id="@+id/loading_indicator"
-        style="@style/Widget.AppCompat.ProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="invisible" />
-
-</FrameLayout>
+</LinearLayout>

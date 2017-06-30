@@ -33,7 +33,7 @@ public class HistorySyncUtils {
         Driver driver = new GooglePlayDriver(context);
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
 
-        Job syncSunshineJob = dispatcher.newJobBuilder()
+        Job syncHistoryJob = dispatcher.newJobBuilder()
                 .setService(HistoryFirebaseJobService.class)
                 .setTag(HISTORY_SYNC_TAG)
                 .setConstraints(Constraint.ON_ANY_NETWORK)
@@ -45,7 +45,7 @@ public class HistorySyncUtils {
                 .setReplaceCurrent(true)
                 .build();
 
-        dispatcher.schedule(syncSunshineJob);
+        dispatcher.schedule(syncHistoryJob);
     }
 
     /*

@@ -10,6 +10,10 @@
     <string name="notification_new_history">Nova história adicionada.</string>
     <string name="notification_new_histories"><xliff:g id="history_number">%d</xliff:g> novas histórias adicionadas.</string>
 
+    <!-- Labels para as abas do TabLayout -->
+    <string name="category_histories_label">Todas</string>
+    <string name="category_favorites_label">Favoritas</string>
+
     <!-- Mensagens de erro a serem exibidas na tela principal -->
     <string name="empty_history_list">Nenhuma história encontrada.</string>
     <string name="empty_history_list_no_network">Nenhuma história encontrada. Não há conexão internet.</string>

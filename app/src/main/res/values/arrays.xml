@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Labels das abas do TabLayout da MainActivity. -->
+    <string-array name="category_labels">
+        <item>@string/category_histories_label</item>
+        <item>@string/category_favorites_label</item>
+    </string-array>
+</resources>
