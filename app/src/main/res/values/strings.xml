@@ -15,4 +15,9 @@
     <string name="empty_history_list_no_network">Nenhuma história encontrada. Não há conexão internet.</string>
     <string name="empty_history_list_server_down">Nenhuma história encontrada. O servidor não está retornando nenhum dado.</string>
     <string name="empty_history_list_server_error">Nenhuma história encontrada. O servidor está retornando dados inválidos. Procure por uma nova versão de nosso app.</string>
+
+    <!-- Mensagens para o Toast quando o status de favorito de uma história é modificado -->
+    <string name="favorite_added">História adicionada aos favoritos</string>
+    <string name="favorite_removed">História removida dos favoritos</string>
+
 </resources>

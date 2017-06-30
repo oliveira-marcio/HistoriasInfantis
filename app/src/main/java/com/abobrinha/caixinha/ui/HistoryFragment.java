@@ -1,9 +1,13 @@
 package com.abobrinha.caixinha.ui;
 
 import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -15,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
@@ -30,12 +35,14 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
     private Uri mHistoryUri;
     private Uri mParagraphsUri;
     private int mPosition = RecyclerView.NO_POSITION;
+    private boolean mIsFavorite;
 
     private final String VISIBLE_POSITION = "visible_position";
 
     private RecyclerView mHistoryView;
     private TextView mTitleTextView;
     private LinearLayoutManager mLayoutManager;
+    private FloatingActionButton mFabFavorite;
 
     private HistoryAdapter mAdapter;
     private ProgressBar mLoadingIndicator;
@@ -45,11 +52,13 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 
     public final String[] MAIN_HISTORY_PROJECTION = {
             HistoryContract.HistoriesEntry.COLUMN_HISTORY_TITLE,
-            HistoryContract.HistoriesEntry.COLUMN_HISTORY_IMAGE
+            HistoryContract.HistoriesEntry.COLUMN_HISTORY_IMAGE,
+            HistoryContract.HistoriesEntry.COLUMN_FAVORITE
     };
 
     public static final int INDEX_HISTORY_TITLE = 0;
     public static final int INDEX_HISTORY_IMAGE = 1;
+    public static final int INDEX_FAVORITE = 2;
 
 
     @Override
@@ -63,9 +72,17 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         mParagraphsUri = HistoryContract.ParagraphsEntry.buildParagraphsFromHistoryId(historyId);
 
         mLoadingIndicator = (ProgressBar) rootView.findViewById(R.id.loading_indicator);
-
         mTitleTextView = (TextView) rootView.findViewById(R.id.title);
         mHistoryView = (RecyclerView) rootView.findViewById(R.id.rv_history);
+
+        mFabFavorite = (FloatingActionButton) rootView.findViewById(R.id.fabFavorite);
+        mFabFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleFavoriteStatus();
+            }
+        });
+
         mLayoutManager = new LinearLayoutManager(getActivity());
 
         mHistoryView.setLayoutManager(mLayoutManager);
@@ -136,12 +153,13 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (data == null || !data.moveToFirst()) throw
-                new NullPointerException("URI para HistoryActivity não pode ser nula.");
+        if (data == null || !data.moveToFirst()) return;
 
         switch (loader.getId()) {
             case HISTORY_LOADER_ID:
                 mTitleTextView.setText(Jsoup.parse(data.getString(INDEX_HISTORY_TITLE)).text());
+                mIsFavorite = (data.getInt(INDEX_FAVORITE) == HistoryContract.IS_FAVORITE);
+                setFavoriteFabColor();
                 break;
 
             case PARAGRAPH_LOADER_ID:
@@ -156,5 +174,30 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
+    }
+
+    public void setFavoriteFabColor() {
+        int color = ActivityCompat
+                .getColor(getActivity(), mIsFavorite ? R.color.colorFavorite : R.color.colorAccent);
+        mFabFavorite.setBackgroundTintList(ColorStateList.valueOf(color));
+    }
+
+    public void toggleFavoriteStatus() {
+        mIsFavorite = !mIsFavorite;
+
+        ContentValues values = new ContentValues();
+        values.put(HistoryContract.HistoriesEntry.COLUMN_FAVORITE,
+                mIsFavorite ? HistoryContract.IS_FAVORITE : HistoryContract.IS_NOT_FAVORITE);
+
+        int updatedRows = getActivity().getContentResolver().update(
+                mHistoryUri,
+                values,
+                null,
+                null);
+
+        if (updatedRows > 0)
+            Toast.makeText(getActivity(),
+                    mIsFavorite ? getString(R.string.favorite_added) : getString(R.string.favorite_removed),
+                    Toast.LENGTH_SHORT).show();
     }
 }
