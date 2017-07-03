@@ -4,10 +4,16 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -16,6 +22,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -26,6 +35,7 @@ import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
 import com.abobrinha.caixinha.network.WordPressConn;
 import com.abobrinha.caixinha.sync.HistorySyncTask;
+import com.abobrinha.caixinha.sync.HistorySyncUtils;
 
 
 public class HistoryGridFragment extends Fragment implements
@@ -43,7 +53,7 @@ public class HistoryGridFragment extends Fragment implements
     }
 
     private int mCategory;
-    //    private final int CATEGORY_HISTORIES = 0;
+    private final int CATEGORY_HISTORIES = 0;
     private final int CATEGORY_FAVORITES = 1;
 
     public final Uri[] mCategoryUri = new Uri[]{
@@ -91,58 +101,19 @@ public class HistoryGridFragment extends Fragment implements
 
         View rootView = inflater.inflate(R.layout.fragment_grid_history, container, false);
 
+        mHistoriesList = (RecyclerView) rootView.findViewById(R.id.rv_histories);
         mEmptyStateTextView = (TextView) rootView.findViewById(R.id.empty_view);
         mLoadingIndicator = (ProgressBar) rootView.findViewById(R.id.loading_indicator);
-
-        mHistoriesList = (RecyclerView) rootView.findViewById(R.id.rv_histories);
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
-
-        mHistoriesList.setLayoutManager(layoutManager);
-        mHistoriesList.setHasFixedSize(true);
 
         mAdapter = new HistoryGridAdAdapter(getActivity(), this);
         //ToDo: Passar linha acima para free flavor
 //        mAdapter = new HistoryGridAdapter(this, this);
-        mHistoriesList.setAdapter(mAdapter);
-
-        if (mCategory == CATEGORY_FAVORITES) {
-            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-                @Override
-                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
-                                      RecyclerView.ViewHolder target) {
-                    return false;
-                }
-
-                @Override
-                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                    long historyId = mAdapter.getHistoryIdAtPosition(viewHolder.getAdapterPosition());
-                    if (historyId == -1) return;
-
-                    ContentValues values = new ContentValues();
-                    values.put(HistoryContract.HistoriesEntry.COLUMN_FAVORITE,
-                            HistoryContract.IS_NOT_FAVORITE);
-
-                    getActivity().getContentResolver().update(
-                            HistoryContract.HistoriesEntry.buildSingleHistoryUri(historyId),
-                            values,
-                            null,
-                            null);
-                }
-
-                @Override
-                public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                    if (mAdapter.getHistoryIdAtPosition(viewHolder.getAdapterPosition()) == -1)
-                        return 0;
-                    return super.getSwipeDirs(recyclerView, viewHolder);
-                }
-            }).attachToRecyclerView(mHistoriesList);
-        }
 
         showLoading();
 
         getLoaderManager().initLoader(mCategory, null, this);
 
-
+        setHasOptionsMenu(true);
         return rootView;
     }
 
@@ -184,12 +155,6 @@ public class HistoryGridFragment extends Fragment implements
         mLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
-    private void showHistoriesDataView() {
-        mEmptyStateTextView.setVisibility(View.INVISIBLE);
-        mHistoriesList.setVisibility(View.VISIBLE);
-        mLoadingIndicator.setVisibility(View.INVISIBLE);
-    }
-
     private void showErrorMessage() {
         int historyStatus = getHistoryStatus();
         if (historyStatus == HistorySyncTask.HISTORY_STATUS_UNKNOWN &&
@@ -228,6 +193,92 @@ public class HistoryGridFragment extends Fragment implements
                 HistorySyncTask.HISTORY_STATUS_UNKNOWN);
     }
 
+    private void showHistoriesDataView(Cursor data) {
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
+
+        mHistoriesList.setLayoutManager(layoutManager);
+        mHistoriesList.setHasFixedSize(true);
+
+        mHistoriesList.setAdapter(mAdapter);
+
+        if (mCategory == CATEGORY_FAVORITES) {
+            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                @Override
+                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                      RecyclerView.ViewHolder target) {
+                    return false;
+                }
+
+                @Override
+                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                    long historyId = mAdapter.getHistoryIdAtPosition(viewHolder.getAdapterPosition());
+                    if (historyId == -1) return;
+
+                    ContentValues values = new ContentValues();
+                    values.put(HistoryContract.HistoriesEntry.COLUMN_FAVORITE,
+                            HistoryContract.IS_NOT_FAVORITE);
+
+                    getActivity().getContentResolver().update(
+                            HistoryContract.HistoriesEntry.buildSingleHistoryUri(historyId),
+                            values,
+                            null,
+                            null);
+                }
+
+                @Override
+                public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                    int position = viewHolder.getAdapterPosition();
+                    if (position >= 0 && mAdapter.getHistoryIdAtPosition(position) == -1)
+                        return 0;
+                    return super.getSwipeDirs(recyclerView, viewHolder);
+                }
+
+                @Override
+                public void onChildDraw(Canvas c, RecyclerView recyclerView,
+                                        RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                        int actionState, boolean isCurrentlyActive) {
+                    Bitmap icon;
+                    if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                        View itemView = viewHolder.itemView;
+                        float height = (float) itemView.getBottom() - (float) itemView.getTop();
+                        float width = height / 3;
+
+                        if (dX <= 0) {
+                            Paint p = new Paint();
+                            p.setColor(ActivityCompat.getColor(getActivity(),
+                                    R.color.colorSwipeBackground));
+                            RectF background = new RectF(
+                                    (float) itemView.getRight() + dX,
+                                    (float) itemView.getTop(),
+                                    (float) itemView.getRight(),
+                                    (float) itemView.getBottom());
+                            c.drawRect(background, p);
+                            c.clipRect(background);
+                            icon = BitmapFactory.decodeResource(getResources(),
+                                    R.drawable.ic_delete_white);
+                            RectF icon_dest = new RectF(
+                                    (float) itemView.getRight() - 2 * width,
+                                    (float) itemView.getTop() + width,
+                                    (float) itemView.getRight() - width,
+                                    (float) itemView.getBottom() - width);
+                            c.drawBitmap(icon, null, icon_dest, p);
+                            c.restore();
+                        }
+                    }
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState,
+                            isCurrentlyActive);
+                }
+            }).attachToRecyclerView(mHistoriesList);
+        }
+
+        if (mPosition != RecyclerView.NO_POSITION)
+            mHistoriesList.smoothScrollToPosition(mPosition);
+
+        mEmptyStateTextView.setVisibility(View.INVISIBLE);
+        mHistoriesList.setVisibility(View.VISIBLE);
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getActivity(),
@@ -241,11 +292,8 @@ public class HistoryGridFragment extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(data);
-        if (mPosition != RecyclerView.NO_POSITION)
-            mHistoriesList.smoothScrollToPosition(mPosition);
-
         if (data != null && data.moveToFirst()) {
-            showHistoriesDataView();
+            showHistoriesDataView(data);
         } else {
             showErrorMessage();
         }
@@ -265,50 +313,60 @@ public class HistoryGridFragment extends Fragment implements
         startActivity(intent);
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//
-//        int id = item.getItemId();
-//        if (id == R.id.action_refresh) {
-//            HistorySyncUtils.startImmediateSync(this);
-//            if (mAdapter.getItemCount() == 0) showLoading();
-//            // ToDo: Na versão final, substituir toast por progressbar circular na appbar
-//            Toast.makeText(this, "Atualizando...", Toast.LENGTH_SHORT).show();
-//            return true;
-//        }
-//
-//        // Métodos para teste de sincronização e notificação.
-//        // Deve ser deletado na versão final
-//        // ToDo: Remover código abaixo até o return super e remover entradas do menu
-//        Long lastId = null;
-//        Long beforeLastId = null;
-//
-//        Uri uri = HistoryContract.HistoriesEntry.CONTENT_URI;
-//        Cursor cursor = getContentResolver().query(uri,
-//                MAIN_HISTORIES_PROJECTION,
-//                null,
-//                null,
-//                HistoryContract.HistoriesEntry.COLUMN_HISTORY_DATE + " DESC");
-//
-//        if (cursor != null && cursor.moveToFirst()) {
-//            lastId = cursor.getLong(INDEX_HISTORY_ID);
-//
-//            if (id == R.id.action_delete_two && cursor.moveToNext()) {
-//                beforeLastId = cursor.getLong(INDEX_HISTORY_ID);
-//            }
-//        }
-//        cursor.close();
-//
-//        if (lastId != null) {
-//            getContentResolver().delete(uri, HistoryContract.HistoriesEntry._ID + "=" + lastId, null);
-//            if (beforeLastId != null) {
-//                getContentResolver().delete(uri, HistoryContract.HistoriesEntry._ID + "=" + beforeLastId, null);
-//            }
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (mCategory == CATEGORY_HISTORIES) {
+            inflater.inflate(R.menu.main, menu);
+            super.onCreateOptionsMenu(menu, inflater);
+        }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_refresh) {
+            HistorySyncUtils.startImmediateSync(getActivity());
+            if (mAdapter.getItemCount() == 0) showLoading();
+            // ToDo: Na versão final, substituir toast por progressbar circular na appbar
+            Toast.makeText(getActivity(), "Atualizando...", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        // Métodos para teste de sincronização e notificação.
+        // Deve ser deletado na versão final
+        // ToDo: Remover código abaixo até o return super e remover entradas do menu
+        Long lastId = null;
+        Long beforeLastId = null;
+
+        Uri uri = HistoryContract.HistoriesEntry.CONTENT_URI;
+        Cursor cursor = getActivity().getContentResolver().query(uri,
+                MAIN_HISTORIES_PROJECTION,
+                null,
+                null,
+                HistoryContract.HistoriesEntry.COLUMN_HISTORY_DATE + " DESC");
+
+        if (cursor != null && cursor.moveToFirst()) {
+            lastId = cursor.getLong(INDEX_HISTORY_ID);
+
+            if (id == R.id.action_delete_two && cursor.moveToNext()) {
+                beforeLastId = cursor.getLong(INDEX_HISTORY_ID);
+            }
+        }
+        cursor.close();
+
+        if (lastId != null) {
+            getActivity().getContentResolver().delete(uri, HistoryContract.HistoriesEntry._ID +
+                    "=" + lastId, null);
+            if (beforeLastId != null) {
+                getActivity().getContentResolver().delete(uri, HistoryContract.HistoriesEntry._ID +
+                        "=" + beforeLastId, null);
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }
 
 // ToDo: Verificar se Gson ainda será utilizado e removê-lo.
