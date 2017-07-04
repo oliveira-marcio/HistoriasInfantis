@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.abobrinha.caixinha.R;
@@ -41,7 +40,6 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
     private final String HISTORY_URI = "history_uri";
 
     private RecyclerView mHistoryView;
-    private TextView mTitleTextView;
     private LinearLayoutManager mLayoutManager;
     private FloatingActionButton mFabFavorite;
 
@@ -78,7 +76,6 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         mParagraphsUri = HistoryContract.ParagraphsEntry.buildParagraphsFromHistoryId(historyId);
 
         mLoadingIndicator = (ProgressBar) rootView.findViewById(R.id.loading_indicator);
-        mTitleTextView = (TextView) rootView.findViewById(R.id.title);
         mHistoryView = (RecyclerView) rootView.findViewById(R.id.rv_history);
 
         mFabFavorite = (FloatingActionButton) rootView.findViewById(R.id.fabFavorite);
@@ -160,7 +157,7 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 
         switch (loader.getId()) {
             case HISTORY_LOADER_ID:
-                mTitleTextView.setText(Jsoup.parse(data.getString(INDEX_HISTORY_TITLE)).text());
+                mAdapter.setTitle(Jsoup.parse(data.getString(INDEX_HISTORY_TITLE)).text());
                 mIsFavorite = (data.getInt(INDEX_FAVORITE) == HistoryContract.IS_FAVORITE);
                 setFavoriteFabColor();
                 break;

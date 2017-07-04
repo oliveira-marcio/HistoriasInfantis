@@ -6,28 +6,10 @@
     android:layout_height="match_parent"
     tools:context="com.abobrinha.caixinha.ui.HistoryActivity">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_history"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:gravity="center_horizontal"
-            android:textAllCaps="true"
-            android:textStyle="bold"
-            tools:text="Título da história" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_history"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
+        android:layout_height="match_parent" />
 
     <!-- Indicador de progresso de carregamento dos dados -->
     <ProgressBar
@@ -44,8 +26,8 @@
         android:layout_width="@dimen/fab_size"
         android:layout_height="@dimen/fab_size"
         android:layout_gravity="bottom|end"
-        android:clickable="true"
         android:layout_margin="16dp"
+        android:clickable="true"
         android:src="@drawable/ic_about"
         android:tint="@android:color/background_light"
         app:borderWidth="0dp"

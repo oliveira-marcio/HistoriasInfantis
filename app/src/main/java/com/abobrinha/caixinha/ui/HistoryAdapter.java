@@ -16,6 +16,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private Cursor mCursor;
     private Context mContext;
+    private String mTitle;
 
     private int mIndexParagraphType;
     private int mIndexParagraphContent;
@@ -24,7 +25,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mContext = context;
     }
 
-    void swapCursor(Cursor newCursor) {
+    public void setTitle(String title) {
+        mTitle = title;
+    }
+
+    public void swapCursor(Cursor newCursor) {
         mCursor = newCursor;
         if (mCursor != null) {
             mIndexParagraphType = mCursor.getColumnIndex(
@@ -64,20 +69,37 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case HistoryContract.ParagraphsEntry.TYPE_AUTHOR:
                 ParagraphTextViewHolder aHolder = (ParagraphTextViewHolder) holder;
                 aHolder.historyContent.setText("(AUTHOR) " + paragraphContent);
+                if (position == 0) showTitle(aHolder.historyTitle);
+                else hideTitle(aHolder.historyTitle);
                 break;
             case HistoryContract.ParagraphsEntry.TYPE_END:
                 ParagraphTextViewHolder eHolder = (ParagraphTextViewHolder) holder;
                 eHolder.historyContent.setText("(END) " + paragraphContent);
+                if (position == 0) showTitle(eHolder.historyTitle);
+                else hideTitle(eHolder.historyTitle);
                 break;
             case HistoryContract.ParagraphsEntry.TYPE_IMAGE:
                 ParagraphImageViewHolder iHolder = (ParagraphImageViewHolder) holder;
                 iHolder.historyImage.setText(paragraphContent);
+                if (position == 0) showTitle(iHolder.historyTitle);
+                else hideTitle(iHolder.historyTitle);
                 break;
             default:
                 ParagraphTextViewHolder tHolder = (ParagraphTextViewHolder) holder;
                 tHolder.historyContent.setText(paragraphContent);
+                if (position == 0) showTitle(tHolder.historyTitle);
+                else hideTitle(tHolder.historyTitle);
                 break;
         }
+    }
+
+    private void showTitle(TextView titleView) {
+        titleView.setText(mTitle);
+        titleView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideTitle(TextView titleView) {
+        titleView.setVisibility(View.GONE);
     }
 
     @Override
@@ -94,20 +116,24 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public class ParagraphTextViewHolder extends RecyclerView.ViewHolder {
 
         public TextView historyContent;
+        public TextView historyTitle;
 
         public ParagraphTextViewHolder(View itemView) {
             super(itemView);
             historyContent = (TextView) itemView.findViewById(R.id.content_text_view);
+            historyTitle = (TextView) itemView.findViewById(R.id.title_text_view);
         }
     }
 
     public class ParagraphImageViewHolder extends RecyclerView.ViewHolder {
 
         public TextView historyImage;
+        public TextView historyTitle;
 
         public ParagraphImageViewHolder(View itemView) {
             super(itemView);
             historyImage = (TextView) itemView.findViewById(R.id.image_text_view);
+            historyTitle = (TextView) itemView.findViewById(R.id.title_text_view);
         }
     }
 }

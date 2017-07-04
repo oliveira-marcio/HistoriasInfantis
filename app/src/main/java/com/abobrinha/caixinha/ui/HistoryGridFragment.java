@@ -147,6 +147,7 @@ public class HistoryGridFragment extends Fragment implements
                         HistorySyncTask.HISTORY_STATUS_OK) {
             showErrorMessage();
         }
+        // ToDo: Avaliar se deve ser exibido uma mensagem em caso de sincronia com sucesso.
     }
 
     private void showLoading() {

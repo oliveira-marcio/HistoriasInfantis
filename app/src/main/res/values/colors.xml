@@ -6,5 +6,7 @@
     <!-- Cor para o FAB de favoritos quando uma história é marcada como favorita -->
     <color name="colorFavorite">@android:color/holo_green_dark</color>
 
+
+    <color name="colorTransparent">@android:color/transparent</color>
     <color name="colorSwipeBackground">#D32F2F</color>
 </resources>

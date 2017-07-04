@@ -8,13 +8,19 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
 
 public class HistoryActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>,
+        DrawerAdapter.DrawerOnItemClickListener {
 
     private long mHistoryId;
     private int mCategory;
@@ -25,6 +31,7 @@ public class HistoryActivity extends AppCompatActivity implements
 
     public static final String[] MAIN_HISTORIES_PROJECTION = {
             HistoryContract.HistoriesEntry._ID,
+            HistoryContract.HistoriesEntry.COLUMN_HISTORY_TITLE,
             HistoryContract.HistoriesEntry.COLUMN_HISTORY_DATE
     };
 
@@ -34,11 +41,15 @@ public class HistoryActivity extends AppCompatActivity implements
     };
 
     public static final int INDEX_HISTORY_ID = 0;
-    public static final int INDEX_HISTORY_DATE = 1;
+    public static final int INDEX_HISTORY_TITLE = 1;
+    public static final int INDEX_HISTORY_DATE = 2;
 
     private final int INVALID_ID = -1;
     private final String SELECTED_HISTORY = "selected_history";
     private final String SELECTED_CATEGORY = "selected_category";
+
+    private DrawerLayout mDrawerLayout;
+    private RecyclerView mDrawerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,10 +114,33 @@ public class HistoryActivity extends AppCompatActivity implements
         }
 
         loadHistory(position);
+        loadDrawer();
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+    }
+
+    private void loadDrawer() {
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (RecyclerView) findViewById(R.id.left_drawer);
+
+        DrawerAdapter adapter = new DrawerAdapter(this, this, mCursor);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mDrawerList.setLayoutManager(layoutManager);
+        mDrawerList.setHasFixedSize(true);
+
+        mDrawerList.setAdapter(adapter);
+
+        ImageView drawerToggler = (ImageView) findViewById(R.id.action_drawer);
+
+        drawerToggler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDrawerLayout.openDrawer(mDrawerList);
+            }
+        });
     }
 
     private void loadHistory(int position) {
@@ -133,5 +167,11 @@ public class HistoryActivity extends AppCompatActivity implements
 
             }
         });
+    }
+
+    @Override
+    public void onDrawerItemClick(long historyId, int position) {
+        loadHistory(position);
+        mDrawerLayout.closeDrawer(mDrawerList);
     }
 }
