@@ -311,6 +311,13 @@ public class HistoryProvider extends ContentProvider {
 
         switch (sUriMatcher.match(uri)) {
 
+            // Remove o status de favorito de todas as histórias
+            case CODE_HISTORIES:
+                selection = favoriteColumnName + "=?";
+                selectionArgs = new String[]{String.valueOf(HistoryContract.IS_FAVORITE)};
+                selectedValues.put(favoriteColumnName, HistoryContract.IS_NOT_FAVORITE);
+                break;
+
             case CODE_SINGLE_HISTORY:
                 // Update de uma história específica deverá ser apenas do status de favorito
                 selection = HistoryContract.HistoriesEntry._ID + "=?";

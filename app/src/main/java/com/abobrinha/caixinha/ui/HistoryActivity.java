@@ -19,6 +19,7 @@ import android.widget.ImageView;
 
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
+import com.abobrinha.caixinha.data.PreferencesUtils;
 
 public class HistoryActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -52,7 +53,6 @@ public class HistoryActivity extends AppCompatActivity implements
 
     private final int INVALID_ID = -1;
     private final String SELECTED_HISTORY = "selected_history";
-    private final String SELECTED_CATEGORY = "selected_category";
 
     private NavigationView mNavigationView;
 
@@ -68,11 +68,12 @@ public class HistoryActivity extends AppCompatActivity implements
 
         if (savedInstanceState == null) {
             mHistoryId = getIntent().getLongExtra(Intent.EXTRA_TEXT, INVALID_ID);
-            mCategory = getIntent().getIntExtra(Intent.EXTRA_TITLE, 0);
         } else {
             mHistoryId = savedInstanceState.getLong(SELECTED_HISTORY, INVALID_ID);
-            mCategory = savedInstanceState.getInt(SELECTED_CATEGORY, 0);
         }
+
+        // ToDo: Widget vai precisar alterar sharedpreference sempre que clicar numa história.
+        mCategory = PreferencesUtils.getMainHistoryCategory(this);
 
         if (mHistoryId == INVALID_ID) throw
                 new NullPointerException("id da história inválido.");
@@ -92,7 +93,6 @@ public class HistoryActivity extends AppCompatActivity implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putLong(SELECTED_HISTORY, mHistoryId);
-        outState.putLong(SELECTED_CATEGORY, mCategory);
         super.onSaveInstanceState(outState);
     }
 
@@ -184,7 +184,8 @@ public class HistoryActivity extends AppCompatActivity implements
                 if (mCursor.moveToPosition(position)) {
                     mPosition = position;
                     mHistoryId = mCursor.getLong(INDEX_HISTORY_ID);
-                    mNavigationView.getMenu().getItem(position).setChecked(true);
+                    int id = mNavigationView.getMenu().getItem(position).getItemId();
+                    mNavigationView.setCheckedItem(id);
                 }
             }
 

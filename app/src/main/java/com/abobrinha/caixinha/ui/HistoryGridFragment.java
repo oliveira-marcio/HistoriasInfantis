@@ -1,6 +1,7 @@
 package com.abobrinha.caixinha.ui;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -18,6 +19,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -48,13 +50,8 @@ public class HistoryGridFragment extends Fragment implements
     public HistoryGridFragment() {
     }
 
-    public void setCategory(int category) {
-        mCategory = category;
-    }
-
     private int mCategory;
-    private final int CATEGORY_HISTORIES = 0;
-    private final int CATEGORY_FAVORITES = 1;
+    private boolean mHasFavorites = false;
 
     public final Uri[] mCategoryUri = new Uri[]{
             HistoryContract.HistoriesEntry.CONTENT_URI,
@@ -91,13 +88,13 @@ public class HistoryGridFragment extends Fragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mCategory = PreferencesUtils.getMainHistoryCategory(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
-            mCategory = savedInstanceState.getInt(SELECTED_CATEGORY);
         }
 
         View rootView = inflater.inflate(R.layout.fragment_grid_history, container, false);
@@ -125,7 +122,6 @@ public class HistoryGridFragment extends Fragment implements
         if (mPosition != RecyclerView.NO_POSITION) {
             outState.putInt(SELECTED_KEY, mPosition);
         }
-        outState.putInt(SELECTED_CATEGORY, mCategory);
         super.onSaveInstanceState(outState);
     }
 
@@ -197,7 +193,7 @@ public class HistoryGridFragment extends Fragment implements
 
         mHistoriesList.setAdapter(mAdapter);
 
-        if (mCategory == CATEGORY_FAVORITES) {
+        if (mCategory == PreferencesUtils.FAVORITES_CATEGORY_INDEX) {
             new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                     ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
                 @Override
@@ -301,10 +297,16 @@ public class HistoryGridFragment extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(data);
-        if (data != null && data.moveToFirst()) {
+        boolean hasData = data != null && data.moveToFirst();
+        if (hasData) {
             showHistoriesDataView(data);
         } else {
             showErrorMessage();
+        }
+
+        if (mCategory == PreferencesUtils.FAVORITES_CATEGORY_INDEX) {
+            mHasFavorites = hasData;
+            getActivity().invalidateOptionsMenu();
         }
     }
 
@@ -317,18 +319,32 @@ public class HistoryGridFragment extends Fragment implements
     public void onListItemClick(long historyId, int position) {
         Intent intent = new Intent(getActivity(), HistoryActivity.class);
         intent.putExtra(Intent.EXTRA_TEXT, historyId);
-        intent.putExtra(Intent.EXTRA_TITLE, mCategory);
         startActivity(intent);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (mCategory == CATEGORY_HISTORIES) {
-            inflater.inflate(R.menu.main, menu);
-            super.onCreateOptionsMenu(menu, inflater);
+        switch (mCategory) {
+            case PreferencesUtils.HISTORIES_CATEGORY_INDEX:
+                inflater.inflate(R.menu.histories_menu, menu);
+                break;
+            case PreferencesUtils.FAVORITES_CATEGORY_INDEX:
+                inflater.inflate(R.menu.favorites_menu, menu);
+                break;
+            default:
+                return;
         }
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (mCategory == PreferencesUtils.FAVORITES_CATEGORY_INDEX) {
+            MenuItem reminderItem = menu.findItem(R.id.action_delete);
+            reminderItem.setVisible(mHasFavorites);
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -338,6 +354,11 @@ public class HistoryGridFragment extends Fragment implements
             if (mAdapter.getItemCount() == 0) showLoading();
             // ToDo: Na versão final, substituir toast por progressbar circular na appbar
             Toast.makeText(getActivity(), "Atualizando...", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        if (id == R.id.action_delete) {
+            showDeleteConfirmationDialog();
             return true;
         }
 
@@ -374,6 +395,28 @@ public class HistoryGridFragment extends Fragment implements
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.delete_all_favorites_msg);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                getActivity().getContentResolver().update(
+                        HistoryContract.HistoriesEntry.CONTENT_URI, null, null, null);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }
 

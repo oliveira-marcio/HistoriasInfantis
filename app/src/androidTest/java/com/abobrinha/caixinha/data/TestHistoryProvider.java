@@ -281,6 +281,26 @@ public class TestHistoryProvider {
     }
 
     /*
+     * Este teste valida o método de update do provider usando a URI para todas as histórias
+     * (CODE_HISTORIES, do matcher).
+     */
+    @Test
+    public void testAllHistoriesUpdate() {
+        testHistoriesUpdate();
+
+        Uri uri = HistoryContract.HistoriesEntry.CONTENT_URI;
+        context.getContentResolver().update(uri, null, null, null);
+
+        uri = HistoryContract.HistoriesEntry.buildFavoritesUri();
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+
+        String updateFailed = "Erro ao remover o status de favoritos das histórias no database.";
+        assertEquals(updateFailed, 0, cursor.getCount());
+
+        cursor.close();
+    }
+
+    /*
      * Este teste valida a estratégia de sincronização do banco com dados com a API, que consiste
      * nestes passos:
      * 1) Guardar os ID's das histórias marcadas como favoritas
@@ -298,11 +318,11 @@ public class TestHistoryProvider {
                 TestDbUtilities.createBulkInsertTestHistoryContentValues(context,
                         TestDbUtilities.CONTENT_VALUES_LOWER_QUANTITY, true);
 
-        final String[] FAVORITE_INDEXES = new String[]{"1","2"};
+        final String[] FAVORITE_INDEXES = new String[]{"1", "2"};
 //      Usar linha abaixo, em vez da de cima, para testar sincronia sem favoritos
 //        final String[] FAVORITE_INDEXES = null;
 
-        if(FAVORITE_INDEXES != null) {
+        if (FAVORITE_INDEXES != null) {
             for (String index : FAVORITE_INDEXES) {
                 oldHistoryValues[Integer.parseInt(index)]
                         .put(HistoryContract.HistoriesEntry.COLUMN_FAVORITE, HistoryContract.IS_FAVORITE);
@@ -322,7 +342,7 @@ public class TestHistoryProvider {
         Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
 
         String[] favoritesSaved = null;
-        if(cursor != null && cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             int i = 0;
             favoritesSaved = new String[cursor.getCount()];
             do {
@@ -358,7 +378,7 @@ public class TestHistoryProvider {
 
         // 4) Restaurar as marcações prévias de favoritos
 
-        if(favoritesSaved != null) {
+        if (favoritesSaved != null) {
             uri = HistoryContract.HistoriesEntry.buildFavoritesUri();
             int rowsUpdated = context.getContentResolver().update(uri, null, null, favoritesSaved);
 

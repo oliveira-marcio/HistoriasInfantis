@@ -5,6 +5,7 @@
     <string name="history_raw_content" translatable="false">history_raw_content</string>
 
     <string name="action_refresh">Atualizar</string>
+    <string name="action_delete">Remover todos</string>
 
     <string name="notification_new_history">Nova história adicionada.</string>
     <string name="notification_new_histories"><xliff:g id="history_number">%d</xliff:g> novas histórias adicionadas.</string>
@@ -30,6 +31,11 @@
 
     <string name="close_main_drawer">Menu de navegação principal</string>
     <string name="open_main_drawer">Menu de navegação principal fechado</string>
+
+    <string name="delete_all_favorites_msg">Deseja remover todas as histórias dos favoritos?</string>
+    <string name="delete">Remover</string>
+    <string name="cancel">Cancelar</string>
+
 
     <!-- Textos para a funcionalidade de compartilhamento do app -->
     <string name="sharing_text">Gostaria de compartilhar este incrível aplicativo!!</string>

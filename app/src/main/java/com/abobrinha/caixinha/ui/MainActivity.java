@@ -41,17 +41,19 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (menuItem.getItemId()) {
                     case R.id.menu_all_histories:
-                        if (!menuItem.isChecked())
+                        if (!menuItem.isChecked()) {
                             PreferencesUtils.setMainHistoryCategory(MainActivity.this,
                                     PreferencesUtils.HISTORIES_CATEGORY_INDEX);
-                        loadHistories(PreferencesUtils.HISTORIES_CATEGORY_INDEX);
+                            loadHistories();
+                        }
                         break;
 
                     case R.id.menu_favorites:
-                        if (!menuItem.isChecked())
+                        if (!menuItem.isChecked()) {
                             PreferencesUtils.setMainHistoryCategory(MainActivity.this,
                                     PreferencesUtils.FAVORITES_CATEGORY_INDEX);
-                        loadHistories(PreferencesUtils.FAVORITES_CATEGORY_INDEX);
+                            loadHistories();
+                        }
                         break;
 
                     case R.id.menu_share:
@@ -60,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
                     default:
                         Toast.makeText(MainActivity.this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
                 }
-
                 return true;
             }
         });
@@ -84,16 +85,16 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             int category = PreferencesUtils.getMainHistoryCategory(this);
-            navigationView.getMenu().getItem(0).getSubMenu().getItem(category).setChecked(true);
-            loadHistories(category);
+            int itemId = navigationView.getMenu().getItem(0).getSubMenu().getItem(category).getItemId();
+            navigationView.setCheckedItem(itemId);
+            loadHistories();
         }
 
         HistorySyncUtils.initialize(this);
     }
 
-    private void loadHistories(int category) {
+    private void loadHistories() {
         HistoryGridFragment historyGridFragment = new HistoryGridFragment();
-        historyGridFragment.setCategory(category);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
