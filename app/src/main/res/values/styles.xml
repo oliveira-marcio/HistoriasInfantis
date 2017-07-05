@@ -8,16 +8,4 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!--Tema para as abas de categorias -->
-    <style name="CategoryTab" parent="Widget.Design.TabLayout">
-        <item name="tabIndicatorColor">@android:color/white</item>
-        <item name="tabSelectedTextColor">@android:color/white</item>
-        <item name="tabTextAppearance">@style/CategoryTabTextAppearance</item>
-        <item name="android:background">@color/colorPrimary</item>
-    </style>
-
-    <!-- Aparência do texto de uma aba não-selecionada -->
-    <style name="CategoryTabTextAppearance" parent="TextAppearance.Design.Tab">
-        <item name="android:textColor">#A8A19E</item>
-    </style>
 </resources>

@@ -17,9 +17,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private Cursor mCursor;
     private Context mContext;
     private String mTitle;
+    private int mTitleVisibility;
 
     private int mIndexParagraphType;
     private int mIndexParagraphContent;
+
 
     public HistoryAdapter(@NonNull Context context) {
         mContext = context;
@@ -69,37 +71,29 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case HistoryContract.ParagraphsEntry.TYPE_AUTHOR:
                 ParagraphTextViewHolder aHolder = (ParagraphTextViewHolder) holder;
                 aHolder.historyContent.setText("(AUTHOR) " + paragraphContent);
-                if (position == 0) showTitle(aHolder.historyTitle);
-                else hideTitle(aHolder.historyTitle);
+                setTitle(aHolder.historyTitle);
                 break;
             case HistoryContract.ParagraphsEntry.TYPE_END:
                 ParagraphTextViewHolder eHolder = (ParagraphTextViewHolder) holder;
                 eHolder.historyContent.setText("(END) " + paragraphContent);
-                if (position == 0) showTitle(eHolder.historyTitle);
-                else hideTitle(eHolder.historyTitle);
+                setTitle(eHolder.historyTitle);
                 break;
             case HistoryContract.ParagraphsEntry.TYPE_IMAGE:
                 ParagraphImageViewHolder iHolder = (ParagraphImageViewHolder) holder;
                 iHolder.historyImage.setText(paragraphContent);
-                if (position == 0) showTitle(iHolder.historyTitle);
-                else hideTitle(iHolder.historyTitle);
+                setTitle(iHolder.historyTitle);
                 break;
             default:
                 ParagraphTextViewHolder tHolder = (ParagraphTextViewHolder) holder;
                 tHolder.historyContent.setText(paragraphContent);
-                if (position == 0) showTitle(tHolder.historyTitle);
-                else hideTitle(tHolder.historyTitle);
+                setTitle(tHolder.historyTitle);
                 break;
         }
     }
 
-    private void showTitle(TextView titleView) {
+    private void setTitle(TextView titleView) {
         titleView.setText(mTitle);
-        titleView.setVisibility(View.VISIBLE);
-    }
-
-    private void hideTitle(TextView titleView) {
-        titleView.setVisibility(View.GONE);
+        titleView.setVisibility(mTitleVisibility);
     }
 
     @Override
@@ -110,6 +104,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemViewType(int position) {
         mCursor.moveToPosition(position);
+        mTitleVisibility = (position == 0) ? View.VISIBLE : View.GONE;
         return mCursor.getInt(mIndexParagraphType);
     }
 

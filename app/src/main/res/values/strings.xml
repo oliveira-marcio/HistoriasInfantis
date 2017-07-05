@@ -24,4 +24,7 @@
     <string name="favorite_added">História adicionada aos favoritos</string>
     <string name="favorite_removed">História removida dos favoritos</string>
 
+    <string name="close_main_drawer">Menu de navegação principal</string>
+    <string name="open_main_drawer">Menu de navegação principal fechado</string>
+
 </resources>

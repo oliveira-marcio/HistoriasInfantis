@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/all_histories"
+            android:checked="false"
+            android:icon="@drawable/ic_about"
+            android:title="@string/category_histories_label" />
+
+        <item
+            android:id="@+id/favorites"
+            android:checked="false"
+            android:icon="@drawable/ic_favorite"
+            android:title="@string/category_favorites_label" />
+    </group>
+</menu>

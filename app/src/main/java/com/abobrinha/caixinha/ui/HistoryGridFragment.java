@@ -83,6 +83,7 @@ public class HistoryGridFragment extends Fragment implements
 
     private TextView mEmptyStateTextView;
     private ProgressBar mLoadingIndicator;
+    private GridLayoutManager mLayoutManager;
 
     private int mPosition = RecyclerView.NO_POSITION;
 
@@ -105,6 +106,7 @@ public class HistoryGridFragment extends Fragment implements
         mEmptyStateTextView = (TextView) rootView.findViewById(R.id.empty_view);
         mLoadingIndicator = (ProgressBar) rootView.findViewById(R.id.loading_indicator);
 
+        mLayoutManager = new GridLayoutManager(getActivity(), 1);
         mAdapter = new HistoryGridAdAdapter(getActivity(), this);
         //ToDo: Passar linha acima para free flavor
 //        mAdapter = new HistoryGridAdapter(this, this);
@@ -119,6 +121,7 @@ public class HistoryGridFragment extends Fragment implements
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        mPosition = mLayoutManager.findFirstVisibleItemPosition();
         if (mPosition != RecyclerView.NO_POSITION) {
             outState.putInt(SELECTED_KEY, mPosition);
         }
@@ -195,15 +198,14 @@ public class HistoryGridFragment extends Fragment implements
     }
 
     private void showHistoriesDataView(Cursor data) {
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
-
-        mHistoriesList.setLayoutManager(layoutManager);
+        mHistoriesList.setLayoutManager(mLayoutManager);
         mHistoriesList.setHasFixedSize(true);
 
         mHistoriesList.setAdapter(mAdapter);
 
         if (mCategory == CATEGORY_FAVORITES) {
-            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                    ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
                 @Override
                 public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
                                       RecyclerView.ViewHolder target) {
@@ -238,33 +240,45 @@ public class HistoryGridFragment extends Fragment implements
                 public void onChildDraw(Canvas c, RecyclerView recyclerView,
                                         RecyclerView.ViewHolder viewHolder, float dX, float dY,
                                         int actionState, boolean isCurrentlyActive) {
-                    Bitmap icon;
                     if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                         View itemView = viewHolder.itemView;
                         float height = (float) itemView.getBottom() - (float) itemView.getTop();
                         float width = height / 3;
+                        Bitmap icon;
+                        Paint p = new Paint();
+                        RectF background, icon_dest;
+                        p.setColor(ActivityCompat.getColor(getActivity(),
+                                R.color.colorSwipeBackground));
 
-                        if (dX <= 0) {
-                            Paint p = new Paint();
-                            p.setColor(ActivityCompat.getColor(getActivity(),
-                                    R.color.colorSwipeBackground));
-                            RectF background = new RectF(
+                        if (dX > 0) {
+                            background = new RectF(
+                                    (float) itemView.getLeft(),
+                                    (float) itemView.getTop(),
+                                    dX,
+                                    (float) itemView.getBottom());
+                            icon_dest = new RectF(
+                                    (float) itemView.getLeft() + width,
+                                    (float) itemView.getTop() + width,
+                                    (float) itemView.getLeft() + 2 * width,
+                                    (float) itemView.getBottom() - width);
+                        } else {
+                            background = new RectF(
                                     (float) itemView.getRight() + dX,
                                     (float) itemView.getTop(),
                                     (float) itemView.getRight(),
                                     (float) itemView.getBottom());
-                            c.drawRect(background, p);
-                            c.clipRect(background);
-                            icon = BitmapFactory.decodeResource(getResources(),
-                                    R.drawable.ic_delete_white);
-                            RectF icon_dest = new RectF(
+                            icon_dest = new RectF(
                                     (float) itemView.getRight() - 2 * width,
                                     (float) itemView.getTop() + width,
                                     (float) itemView.getRight() - width,
                                     (float) itemView.getBottom() - width);
-                            c.drawBitmap(icon, null, icon_dest, p);
-                            c.restore();
                         }
+                        c.drawRect(background, p);
+                        c.clipRect(background);
+                        icon = BitmapFactory.decodeResource(getResources(),
+                                R.drawable.ic_delete_white);
+                        c.drawBitmap(icon, null, icon_dest, p);
+                        c.restore();
                     }
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState,
                             isCurrentlyActive);
@@ -273,7 +287,7 @@ public class HistoryGridFragment extends Fragment implements
         }
 
         if (mPosition != RecyclerView.NO_POSITION)
-            mHistoriesList.smoothScrollToPosition(mPosition);
+            mHistoriesList.scrollToPosition(mPosition);
 
         mEmptyStateTextView.setVisibility(View.INVISIBLE);
         mHistoriesList.setVisibility(View.VISIBLE);
@@ -307,7 +321,6 @@ public class HistoryGridFragment extends Fragment implements
 
     @Override
     public void onListItemClick(long historyId, int position) {
-        mPosition = position;
         Intent intent = new Intent(getActivity(), HistoryActivity.class);
         intent.putExtra(Intent.EXTRA_TEXT, historyId);
         intent.putExtra(Intent.EXTRA_TITLE, mCategory);
