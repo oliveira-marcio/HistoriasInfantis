@@ -71,7 +71,7 @@ public class NotificationUtils {
                 try {
                     largeIcon = Glide.with(context).load(imageUrl).asBitmap().into(-1, -1).get();
                 } catch (Exception e) {
-                    largeIcon = BitmapFactory.decodeResource(resources, R.drawable.sobre);
+                    largeIcon = BitmapFactory.decodeResource(resources, R.drawable.img_about);
                 }
 
                 notificationTitle = context.getString(R.string.app_name) + " - " +

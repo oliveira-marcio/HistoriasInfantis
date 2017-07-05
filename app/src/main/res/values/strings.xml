@@ -3,16 +3,20 @@
 
     <string name="content_authority" translatable="false">com.abobrinha.caixinha</string>
     <string name="history_raw_content" translatable="false">history_raw_content</string>
-    <string name="pref_history_status_key" translatable="false">history_status</string>
 
     <string name="action_refresh">Atualizar</string>
 
     <string name="notification_new_history">Nova história adicionada.</string>
     <string name="notification_new_histories"><xliff:g id="history_number">%d</xliff:g> novas histórias adicionadas.</string>
 
-    <!-- Labels para as abas do TabLayout -->
+    <!-- Labels para as abas do Main Drawer -->
+    <string name="category_histories_group">Histórias</string>
     <string name="category_histories_label">Todas</string>
     <string name="category_favorites_label">Favoritas</string>
+    <string name="category_contact_group">Contato</string>
+    <string name="category_settings_label">Configurações</string>
+    <string name="category_share_label">Compartilhar</string>
+    <string name="category_about_label">Sobre</string>
 
     <!-- Mensagens de erro a serem exibidas na tela principal -->
     <string name="empty_history_list">Nenhuma história encontrada.</string>
@@ -26,5 +30,12 @@
 
     <string name="close_main_drawer">Menu de navegação principal</string>
     <string name="open_main_drawer">Menu de navegação principal fechado</string>
+
+    <!-- Textos para a funcionalidade de compartilhamento do app -->
+    <string name="sharing_text">Gostaria de compartilhar este incrível aplicativo!!</string>
+    <string name="sharing_link" translatable="false">https://play.google.com/store/apps/details?id=com.abobrinha.caixinha</string>
+    <string name="sharing_subject">Conheça o</string>
+    <string name="sharing_title">Compartilhar via</string>
+    <string name="sharing_error">Não foi possível compartilhar o aplicativo.</string>
 
 </resources>

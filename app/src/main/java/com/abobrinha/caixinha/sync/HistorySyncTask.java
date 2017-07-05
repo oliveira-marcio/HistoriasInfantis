@@ -2,14 +2,12 @@ package com.abobrinha.caixinha.sync;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
+import com.abobrinha.caixinha.data.PreferencesUtils;
 import com.abobrinha.caixinha.network.WordPressUtils;
 
 import org.json.JSONException;
@@ -18,13 +16,6 @@ import java.io.IOException;
 
 
 public class HistorySyncTask {
-
-    public static final int HISTORY_STATUS_OK = 0;
-    public static final int HISTORY_STATUS_SERVER_DOWN = 1;
-    public static final int
-            HISTORY_STATUS_SERVER_INVALID = 2;
-    public static final int
-            HISTORY_STATUS_UNKNOWN = 3;
 
     /*
      *  Essa rotina sincroniza a base de dados com a API utilizando a seguinte estratégia:
@@ -38,11 +29,11 @@ public class HistorySyncTask {
             //ToDo: Remover LOGS
             Log.v("SYNC_HIST", "Sincronizando...");
 
-            setHistoryStatus(context, HISTORY_STATUS_UNKNOWN);
+            PreferencesUtils.setHistoryStatus(context, PreferencesUtils.HISTORY_STATUS_UNKNOWN);
 
             ContentValues[] historiesValues = WordPressUtils.getDataFromAllApiPages(context);
             if (historiesValues == null) {
-                setHistoryStatus(context, HISTORY_STATUS_SERVER_DOWN);
+                PreferencesUtils.setHistoryStatus(context, PreferencesUtils.HISTORY_STATUS_SERVER_DOWN);
                 return;
             }
 
@@ -79,19 +70,12 @@ public class HistorySyncTask {
                 NotificationUtils.notifyUserOfNewHistories(context, newHistories);
             }
 
-            setHistoryStatus(context, HISTORY_STATUS_OK);
+            PreferencesUtils.setHistoryStatus(context, PreferencesUtils.HISTORY_STATUS_OK);
 
         } catch (IOException e) {
-            setHistoryStatus(context, HISTORY_STATUS_SERVER_DOWN);
+            PreferencesUtils.setHistoryStatus(context, PreferencesUtils.HISTORY_STATUS_SERVER_DOWN);
         } catch (JSONException e) {
-            setHistoryStatus(context, HISTORY_STATUS_SERVER_INVALID);
+            PreferencesUtils.setHistoryStatus(context, PreferencesUtils.HISTORY_STATUS_SERVER_INVALID);
         }
-    }
-
-    private static void setHistoryStatus(Context c, int historyStatus) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
-        SharedPreferences.Editor spe = sp.edit();
-        spe.putInt(c.getString(R.string.pref_history_status_key), historyStatus);
-        spe.commit();
     }
 }

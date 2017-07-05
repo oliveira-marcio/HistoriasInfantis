@@ -160,10 +160,7 @@ public class HistoryActivity extends AppCompatActivity implements
             mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(MenuItem menuItem) {
-                    if (menuItem.isChecked()) menuItem.setChecked(false);
-                    else menuItem.setChecked(true);
                     drawerLayout.closeDrawers();
-
                     loadHistory(menuItem.getItemId());
                     return true;
                 }

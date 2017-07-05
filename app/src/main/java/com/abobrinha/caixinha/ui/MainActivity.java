@@ -9,8 +9,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.abobrinha.caixinha.R;
+import com.abobrinha.caixinha.data.PreferencesUtils;
+import com.abobrinha.caixinha.network.SocialUtils;
 import com.abobrinha.caixinha.sync.HistorySyncUtils;
 
 import static com.abobrinha.caixinha.R.id.toolbar;
@@ -20,9 +23,6 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
-
-    private final int HISTORIES_INDEX = 0;
-    private final int FAVORITES_INDEX = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,22 +37,30 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                if (menuItem.isChecked()) menuItem.setChecked(false);
-                else menuItem.setChecked(true);
                 drawerLayout.closeDrawers();
 
-                int category = HISTORIES_INDEX;
                 switch (menuItem.getItemId()) {
-                    case R.id.all_histories:
-                        category = HISTORIES_INDEX;
+                    case R.id.menu_all_histories:
+                        if (!menuItem.isChecked())
+                            PreferencesUtils.setMainHistoryCategory(MainActivity.this,
+                                    PreferencesUtils.HISTORIES_CATEGORY_INDEX);
+                        loadHistories(PreferencesUtils.HISTORIES_CATEGORY_INDEX);
                         break;
 
-                    case R.id.favorites:
-                        category = FAVORITES_INDEX;
+                    case R.id.menu_favorites:
+                        if (!menuItem.isChecked())
+                            PreferencesUtils.setMainHistoryCategory(MainActivity.this,
+                                    PreferencesUtils.FAVORITES_CATEGORY_INDEX);
+                        loadHistories(PreferencesUtils.FAVORITES_CATEGORY_INDEX);
                         break;
+
+                    case R.id.menu_share:
+                        SocialUtils.shareApp(MainActivity.this);
+                        break;
+                    default:
+                        Toast.makeText(MainActivity.this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
                 }
 
-                loadHistories(category);
                 return true;
             }
         });
@@ -75,8 +83,9 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
 
         if (savedInstanceState == null) {
-            navigationView.setCheckedItem(navigationView.getMenu().getItem(HISTORIES_INDEX).getItemId());
-            loadHistories(HISTORIES_INDEX);
+            int category = PreferencesUtils.getMainHistoryCategory(this);
+            navigationView.getMenu().getItem(0).getSubMenu().getItem(category).setChecked(true);
+            loadHistories(category);
         }
 
         HistorySyncUtils.initialize(this);

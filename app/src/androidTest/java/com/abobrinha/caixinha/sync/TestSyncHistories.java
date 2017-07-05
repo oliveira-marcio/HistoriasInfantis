@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.abobrinha.caixinha.data.PreferencesUtils;
 import com.abobrinha.caixinha.network.WordPressConn;
 
 import org.json.JSONException;
@@ -15,8 +16,6 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.util.List;
 
-import static com.abobrinha.caixinha.sync.HistorySyncTask.HISTORY_STATUS_OK;
-import static com.abobrinha.caixinha.sync.HistorySyncTask.HISTORY_STATUS_SERVER_DOWN;
 import static junit.framework.Assert.assertEquals;
 
 
@@ -41,15 +40,15 @@ public class TestSyncHistories {
     public void testServerStatus() {
         getDataFromUrl(EMPTY_URL, 1);
         String error = "Erro no teste de servidor fora do ar";
-        assertEquals(error, HISTORY_STATUS_SERVER_DOWN, mStatus);
+        assertEquals(error, PreferencesUtils.HISTORY_STATUS_SERVER_DOWN, mStatus);
 
         getDataFromUrl(INVALID_URL, 1);
         error = "Erro no teste de dados inválidos do servidor";
-        assertEquals(error, HistorySyncTask.HISTORY_STATUS_SERVER_INVALID, mStatus);
+        assertEquals(error, PreferencesUtils.HISTORY_STATUS_SERVER_INVALID, mStatus);
 
         getDataFromUrl(VALID_URL, 1);
         error = "Erro no teste de dados válidos do servidor";
-        assertEquals(error, HISTORY_STATUS_OK, mStatus);
+        assertEquals(error, PreferencesUtils.HISTORY_STATUS_OK, mStatus);
     }
 
     /**
@@ -65,12 +64,12 @@ public class TestSyncHistories {
 
         getDataFromUrl(VALID_URL, results_per_page1);
         String error = "Erro para obter o primeiro conjunto de dados.";
-        assertEquals(error, HISTORY_STATUS_OK, mStatus);
+        assertEquals(error, PreferencesUtils.HISTORY_STATUS_OK, mStatus);
         dataSet1 = mData;
 
         getDataFromUrl(VALID_URL, results_per_page2);
         error = "Erro para obter o segundo conjunto de dados.";
-        assertEquals(error, HISTORY_STATUS_OK, mStatus);
+        assertEquals(error, PreferencesUtils.HISTORY_STATUS_OK, mStatus);
         dataSet2 = mData;
 
         error = "O tamanho dos conjuntos de dados não estão iguais.";
@@ -86,16 +85,16 @@ public class TestSyncHistories {
         try {
             List<ContentValues> dataRetrieved = TestSyncUtilities.getDataFromAllApiPages(context, urlString, results_per_page);
             if (dataRetrieved == null) {
-                mStatus = HistorySyncTask.HISTORY_STATUS_SERVER_DOWN;
+                mStatus = PreferencesUtils.HISTORY_STATUS_SERVER_DOWN;
                 return;
             }
 
             mData = dataRetrieved.toArray(new ContentValues[0]);
-            mStatus = HistorySyncTask.HISTORY_STATUS_OK;
+            mStatus = PreferencesUtils.HISTORY_STATUS_OK;
         } catch (IOException e) {
-            mStatus = HISTORY_STATUS_SERVER_DOWN;
+            mStatus = PreferencesUtils.HISTORY_STATUS_SERVER_DOWN;
         } catch (JSONException e) {
-            mStatus = HistorySyncTask.HISTORY_STATUS_SERVER_INVALID;
+            mStatus = PreferencesUtils.HISTORY_STATUS_SERVER_INVALID;
         }
     }
 }

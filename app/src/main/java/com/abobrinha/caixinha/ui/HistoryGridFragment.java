@@ -33,8 +33,8 @@ import android.widget.Toast;
 
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
+import com.abobrinha.caixinha.data.PreferencesUtils;
 import com.abobrinha.caixinha.network.WordPressConn;
-import com.abobrinha.caixinha.sync.HistorySyncTask;
 import com.abobrinha.caixinha.sync.HistorySyncUtils;
 
 
@@ -145,9 +145,9 @@ public class HistoryGridFragment extends Fragment implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.pref_history_status_key)) &&
-                sharedPreferences.getInt(key, HistorySyncTask.HISTORY_STATUS_OK) !=
-                        HistorySyncTask.HISTORY_STATUS_OK) {
+        if (key.equals(PreferencesUtils.HISTORY_STATUS_KEY) &&
+                sharedPreferences.getInt(key, PreferencesUtils.HISTORY_STATUS_OK) !=
+                        PreferencesUtils.HISTORY_STATUS_OK) {
             showErrorMessage();
         }
         // ToDo: Avaliar se deve ser exibido uma mensagem em caso de sincronia com sucesso.
@@ -160,19 +160,19 @@ public class HistoryGridFragment extends Fragment implements
     }
 
     private void showErrorMessage() {
-        int historyStatus = getHistoryStatus();
-        if (historyStatus == HistorySyncTask.HISTORY_STATUS_UNKNOWN &&
+        int historyStatus = PreferencesUtils.getHistoryStatus(getActivity());
+        if (historyStatus == PreferencesUtils.HISTORY_STATUS_UNKNOWN &&
                 WordPressConn.isNetworkAvailable(getActivity())) return;
 
         int message = R.string.empty_history_list;
         switch (historyStatus) {
-            case HistorySyncTask.HISTORY_STATUS_SERVER_DOWN:
+            case PreferencesUtils.HISTORY_STATUS_SERVER_DOWN:
                 message = R.string.empty_history_list_server_down;
                 if (!WordPressConn.isNetworkAvailable(getActivity())) {
                     message = R.string.empty_history_list_no_network;
                 }
                 break;
-            case HistorySyncTask.HISTORY_STATUS_SERVER_INVALID:
+            case PreferencesUtils.HISTORY_STATUS_SERVER_INVALID:
                 message = R.string.empty_history_list_server_error;
                 break;
             default:
@@ -189,12 +189,6 @@ public class HistoryGridFragment extends Fragment implements
             mEmptyStateTextView.setVisibility(View.VISIBLE);
             mHistoriesList.setVisibility(View.INVISIBLE);
         }
-    }
-
-    private int getHistoryStatus() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        return sp.getInt(getString(R.string.pref_history_status_key),
-                HistorySyncTask.HISTORY_STATUS_UNKNOWN);
     }
 
     private void showHistoriesDataView(Cursor data) {
