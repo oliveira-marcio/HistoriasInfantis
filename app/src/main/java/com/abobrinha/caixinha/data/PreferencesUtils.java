@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.abobrinha.caixinha.R;
+
 public class PreferencesUtils {
     private PreferencesUtils() {
     }
@@ -44,4 +46,28 @@ public class PreferencesUtils {
         return sp.getInt(HISTORY_CATEGORY_KEY, HISTORIES_CATEGORY_INDEX);
     }
 
+    public static String getGridHistoryOrder(Context c) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        String orderByPreference = sp.getString(
+                c.getString(R.string.pref_order_key),
+                c.getString(R.string.pref_order_date)
+        );
+
+        return orderByPreference.equals(c.getString(R.string.pref_order_title))
+                ? HistoryContract.HistoriesEntry.COLUMN_HISTORY_TITLE + " ASC"
+                : HistoryContract.HistoriesEntry.COLUMN_HISTORY_DATE + " DESC";
+    }
+
+    public static boolean areNotificationsEnabled(Context context) {
+        String displayNotificationsKey = context.getString(R.string.pref_enable_notifications_key);
+        boolean shouldDisplayNotificationsByDefault = context
+                .getResources()
+                .getBoolean(R.bool.show_notifications_by_default);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean shouldDisplayNotifications = sp
+                .getBoolean(displayNotificationsKey, shouldDisplayNotificationsByDefault);
+
+        return shouldDisplayNotifications;
+    }
 }

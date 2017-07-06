@@ -1,5 +1,6 @@
 package com.abobrinha.caixinha.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -56,11 +57,17 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
 
+                    case R.id.menu_settings:
+                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                        break;
+
                     case R.id.menu_share:
                         SocialUtils.shareApp(MainActivity.this);
                         break;
-                    default:
+
+                    case R.id.menu_about:
                         Toast.makeText(MainActivity.this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+                        break;
                 }
                 return true;
             }

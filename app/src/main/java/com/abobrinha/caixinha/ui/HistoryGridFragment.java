@@ -291,7 +291,7 @@ public class HistoryGridFragment extends Fragment implements
                 MAIN_HISTORIES_PROJECTION,
                 null,
                 null,
-                HistoryContract.HistoriesEntry.COLUMN_HISTORY_DATE + " DESC");
+                PreferencesUtils.getGridHistoryOrder(getActivity()));
     }
 
     @Override

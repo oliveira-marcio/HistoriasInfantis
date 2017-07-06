@@ -36,6 +36,19 @@
     <string name="delete">Remover</string>
     <string name="cancel">Cancelar</string>
 
+    <!-- Label para a configuração de ordenação das histórias -->
+    <string name="pref_order_label">Ordenação das histórias</string>
+    <string name="pref_order_label_title">Título</string>
+    <string name="pref_order_label_date">Data</string>
+    <string name="pref_order_key" translatable="false">order</string>
+    <string name="pref_order_title" translatable="false">title</string>
+    <string name="pref_order_date" translatable="false">date</string>
+
+    <!-- Strings relacionadas à configuração de notificações -->
+    <string name="pref_enable_notifications_key" translatable="false">enable_notifications</string>
+    <string name="pref_enable_notifications_label">Notificações de novas histórias</string>
+    <string name="pref_enable_notifications_true">Habilitado</string>
+    <string name="pref_enable_notifications_false">Desabilitado</string>
 
     <!-- Textos para a funcionalidade de compartilhamento do app -->
     <string name="sharing_text">Gostaria de compartilhar este incrível aplicativo!!</string>
@@ -43,5 +56,6 @@
     <string name="sharing_subject">Conheça o</string>
     <string name="sharing_title">Compartilhar via</string>
     <string name="sharing_error">Não foi possível compartilhar o aplicativo.</string>
+    <string name="title_activity_settings">Settings</string>
 
 </resources>

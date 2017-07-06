@@ -12,8 +12,8 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -104,7 +104,7 @@ public class HistoryActivity extends AppCompatActivity implements
                 MAIN_HISTORIES_PROJECTION,
                 null,
                 null,
-                HistoryContract.HistoriesEntry.COLUMN_HISTORY_DATE + " DESC");
+                PreferencesUtils.getGridHistoryOrder(this));
     }
 
     @Override
@@ -145,7 +145,7 @@ public class HistoryActivity extends AppCompatActivity implements
         final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         if (mCursor.moveToFirst()) {
-            Menu menu = mNavigationView.getMenu();
+            SubMenu menu = mNavigationView.getMenu().getItem(0).getSubMenu();
             menu.clear();
 
             int i = 0;
@@ -161,7 +161,11 @@ public class HistoryActivity extends AppCompatActivity implements
                 @Override
                 public boolean onNavigationItemSelected(MenuItem menuItem) {
                     drawerLayout.closeDrawers();
-                    loadHistory(menuItem.getItemId());
+                    if (menuItem.getItemId() == R.id.menu_settings) {
+                        startActivity(new Intent(HistoryActivity.this, SettingsActivity.class));
+                    } else {
+                        loadHistory(menuItem.getItemId());
+                    }
                     return true;
                 }
             });
@@ -184,7 +188,7 @@ public class HistoryActivity extends AppCompatActivity implements
                 if (mCursor.moveToPosition(position)) {
                     mPosition = position;
                     mHistoryId = mCursor.getLong(INDEX_HISTORY_ID);
-                    int id = mNavigationView.getMenu().getItem(position).getItemId();
+                    int id = mNavigationView.getMenu().getItem(0).getSubMenu().getItem(position).getItemId();
                     mNavigationView.setCheckedItem(id);
                 }
             }

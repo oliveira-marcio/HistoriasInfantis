@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".ui.MainActivity"
             android:launchMode="singleTop">
@@ -21,6 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.HistoryActivity"
             android:parentActivityName=".ui.MainActivity">
@@ -28,6 +30,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.MainActivity" />
         </activity>
+
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:theme="@style/SettingsTheme" />
 
         <provider
             android:name=".data.HistoryProvider"
@@ -37,14 +43,14 @@
         <service
             android:name=".sync.HistorySyncIntentService"
             android:exported="false" />
-
         <service
             android:name=".sync.HistoryFirebaseJobService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
+
     </application>
 
 </manifest>

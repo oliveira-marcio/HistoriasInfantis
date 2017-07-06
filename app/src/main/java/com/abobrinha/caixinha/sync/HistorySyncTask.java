@@ -65,7 +65,9 @@ public class HistorySyncTask {
                 context.getContentResolver().update(favoritesUri, null, null, favoritesSaved);
             }
 
-            if (oldHistoryQuantity > 0 && newHistoryQuantity > oldHistoryQuantity) {
+            boolean notificationsEnabled = PreferencesUtils.areNotificationsEnabled(context);
+
+            if (notificationsEnabled && oldHistoryQuantity > 0 && newHistoryQuantity > oldHistoryQuantity) {
                 int newHistories = newHistoryQuantity - oldHistoryQuantity;
                 NotificationUtils.notifyUserOfNewHistories(context, newHistories);
             }
