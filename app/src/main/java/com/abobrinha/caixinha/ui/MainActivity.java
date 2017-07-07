@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.menu_all_histories:
                         if (!menuItem.isChecked()) {
                             PreferencesUtils.setMainHistoryCategory(MainActivity.this,
-                                    PreferencesUtils.HISTORIES_CATEGORY_INDEX);
+                                    PreferencesUtils.CATEGORY_HISTORIES);
                             loadHistories();
                         }
                         break;
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.menu_favorites:
                         if (!menuItem.isChecked()) {
                             PreferencesUtils.setMainHistoryCategory(MainActivity.this,
-                                    PreferencesUtils.FAVORITES_CATEGORY_INDEX);
+                                    PreferencesUtils.CATEGORY_FAVORITES);
                             loadHistories();
                         }
                         break;

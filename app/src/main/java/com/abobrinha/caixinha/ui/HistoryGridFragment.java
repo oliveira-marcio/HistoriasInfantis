@@ -89,6 +89,9 @@ public class HistoryGridFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mCategory = PreferencesUtils.getMainHistoryCategory(getActivity());
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sp.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -126,25 +129,20 @@ public class HistoryGridFragment extends Fragment implements
     }
 
     @Override
-    public void onResume() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        sp.registerOnSharedPreferenceChangeListener(this);
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
+    public void onDestroy() {
+        super.onDestroy();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sp.unregisterOnSharedPreferenceChangeListener(this);
-        super.onPause();
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(PreferencesUtils.HISTORY_STATUS_KEY) &&
+        if (key.equals(getString(R.string.pref_history_status_key)) &&
                 sharedPreferences.getInt(key, PreferencesUtils.HISTORY_STATUS_OK) !=
                         PreferencesUtils.HISTORY_STATUS_OK) {
             showErrorMessage();
+        } else if (key.equals(getString(R.string.pref_order_key))) {
+            getLoaderManager().restartLoader(mCategory, null, this);
         }
         // ToDo: Avaliar se deve ser exibido uma mensagem em caso de sincronia com sucesso.
     }
@@ -193,7 +191,7 @@ public class HistoryGridFragment extends Fragment implements
 
         mHistoriesList.setAdapter(mAdapter);
 
-        if (mCategory == PreferencesUtils.FAVORITES_CATEGORY_INDEX) {
+        if (mCategory == PreferencesUtils.CATEGORY_FAVORITES) {
             new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                     ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
                 @Override
@@ -304,7 +302,7 @@ public class HistoryGridFragment extends Fragment implements
             showErrorMessage();
         }
 
-        if (mCategory == PreferencesUtils.FAVORITES_CATEGORY_INDEX) {
+        if (mCategory == PreferencesUtils.CATEGORY_FAVORITES) {
             mHasFavorites = hasData;
             getActivity().invalidateOptionsMenu();
         }
@@ -325,10 +323,10 @@ public class HistoryGridFragment extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         switch (mCategory) {
-            case PreferencesUtils.HISTORIES_CATEGORY_INDEX:
+            case PreferencesUtils.CATEGORY_HISTORIES:
                 inflater.inflate(R.menu.histories_menu, menu);
                 break;
-            case PreferencesUtils.FAVORITES_CATEGORY_INDEX:
+            case PreferencesUtils.CATEGORY_FAVORITES:
                 inflater.inflate(R.menu.favorites_menu, menu);
                 break;
             default:
@@ -340,7 +338,7 @@ public class HistoryGridFragment extends Fragment implements
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (mCategory == PreferencesUtils.FAVORITES_CATEGORY_INDEX) {
+        if (mCategory == PreferencesUtils.CATEGORY_FAVORITES) {
             MenuItem reminderItem = menu.findItem(R.id.action_delete);
             reminderItem.setVisible(mHasFavorites);
         }

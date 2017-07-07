@@ -1,10 +1,12 @@
 package com.abobrinha.caixinha.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -22,7 +24,8 @@ import com.abobrinha.caixinha.data.HistoryContract;
 import com.abobrinha.caixinha.data.PreferencesUtils;
 
 public class HistoryActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private long mHistoryId;
     private int mCategory;
@@ -68,6 +71,14 @@ public class HistoryActivity extends AppCompatActivity implements
 
         if (savedInstanceState == null) {
             mHistoryId = getIntent().getLongExtra(Intent.EXTRA_TEXT, INVALID_ID);
+            // Se esta Activity foi aberta por uma notificação e a última categoria aberta pelo
+            // usuário foi a de favoritos, é necessário setar a categoria para "Todas", pois a
+            // nova história ainda não consta nos favoritos do usuário.
+            int categoryByNotification = getIntent().
+                    getIntExtra(getString(R.string.notification_intent),
+                            PreferencesUtils.getMainHistoryCategory(this));
+            PreferencesUtils.setMainHistoryCategory(this, categoryByNotification);
+
         } else {
             mHistoryId = savedInstanceState.getLong(SELECTED_HISTORY, INVALID_ID);
         }
@@ -88,6 +99,9 @@ public class HistoryActivity extends AppCompatActivity implements
         });
 
         getSupportLoaderManager().initLoader(HISTORY_LOADER_ID, null, this);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -96,6 +110,12 @@ public class HistoryActivity extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp.unregisterOnSharedPreferenceChangeListener(this);
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
@@ -152,10 +172,13 @@ public class HistoryActivity extends AppCompatActivity implements
             do {
                 MenuItem item = menu.add(R.id.history_group, i, i, mCursor.getString(INDEX_HISTORY_TITLE));
                 item.setIcon(mCategoryIcon[mCategory]);
-                if (initialPosition == i++) item.setChecked(true);
+                i++;
             } while (mCursor.moveToNext());
 
             menu.setGroupCheckable(R.id.history_group, true, true);
+
+            int id = mNavigationView.getMenu().getItem(0).getSubMenu().getItem(initialPosition).getItemId();
+            mNavigationView.setCheckedItem(id);
 
             mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -198,5 +221,12 @@ public class HistoryActivity extends AppCompatActivity implements
 
             }
         });
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.pref_order_key))) {
+            getSupportLoaderManager().restartLoader(HISTORY_LOADER_ID, null, this);
+        }
     }
 }

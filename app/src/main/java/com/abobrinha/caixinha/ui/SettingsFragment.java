@@ -1,6 +1,5 @@
 package com.abobrinha.caixinha.ui;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.preference.CheckBoxPreference;
@@ -10,7 +9,6 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 
 import com.abobrinha.caixinha.R;
-import com.abobrinha.caixinha.data.HistoryContract;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -61,15 +59,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Activity activity = getActivity();
-
-        if (key.equals(getString(R.string.pref_order_key))) {
-            activity.getContentResolver()
-                    .notifyChange(HistoryContract.HistoriesEntry.CONTENT_URI, null);
-            activity.getContentResolver()
-                    .notifyChange(HistoryContract.HistoriesEntry.buildFavoritesUri(), null);
-        }
-
         Preference preference = findPreference(key);
         if (null != preference) {
             if (!(preference instanceof CheckBoxPreference)) {

@@ -9,13 +9,13 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
+import com.abobrinha.caixinha.data.PreferencesUtils;
 import com.abobrinha.caixinha.ui.HistoryActivity;
 import com.abobrinha.caixinha.ui.HistoryGridFragment;
 import com.abobrinha.caixinha.ui.MainActivity;
@@ -63,8 +63,7 @@ public class NotificationUtils {
             );
 
             if (cursor.moveToFirst()) {
-                Uri historyUri = HistoryContract.HistoriesEntry
-                        .buildSingleHistoryUri(cursor.getLong(HistoryGridFragment.INDEX_HISTORY_ID));
+                long historyId = cursor.getLong(HistoryGridFragment.INDEX_HISTORY_ID);
                 String historyTitle = cursor.getString(HistoryGridFragment.INDEX_HISTORY_TITLE);
                 String imageUrl = cursor.getString(HistoryGridFragment.INDEX_HISTORY_IMAGE);
 
@@ -79,7 +78,9 @@ public class NotificationUtils {
                 notificationText = historyTitle;
 
                 historyIntent = new Intent(context, HistoryActivity.class);
-                historyIntent.setData(historyUri);
+                historyIntent.putExtra(Intent.EXTRA_TEXT, historyId);
+                historyIntent.putExtra(context.getString(R.string.notification_intent),
+                        PreferencesUtils.CATEGORY_HISTORIES);
 
                 makeNotification(context, notificationTitle, notificationText, largeIcon, historyIntent);
             }

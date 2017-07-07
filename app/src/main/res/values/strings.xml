@@ -9,6 +9,7 @@
 
     <string name="notification_new_history">Nova história adicionada.</string>
     <string name="notification_new_histories"><xliff:g id="history_number">%d</xliff:g> novas histórias adicionadas.</string>
+    <string name="notification_intent" translatable="false">notification_intent</string>
 
     <!-- Labels para as abas do Main Drawer -->
     <string name="category_histories_group">Histórias</string>
@@ -49,6 +50,10 @@
     <string name="pref_enable_notifications_label">Notificações de novas histórias</string>
     <string name="pref_enable_notifications_true">Habilitado</string>
     <string name="pref_enable_notifications_false">Desabilitado</string>
+
+    <!-- Chaves utilizadas em SharedPreferences -->
+    <string name="pref_history_status_key" translatable="false">history_status</string>
+    <string name="pref_history_category_key" translatable="false">history_category</string>
 
     <!-- Textos para a funcionalidade de compartilhamento do app -->
     <string name="sharing_text">Gostaria de compartilhar este incrível aplicativo!!</string>
