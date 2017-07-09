@@ -6,13 +6,15 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
+import com.abobrinha.caixinha.data.PreferencesUtils;
+import com.abobrinha.caixinha.ui.HistoryActivity;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.AppWidgetTarget;
 
 /**
  * Implementation of App Widget functionality.
@@ -22,35 +24,44 @@ public class SingleHistoryWidgetProvider extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-
-//        CharSequence widgetText = "" + SingleHistoryConfigureActivity.loadHistoryPref(context, appWidgetId);
+// ToDo: passar a obtenção dos dados e atualização do widget para um IntentService
+// ToDo: tratar remoção de histórias
         String[] historyData = getHistoryTitle(context, appWidgetId);
         if (historyData == null) return;
 
-        // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.single_history_widget);
         views.setTextViewText(R.id.appwidget_text, historyData[1]);
 
-        Bitmap image;
-        try {
-            image = Glide.with(context)
-                    .load(historyData[2])
-                    .asBitmap()
-                    .placeholder(R.drawable.capa)
-                    .into(-1, -1)
-                    .get();
-        } catch (Exception e) {
-            image = BitmapFactory.decodeResource(context.getResources(), R.drawable.capa);
-        }
-        views.setImageViewBitmap(R.id.appwidget_background, image);
+        AppWidgetTarget appWidgetTarget = new AppWidgetTarget(
+                context, views, R.id.appwidget_background, appWidgetId);
 
-        Intent intent = new Intent(context, SingleHistoryConfigureActivity.class);
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        Glide.with(context.getApplicationContext())
+                .load(historyData[2])
+                .asBitmap()
+                .placeholder(R.drawable.img_about)
+                .error(R.drawable.img_about)
+                .into(appWidgetTarget);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        views.setOnClickPendingIntent(R.id.appwidget_button, pendingIntent);
+        Intent historyIntent = new Intent(context, HistoryActivity.class);
+        historyIntent.putExtra(Intent.EXTRA_TEXT, Long.valueOf(historyData[0]));
+        historyIntent.putExtra(context.getString(R.string.notification_intent),
+                PreferencesUtils.CATEGORY_HISTORIES);
 
-        // Instruct the widget manager to update the widget
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        taskStackBuilder.addNextIntentWithParentStack(historyIntent);
+        PendingIntent pendingHistoryIntent = taskStackBuilder
+                .getPendingIntent(appWidgetId, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        views.setOnClickPendingIntent(R.id.root_view, pendingHistoryIntent);
+
+        Intent configIntent = new Intent(context, SingleHistoryConfigureActivity.class);
+//        configIntent.setAction("WIDGET_CONFIGURED");
+        configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+
+        PendingIntent pendingConfigIntent = PendingIntent.getActivity(context, appWidgetId, configIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        PendingIntent pendingConfigIntent = PendingIntent.getActivity(context, appWidgetId, configIntent, 0);
+        views.setOnClickPendingIntent(R.id.appwidget_button, pendingConfigIntent);
+
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 

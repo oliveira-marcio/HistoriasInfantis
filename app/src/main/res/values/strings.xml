@@ -62,9 +62,4 @@
     <string name="sharing_title">Compartilhar via</string>
     <string name="sharing_error">Não foi possível compartilhar o aplicativo.</string>
 
-    <string name="title_activity_settings">Settings</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="configure">Configure</string>
-    <string name="add_widget">Add widget</string>
-
 </resources>

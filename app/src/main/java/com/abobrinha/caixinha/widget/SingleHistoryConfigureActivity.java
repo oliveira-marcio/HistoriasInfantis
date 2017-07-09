@@ -15,7 +15,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +53,14 @@ public class SingleHistoryConfigureActivity extends AppCompatActivity implements
 
     private final int HISTORY_LOADER_ID = 1;
 
+    private static final String PREFS_NAME = "com.abobrinha.caixinha.widget.SingleHistoryWidgetProvider";
+    private static final String PREF_PREFIX_KEY = "appwidget_";
+    int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+
+    public SingleHistoryConfigureActivity() {
+        super();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +91,7 @@ public class SingleHistoryConfigureActivity extends AppCompatActivity implements
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mAdapter.invalidateSelection();
                 finish();
             }
         });
@@ -101,6 +109,8 @@ public class SingleHistoryConfigureActivity extends AppCompatActivity implements
                 Intent resultValue = new Intent();
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
                 setResult(RESULT_OK, resultValue);
+
+                mAdapter.invalidateSelection();
                 finish();
             }
         });
@@ -235,14 +245,6 @@ public class SingleHistoryConfigureActivity extends AppCompatActivity implements
         mOkButton.setEnabled(true);
     }
 
-    private static final String PREFS_NAME = "com.abobrinha.caixinha.widget.SingleHistoryWidgetProvider";
-    private static final String PREF_PREFIX_KEY = "appwidget_";
-    int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-    EditText mAppWidgetText;
-
-//    public SingleHistoryConfigureActivity() {
-//        super();
-//    }
 
     // Write the prefix to the SharedPreferences object for this widget
     static void saveHistoryPref(Context context, int appWidgetId, long historyId) {

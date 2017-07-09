@@ -68,10 +68,11 @@ public class NotificationUtils {
                 String imageUrl = cursor.getString(HistoryGridFragment.INDEX_HISTORY_IMAGE);
 
                 try {
-                    largeIcon = Glide.with(context)
+                    largeIcon = Glide.with(context.getApplicationContext())
                             .load(imageUrl)
                             .asBitmap()
                             .placeholder(R.drawable.img_about)
+                            .error(R.drawable.img_about)
                             .into(-1, -1)
                             .get();
                 } catch (Exception e) {

@@ -39,6 +39,10 @@ public class SingleHistoryConfigureAdapter extends
         notifyDataSetChanged();
     }
 
+    public void invalidateSelection() {
+        sItemSelected = -1;
+    }
+
     public long getSelectedHistoryId() {
         return (mCursor != null && mCursor.moveToPosition(sItemSelected))
                 ? mCursor.getLong(HistoryGridFragment.INDEX_HISTORY_ID)

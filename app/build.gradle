@@ -26,7 +26,7 @@ ext {
     espressoLibVersion = '2.2.2'
     testLibVersion = '0.5'
     junitLibVersion = '4.12'
-    glideLibVersion = '3.7.0'
+    glideLibVersion = '3.8.0'
     gsonLibVersion = '2.8.0'
     jsoupLibVersion = '1.10.3'
     firebaseJobDispatcherVersion = '0.6.0'
