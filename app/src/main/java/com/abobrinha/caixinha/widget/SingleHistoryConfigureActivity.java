@@ -103,8 +103,10 @@ public class SingleHistoryConfigureActivity extends AppCompatActivity implements
                 final Context context = SingleHistoryConfigureActivity.this;
                 saveHistoryPref(context, mAppWidgetId, mHistorySelected);
 
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-                SingleHistoryWidgetProvider.updateAppWidget(context, appWidgetManager, mAppWidgetId);
+                Intent getHistoryDataIntent = new Intent(context, SingleHistoryIntentService.class);
+                getHistoryDataIntent.setAction(SingleHistoryIntentService.ACTION_UPDATE_SINGLE_WIDGET);
+                getHistoryDataIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+                context.startService(getHistoryDataIntent);
 
                 Intent resultValue = new Intent();
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
