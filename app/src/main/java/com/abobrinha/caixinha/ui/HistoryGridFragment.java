@@ -38,6 +38,7 @@ import com.abobrinha.caixinha.data.HistoryContract;
 import com.abobrinha.caixinha.data.PreferencesUtils;
 import com.abobrinha.caixinha.network.WordPressConn;
 import com.abobrinha.caixinha.sync.HistorySyncUtils;
+import com.abobrinha.caixinha.sync.NotificationUtils;
 
 
 public class HistoryGridFragment extends Fragment implements
@@ -389,6 +390,8 @@ public class HistoryGridFragment extends Fragment implements
                 getActivity().getContentResolver().delete(uri, HistoryContract.HistoriesEntry._ID +
                         "=" + beforeLastId, null);
             }
+
+            NotificationUtils.updateWidgets(getActivity());
             return true;
         }
 

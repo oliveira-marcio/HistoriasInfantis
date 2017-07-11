@@ -62,4 +62,8 @@
     <string name="sharing_title">Compartilhar via</string>
     <string name="sharing_error">Não foi possível compartilhar o aplicativo.</string>
 
+    <!-- Strings relacionadas aos Widgets -->
+    <string name="widget_loading">Carregando dados...</string>
+    <string name="widget_error">A história previamente selecionada foi removida. Favor selecionar uma nova.</string>
+
 </resources>

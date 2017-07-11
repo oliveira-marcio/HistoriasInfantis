@@ -1,20 +1,12 @@
 package com.abobrinha.caixinha.widget;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v4.app.TaskStackBuilder;
-import android.widget.RemoteViews;
 
-import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.PreferencesUtils;
-import com.abobrinha.caixinha.ui.HistoryActivity;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.AppWidgetTarget;
+import com.abobrinha.caixinha.sync.NotificationUtils;
 
 
 public class SingleHistoryWidgetProvider extends AppWidgetProvider {
@@ -29,8 +21,17 @@ public class SingleHistoryWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
-            SingleHistoryConfigureActivity.deleteTitlePref(context, appWidgetId);
+            PreferencesUtils.deleteWidgetHistoryPref(context, appWidgetId);
+        }
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        if (NotificationUtils.ACTION_DATA_UPDATED.equals(intent.getAction())) {
+            Intent updateIntent = new Intent(context, SingleHistoryIntentService.class);
+            updateIntent.setAction(SingleHistoryIntentService.ACTION_UPDATE_ALL_WIDGETS);
+            context.startService(updateIntent);
         }
     }
 }
-

@@ -53,8 +53,6 @@ public class SingleHistoryConfigureActivity extends AppCompatActivity implements
 
     private final int HISTORY_LOADER_ID = 1;
 
-    private static final String PREFS_NAME = "com.abobrinha.caixinha.widget.SingleHistoryWidgetProvider";
-    private static final String PREF_PREFIX_KEY = "appwidget_";
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     public SingleHistoryConfigureActivity() {
@@ -101,7 +99,7 @@ public class SingleHistoryConfigureActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 final Context context = SingleHistoryConfigureActivity.this;
-                saveHistoryPref(context, mAppWidgetId, mHistorySelected);
+                PreferencesUtils.saveWidgetHistoryPref(context, mAppWidgetId, mHistorySelected);
 
                 Intent getHistoryDataIntent = new Intent(context, SingleHistoryIntentService.class);
                 getHistoryDataIntent.setAction(SingleHistoryIntentService.ACTION_UPDATE_SINGLE_WIDGET);
@@ -245,27 +243,6 @@ public class SingleHistoryConfigureActivity extends AppCompatActivity implements
     public void onListItemClick(long historyId) {
         mHistorySelected = historyId;
         mOkButton.setEnabled(true);
-    }
-
-
-    // Write the prefix to the SharedPreferences object for this widget
-    static void saveHistoryPref(Context context, int appWidgetId, long historyId) {
-        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.putLong(PREF_PREFIX_KEY + appWidgetId, historyId);
-        prefs.apply();
-    }
-
-    // Read the prefix from the SharedPreferences object for this widget.
-    // If there is no preference saved, get the default from a resource
-    static long loadHistoryPref(Context context, int appWidgetId) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        return prefs.getLong(PREF_PREFIX_KEY + appWidgetId, SingleHistoryConfigureAdapter.INVALID_HISTORY_ID);
-    }
-
-    static void deleteTitlePref(Context context, int appWidgetId) {
-        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.remove(PREF_PREFIX_KEY + appWidgetId);
-        prefs.apply();
     }
 }
 

@@ -74,6 +74,8 @@ public class HistorySyncTask {
 
             PreferencesUtils.setHistoryStatus(context, PreferencesUtils.HISTORY_STATUS_OK);
 
+            NotificationUtils.updateWidgets(context);
+
         } catch (IOException e) {
             PreferencesUtils.setHistoryStatus(context, PreferencesUtils.HISTORY_STATUS_SERVER_DOWN);
         } catch (JSONException e) {

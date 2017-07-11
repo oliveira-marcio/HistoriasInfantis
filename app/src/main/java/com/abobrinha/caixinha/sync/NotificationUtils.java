@@ -21,9 +21,11 @@ import com.abobrinha.caixinha.ui.HistoryGridFragment;
 import com.abobrinha.caixinha.ui.MainActivity;
 import com.bumptech.glide.Glide;
 
+
 public class NotificationUtils {
 
     private static final int HISTORY_NOTIFICATION_ID = 1234;
+    public static final String ACTION_DATA_UPDATED = "com.abobrinha.caixinha.ACTION_DATA_UPDATED";
 
     /**
      * Cria notificações de acordo com a quantidade de novas histórias adicionadas.
@@ -119,5 +121,12 @@ public class NotificationUtils {
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(HISTORY_NOTIFICATION_ID, notificationBuilder.build());
+    }
+
+
+    public static void updateWidgets(Context context) {
+        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)
+                .setPackage(context.getPackageName());
+        context.sendBroadcast(dataUpdatedIntent);
     }
 }

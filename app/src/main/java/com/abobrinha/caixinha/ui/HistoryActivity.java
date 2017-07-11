@@ -83,7 +83,6 @@ public class HistoryActivity extends AppCompatActivity implements
             mHistoryId = savedInstanceState.getLong(SELECTED_HISTORY, INVALID_ID);
         }
 
-        // ToDo: Widget vai precisar alterar sharedpreference sempre que clicar numa história.
         mCategory = PreferencesUtils.getMainHistoryCategory(this);
 
         if (mHistoryId == INVALID_ID) throw

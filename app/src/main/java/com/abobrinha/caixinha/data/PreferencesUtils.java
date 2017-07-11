@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.abobrinha.caixinha.R;
+import com.abobrinha.caixinha.widget.SingleHistoryConfigureAdapter;
 
 public class PreferencesUtils {
     private PreferencesUtils() {
@@ -18,6 +19,9 @@ public class PreferencesUtils {
     public static final int HISTORY_STATUS_SERVER_DOWN = 1;
     public static final int HISTORY_STATUS_SERVER_INVALID = 2;
     public static final int HISTORY_STATUS_UNKNOWN = 3;
+
+    private static final String WIDGET_PREFS_NAME = "com.abobrinha.caixinha.widget.SingleHistoryWidgetProvider";
+    private static final String WIDGET_PREF_PREFIX_KEY = "appwidget_";
 
     public static void setHistoryStatus(Context c, int historyStatus) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
@@ -67,4 +71,22 @@ public class PreferencesUtils {
 
         return shouldDisplayNotifications;
     }
+
+    public static void saveWidgetHistoryPref(Context context, int appWidgetId, long historyId) {
+        SharedPreferences.Editor prefs = context.getSharedPreferences(WIDGET_PREFS_NAME, 0).edit();
+        prefs.putLong(WIDGET_PREF_PREFIX_KEY + appWidgetId, historyId);
+        prefs.apply();
+    }
+
+    public static long loadWidgetHistoryPref(Context context, int appWidgetId) {
+        SharedPreferences prefs = context.getSharedPreferences(WIDGET_PREFS_NAME, 0);
+        return prefs.getLong(WIDGET_PREF_PREFIX_KEY + appWidgetId, SingleHistoryConfigureAdapter.INVALID_HISTORY_ID);
+    }
+
+    public static void deleteWidgetHistoryPref(Context context, int appWidgetId) {
+        SharedPreferences.Editor prefs = context.getSharedPreferences(WIDGET_PREFS_NAME, 0).edit();
+        prefs.remove(WIDGET_PREF_PREFIX_KEY + appWidgetId);
+        prefs.apply();
+    }
+
 }
