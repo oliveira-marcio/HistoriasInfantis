@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
+import com.abobrinha.caixinha.sync.NotificationUtils;
 
 import org.jsoup.Jsoup;
 
@@ -199,6 +200,8 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
             Toast.makeText(getActivity(),
                     mIsFavorite ? getString(R.string.favorite_added) : getString(R.string.favorite_removed),
                     Toast.LENGTH_SHORT).show();
+
+            NotificationUtils.updateWidgets(getActivity());
         }
     }
 }

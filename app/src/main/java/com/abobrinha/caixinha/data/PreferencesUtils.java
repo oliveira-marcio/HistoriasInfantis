@@ -15,13 +15,20 @@ public class PreferencesUtils {
     public static final int CATEGORY_HISTORIES = 0;
     public static final int CATEGORY_FAVORITES = 1;
 
+    public static final int ORDER_DATE = 0;
+    public static final int ORDER_TITLE = 1;
+
     public static final int HISTORY_STATUS_OK = 0;
     public static final int HISTORY_STATUS_SERVER_DOWN = 1;
     public static final int HISTORY_STATUS_SERVER_INVALID = 2;
     public static final int HISTORY_STATUS_UNKNOWN = 3;
 
-    private static final String WIDGET_PREFS_NAME = "com.abobrinha.caixinha.widget.SingleHistoryWidgetProvider";
-    private static final String WIDGET_PREF_PREFIX_KEY = "appwidget_";
+    private static final String SINGLE_WIDGET_PREF_PREFIX_KEY = "single_widget_";
+    private static final String LIST_WIDGET_PREF_PREFIX_KEY = "list_widget_";
+
+    private static final String CATEGORY_PREFIX_KEY = "category";
+    private static final String ORDER_PREFIX_KEY = "order_";
+
 
     public static void setHistoryStatus(Context c, int historyStatus) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
@@ -72,21 +79,74 @@ public class PreferencesUtils {
         return shouldDisplayNotifications;
     }
 
-    public static void saveWidgetHistoryPref(Context context, int appWidgetId, long historyId) {
-        SharedPreferences.Editor prefs = context.getSharedPreferences(WIDGET_PREFS_NAME, 0).edit();
-        prefs.putLong(WIDGET_PREF_PREFIX_KEY + appWidgetId, historyId);
-        prefs.apply();
+    public static void saveWidgetHistoryPref(Context c, int appWidgetId, long historyId) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putLong(SINGLE_WIDGET_PREF_PREFIX_KEY + appWidgetId, historyId);
+        spe.apply();
     }
 
-    public static long loadWidgetHistoryPref(Context context, int appWidgetId) {
-        SharedPreferences prefs = context.getSharedPreferences(WIDGET_PREFS_NAME, 0);
-        return prefs.getLong(WIDGET_PREF_PREFIX_KEY + appWidgetId, SingleHistoryConfigureAdapter.INVALID_HISTORY_ID);
+    public static long loadWidgetHistoryPref(Context c, int appWidgetId) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        return sp.getLong(SINGLE_WIDGET_PREF_PREFIX_KEY + appWidgetId,
+                SingleHistoryConfigureAdapter.INVALID_HISTORY_ID);
     }
 
-    public static void deleteWidgetHistoryPref(Context context, int appWidgetId) {
-        SharedPreferences.Editor prefs = context.getSharedPreferences(WIDGET_PREFS_NAME, 0).edit();
-        prefs.remove(WIDGET_PREF_PREFIX_KEY + appWidgetId);
-        prefs.apply();
+    public static void deleteWidgetHistoryPref(Context c, int appWidgetId) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.remove(SINGLE_WIDGET_PREF_PREFIX_KEY + appWidgetId);
+        spe.apply();
+    }
+
+    public static void saveWidgetCategoryPref(Context c, int appWidgetId, int category) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.putInt(LIST_WIDGET_PREF_PREFIX_KEY + CATEGORY_PREFIX_KEY + appWidgetId, category);
+        spe.apply();
+    }
+
+    public static int loadWidgetCategoryPref(Context c, int appWidgetId) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        return sp.getInt(LIST_WIDGET_PREF_PREFIX_KEY + CATEGORY_PREFIX_KEY + appWidgetId,
+                CATEGORY_HISTORIES);
+    }
+
+    public static void deleteWidgetCategoryPref(Context c, int appWidgetId) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.remove(LIST_WIDGET_PREF_PREFIX_KEY + CATEGORY_PREFIX_KEY + appWidgetId);
+        spe.apply();
+    }
+
+    public static void saveWidgetOrderPref(Context c, int appWidgetId, int category) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        SharedPreferences.Editor spe = sp.edit();
+
+        spe.putInt(
+                LIST_WIDGET_PREF_PREFIX_KEY + ORDER_PREFIX_KEY + appWidgetId,
+                category == ORDER_TITLE ? ORDER_TITLE : ORDER_DATE
+        );
+        spe.apply();
+    }
+
+    public static int loadWidgetOrderPref(Context c, int appWidgetId) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        return sp.getInt(LIST_WIDGET_PREF_PREFIX_KEY + ORDER_PREFIX_KEY + appWidgetId, ORDER_DATE);
+
+    }
+
+    public static String getDatabaseOrderByPref(Context c, int appWidgetId) {
+        return loadWidgetOrderPref(c, appWidgetId) == ORDER_TITLE
+                ? HistoryContract.HistoriesEntry.COLUMN_HISTORY_TITLE + " ASC"
+                : HistoryContract.HistoriesEntry.COLUMN_HISTORY_DATE + " DESC";
+    }
+
+    public static void deleteWidgetOrderPref(Context c, int appWidgetId) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        SharedPreferences.Editor spe = sp.edit();
+        spe.remove(LIST_WIDGET_PREF_PREFIX_KEY + ORDER_PREFIX_KEY + appWidgetId);
+        spe.apply();
     }
 
 }

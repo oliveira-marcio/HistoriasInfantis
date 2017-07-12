@@ -215,6 +215,8 @@ public class HistoryGridFragment extends Fragment implements
                             values,
                             null,
                             null);
+
+                    NotificationUtils.updateWidgets(getActivity());
                 }
 
                 @Override

@@ -110,7 +110,7 @@ public class SingleHistoryIntentService extends IntentService {
         } else {
             PreferencesUtils.deleteWidgetHistoryPref(this, appWidgetId);
 
-            views.setTextViewText(R.id.appwidget_error, getString(R.string.widget_error));
+            views.setTextViewText(R.id.appwidget_error, getString(R.string.single_widget_error));
             views.setViewVisibility(R.id.appwidget_title, View.GONE);
             views.setViewVisibility(R.id.appwidget_error, View.VISIBLE);
 

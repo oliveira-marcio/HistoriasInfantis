@@ -63,7 +63,14 @@
     <string name="sharing_error">Não foi possível compartilhar o aplicativo.</string>
 
     <!-- Strings relacionadas aos Widgets -->
-    <string name="widget_loading">Carregando dados...</string>
-    <string name="widget_error">A história previamente selecionada foi removida. Favor selecionar uma nova.</string>
+    <string name="widget_config_label">Widget (Configuração)</string>
+    <string name="single_widget_label">Selecione uma história:</string>
+    <string name="widget_config_category_label">Quais histórias você gostaria de visualizar?</string>
+    <string name="widget_config_order_label">Ordenar por:</string>
+    <string name="widget_loading">Carregando dados&#8230;</string>
+    <string name="single_widget_error">A história previamente selecionada foi removida. Favor selecionar uma nova.</string>
+    <string name="list_widget_error">Nenhuma história encontrada.\n\nTente selecionar outra categoria.</string>
+    <string name="widget_button_ok">OK</string>
+    <string name="widget_button_cancel">Cancelar</string>
 
 </resources>

@@ -67,6 +67,8 @@
 
         <activity
             android:name=".widget.SingleHistoryConfigureActivity"
+            android:label="@string/widget_config_label"
+            android:launchMode="singleInstance"
             android:theme="@style/SettingsTheme">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
@@ -75,6 +77,33 @@
 
         <service android:name=".widget.SingleHistoryIntentService" />
 
+        <receiver
+            android:name=".widget.ListHistoriesWidgetProvider"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.abobrinha.caixinha.ACTION_DATA_UPDATED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/list_histories_widget_info" />
+        </receiver>
+
+        <activity
+            android:name=".widget.ListHistoriesConfigureActivity"
+            android:label="@string/widget_config_label"
+            android:launchMode="singleInstance"
+            android:theme="@style/SettingsTheme">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".widget.ListHistoriesRemoteViewsService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>
