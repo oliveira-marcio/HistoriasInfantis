@@ -10,6 +10,7 @@
     <string name="notification_new_history">Nova história adicionada.</string>
     <string name="notification_new_histories"><xliff:g id="history_number">%d</xliff:g> novas histórias adicionadas.</string>
     <string name="notification_intent" translatable="false">notification_intent</string>
+    <string name="shortcut_intent" translatable="false">shortcut_intent</string>
 
     <!-- Labels para as abas do Main Drawer -->
     <string name="category_histories_group">Histórias</string>

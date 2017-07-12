@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_about"
+        android:shortcutDisabledMessage="@string/category_histories_label"
+        android:shortcutId="all"
+        android:shortcutLongLabel="@string/category_histories_label"
+        android:shortcutShortLabel="@string/category_histories_label">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.abobrinha.caixinha.ui.MainActivity"
+            android:targetPackage="com.abobrinha.caixinha">
+            <extra
+                android:name="shortcut_intent"
+                android:value="0" />
+        </intent>
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_favorite"
+        android:shortcutDisabledMessage="@string/category_favorites_label"
+        android:shortcutId="favorites"
+        android:shortcutLongLabel="@string/category_favorites_label"
+        android:shortcutShortLabel="@string/category_favorites_label">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.abobrinha.caixinha.ui.MainActivity"
+            android:targetPackage="com.abobrinha.caixinha">
+            <extra
+                android:name="shortcut_intent"
+                android:value="1" />
+        </intent>
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>

@@ -91,6 +91,13 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
 
         if (savedInstanceState == null) {
+            if (getIntent().hasExtra(getString(R.string.shortcut_intent))) {
+                PreferencesUtils.setMainHistoryCategory(this,
+                        getIntent()
+                                .getIntExtra(getString(R.string.shortcut_intent),
+                                        PreferencesUtils.CATEGORY_HISTORIES));
+            }
+
             int category = PreferencesUtils.getMainHistoryCategory(this);
             int itemId = navigationView.getMenu().getItem(0).getSubMenu().getItem(category).getItemId();
             navigationView.setCheckedItem(itemId);
