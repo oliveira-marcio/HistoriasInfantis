@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
                                         PreferencesUtils.CATEGORY_HISTORIES));
             }
 
+            if (getIntent().hasExtra(getString(R.string.fcm_extra_key))) {
+                SocialUtils.openExternalLink(this, SocialUtils.WEB, getIntent()
+                        .getStringExtra(getString(R.string.fcm_extra_key)));
+            }
+
             int category = PreferencesUtils.getMainHistoryCategory(this);
             int itemId = navigationView.getMenu().getItem(0).getSubMenu().getItem(category).getItemId();
             navigationView.setCheckedItem(itemId);
@@ -105,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         HistorySyncUtils.initialize(this);
+
     }
 
     private void loadHistories() {

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "197796202449",
+    "firebase_url": "https://admob-app-id-4658589429.firebaseio.com",
+    "project_id": "admob-app-id-4658589429",
+    "storage_bucket": "admob-app-id-4658589429.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197796202449:android:4e87d3e6fe41b2c0",
+        "android_client_info": {
+          "package_name": "com.abobrinha.caixinha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "197796202449-ui61p085r6gg6gchjvanvck8ho1p44l5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSySKn-HCbd9pT71H8m8MDRXCUVIUMUA0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

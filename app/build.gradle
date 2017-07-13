@@ -29,7 +29,8 @@ ext {
     glideLibVersion = '3.8.0'
     gsonLibVersion = '2.8.0'
     jsoupLibVersion = '1.10.3'
-    firebaseJobDispatcherVersion = '0.6.0'
+    firebaseJobDispatcherLibVersion = '0.6.0'
+    firebaseMessagingLibVersion = '11.0.2'
 }
 
 dependencies {
@@ -45,7 +46,8 @@ dependencies {
     compile "com.github.bumptech.glide:glide:${glideLibVersion}"
     compile "com.google.code.gson:gson:${gsonLibVersion}"
     compile "org.jsoup:jsoup:${jsoupLibVersion}"
-    compile "com.firebase:firebase-jobdispatcher:${firebaseJobDispatcherVersion}"
+    compile "com.firebase:firebase-jobdispatcher:${firebaseJobDispatcherLibVersion}"
+    compile "com.google.firebase:firebase-messaging:${firebaseMessagingLibVersion}"
     compile "com.android.support.test.espresso:espresso-idling-resource:${espressoLibVersion}"
 
     testCompile "junit:junit:${junitLibVersion}"
@@ -61,3 +63,5 @@ dependencies {
     compile 'com.android.support:support-vector-drawable:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
+
+apply plugin: 'com.google.gms.google-services'
