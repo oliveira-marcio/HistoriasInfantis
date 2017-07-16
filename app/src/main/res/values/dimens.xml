@@ -3,6 +3,8 @@
     <dimen name="fab_size">60dp</dimen>
     <dimen name="page_margin">32dp</dimen>
     <dimen name="up_button_size">56dp</dimen>
+    <dimen name="app_bar_elevation">4dp</dimen>
+    <dimen name="app_bar_collapsed_height">200dp</dimen>
 
     <!--
 Refer to App Widget Documentation for margin information
