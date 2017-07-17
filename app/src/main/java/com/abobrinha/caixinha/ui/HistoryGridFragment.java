@@ -1,6 +1,7 @@
 package com.abobrinha.caixinha.ui;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -82,6 +83,7 @@ public class HistoryGridFragment extends Fragment implements
     private TextView mEmptyStateTextView;
     private ProgressBar mLoadingIndicator;
     private GridLayoutManager mLayoutManager;
+    private MenuItem mRefreshItem;
 
     private int mPosition = RecyclerView.NO_POSITION;
 
@@ -145,7 +147,6 @@ public class HistoryGridFragment extends Fragment implements
         } else if (key.equals(getString(R.string.pref_order_key))) {
             getLoaderManager().restartLoader(mCategory, null, this);
         }
-        // ToDo: Avaliar se deve ser exibido uma mensagem em caso de sincronia com sucesso.
     }
 
     private void showLoading() {
@@ -283,6 +284,9 @@ public class HistoryGridFragment extends Fragment implements
         mEmptyStateTextView.setVisibility(View.INVISIBLE);
         mHistoriesList.setVisibility(View.VISIBLE);
         mLoadingIndicator.setVisibility(View.INVISIBLE);
+
+        if (mRefreshItem != null)
+            mRefreshItem.setActionView(null);
     }
 
     @Override
@@ -323,11 +327,20 @@ public class HistoryGridFragment extends Fragment implements
         startActivity(intent);
     }
 
+    private void showAppBarLoading() {
+        LayoutInflater actionInflater = (LayoutInflater) getActivity()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = actionInflater.inflate(R.layout.progress_layout, null);
+        mRefreshItem.setActionView(v);
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         switch (mCategory) {
             case PreferencesUtils.CATEGORY_HISTORIES:
                 inflater.inflate(R.menu.histories_menu, menu);
+                mRefreshItem = menu.findItem(R.id.action_refresh);
+                if (mAdapter.getItemCount() == 0) showAppBarLoading();
                 break;
             case PreferencesUtils.CATEGORY_FAVORITES:
                 inflater.inflate(R.menu.favorites_menu, menu);
@@ -342,8 +355,8 @@ public class HistoryGridFragment extends Fragment implements
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         if (mCategory == PreferencesUtils.CATEGORY_FAVORITES) {
-            MenuItem reminderItem = menu.findItem(R.id.action_delete);
-            reminderItem.setVisible(mHasFavorites);
+            MenuItem deleteItem = menu.findItem(R.id.action_delete);
+            deleteItem.setVisible(mHasFavorites);
         }
     }
 
@@ -351,10 +364,10 @@ public class HistoryGridFragment extends Fragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
+            showAppBarLoading();
+
             HistorySyncUtils.startImmediateSync(getActivity());
             if (mAdapter.getItemCount() == 0) showLoading();
-            // ToDo: Na versão final, substituir toast por progressbar circular na appbar
-            Toast.makeText(getActivity(), "Atualizando...", Toast.LENGTH_SHORT).show();
             return true;
         }
 
