@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="widget_margin">0dp</dimen>
+    <integer name="grid_columns">3</integer>
 </resources>

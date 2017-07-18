@@ -20,6 +20,7 @@ import com.abobrinha.caixinha.data.PreferencesUtils;
 import com.abobrinha.caixinha.ui.HistoryActivity;
 import com.abobrinha.caixinha.ui.MainActivity;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 
 public class SingleHistoryIntentService extends IntentService {
@@ -93,6 +94,7 @@ public class SingleHistoryIntentService extends IntentService {
                 image = Glide.with(getApplicationContext())
                         .load(historyData[2])
                         .asBitmap()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .placeholder(R.drawable.img_about)
                         .error(R.drawable.img_about)
                         .into(-1, -1)

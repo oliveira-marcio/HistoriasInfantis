@@ -8,7 +8,15 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_histories"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryLight"
+        android:clipToPadding="false"
+        android:paddingLeft="@dimen/grid_margins_vertical"
+        android:paddingRight="@dimen/grid_margins_vertical"
+        android:paddingBottom="@dimen/grid_margins_horizontal"
+        android:paddingTop="@dimen/grid_margins_horizontal"
+        android:scrollbarStyle="outsideOverlay"
+        tools:listitem="@layout/history_grid_item" />
 
     <!-- View para exibição de erros -->
     <TextView

@@ -109,10 +109,11 @@ public class HistoryGridFragment extends Fragment implements
         mEmptyStateTextView = (TextView) rootView.findViewById(R.id.empty_view);
         mLoadingIndicator = (ProgressBar) rootView.findViewById(R.id.loading_indicator);
 
-        mLayoutManager = new GridLayoutManager(getActivity(), 1);
+        mLayoutManager = new GridLayoutManager(getActivity(),
+                getActivity().getResources().getInteger(R.integer.grid_columns));
         mAdapter = new HistoryGridAdAdapter(getActivity(), this);
         //ToDo: Passar linha acima para free flavor
-//        mAdapter = new HistoryGridAdapter(this, this);
+//        mAdapter = new HistoryGridAdapter(getActivity(), this);
 
         showLoading();
 
@@ -156,6 +157,10 @@ public class HistoryGridFragment extends Fragment implements
     }
 
     private void showErrorMessage() {
+        if (mRefreshItem != null) {
+            mRefreshItem.setActionView(null);
+        }
+
         int historyStatus = PreferencesUtils.getHistoryStatus(getActivity());
         if (historyStatus == PreferencesUtils.HISTORY_STATUS_UNKNOWN &&
                 WordPressConn.isNetworkAvailable(getActivity())) return;
@@ -187,9 +192,10 @@ public class HistoryGridFragment extends Fragment implements
         }
     }
 
-    private void showHistoriesDataView(Cursor data) {
+    private void showHistoriesDataView() {
         mHistoriesList.setLayoutManager(mLayoutManager);
         mHistoriesList.setHasFixedSize(true);
+        mHistoriesList.setNestedScrollingEnabled(false);
 
         mHistoriesList.setAdapter(mAdapter);
 
@@ -304,7 +310,7 @@ public class HistoryGridFragment extends Fragment implements
         mAdapter.swapCursor(data);
         boolean hasData = data != null && data.moveToFirst();
         if (hasData) {
-            showHistoriesDataView(data);
+            showHistoriesDataView();
         } else {
             showErrorMessage();
         }

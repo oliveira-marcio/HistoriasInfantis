@@ -16,6 +16,7 @@ import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
 import com.abobrinha.caixinha.data.PreferencesUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 
 public class ListHistoriesRemoteViewsService extends RemoteViewsService {
@@ -113,6 +114,7 @@ class ListHistoriesRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
             image = Glide.with(mContext.getApplicationContext())
                     .load(mCursor.getString(INDEX_HISTORY_IMAGE))
                     .asBitmap()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.img_about)
                     .error(R.drawable.img_about)
                     .into(-1, -1)

@@ -1,8 +1,6 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -13,6 +11,59 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+    </style>
+
+    <!-- Temas para os cards apresentados no grid principal -->
+    <style name="ListItemTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ListItemTheme.Card" parent="ListItemTheme">
+        <item name="android:layout_marginBottom">@dimen/grid_margins_horizontal</item>
+        <item name="android:layout_marginTop">@dimen/grid_margins_horizontal</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:foreground">?selectableItemBackground</item>
+    </style>
+
+    <style name="ListItemTheme.Group" parent="ListItemTheme">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">@dimen/item_card_padding</item>
+    </style>
+
+    <style name="ListItemTheme.Card.Landscape" parent="ListItemTheme.Card">
+        <item name="android:layout_marginLeft">@dimen/grid_margins_vertical</item>
+        <item name="android:layout_marginRight">@dimen/grid_margins_vertical</item>
+    </style>
+
+    <style name="ListItemTheme.Image">
+        <item name="android:layout_width">@dimen/item_image_width</item>
+        <item name="android:layout_height">@dimen/item_image_height</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="ListItemTheme.Image.Landscape" parent="ListItemTheme.Image">
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="ListItemTheme.Title" parent="ListItemTheme">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:paddingLeft">@dimen/item_title_margins</item>
+        <item name="android:paddingRight">@dimen/item_title_margins</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">@dimen/item_title_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ListItemTheme.Title.Landscape" parent="ListItemTheme.Title">
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:background">@drawable/title_background</item>
+        <item name="android:paddingBottom">@dimen/item_title_margins</item>
+        <item name="android:paddingTop">@dimen/item_title_margins</item>
+        <item name="android:textColor">@color/colorWhite</item>
     </style>
 
 </resources>

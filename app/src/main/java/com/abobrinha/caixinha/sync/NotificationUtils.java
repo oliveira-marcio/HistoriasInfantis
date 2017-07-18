@@ -20,6 +20,7 @@ import com.abobrinha.caixinha.ui.HistoryActivity;
 import com.abobrinha.caixinha.ui.HistoryGridFragment;
 import com.abobrinha.caixinha.ui.MainActivity;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 
 public class NotificationUtils {
@@ -73,6 +74,7 @@ public class NotificationUtils {
                     largeIcon = Glide.with(context.getApplicationContext())
                             .load(imageUrl)
                             .asBitmap()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .placeholder(R.drawable.img_about)
                             .error(R.drawable.img_about)
                             .into(-1, -1)
