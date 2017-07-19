@@ -13,4 +13,16 @@
         <item name="elevation">0dp</item>
     </style>
 -->
+
+    <style name="WidgetTheme.FAB">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">top|end</item>
+        <item name="android:layout_margin">@dimen/widget_title_margin</item>
+        <item name="android:elevation">@dimen/widget_fab_elevation</item>
+        <item name="android:background">@drawable/background_circle</item>
+        <item name="android:padding">@dimen/widget_fab_padding</item>
+        <item name="android:src">@drawable/ic_settings_widget</item>
+    </style>
+
 </resources>

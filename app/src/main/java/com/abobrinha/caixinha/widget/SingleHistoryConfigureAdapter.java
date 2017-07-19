@@ -63,7 +63,7 @@ public class SingleHistoryConfigureAdapter extends
     public void onBindViewHolder(HistoryConfigWidgetViewHolder holder, int position) {
         mCursor.moveToPosition(position);
         String title = Jsoup.parse(mCursor.getString(HistoryGridFragment.INDEX_HISTORY_TITLE)).text();
-        holder.historyTitle.setText(title);
+        holder.historyRadio.setText(title);
         holder.historyRadio.setChecked(sItemSelected == position);
     }
 
@@ -75,12 +75,10 @@ public class SingleHistoryConfigureAdapter extends
     public class HistoryConfigWidgetViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
-        public TextView historyTitle;
         public RadioButton historyRadio;
 
         public HistoryConfigWidgetViewHolder(View itemView) {
             super(itemView);
-            historyTitle = (TextView) itemView.findViewById(R.id.title_text_view);
             historyRadio = (RadioButton) itemView.findViewById(R.id.option_radio);
             itemView.setOnClickListener(this);
             historyRadio.setOnClickListener(this);

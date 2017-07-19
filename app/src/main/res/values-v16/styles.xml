@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="WidgetTheme.Title" parent="WidgetTheme">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center|bottom</item>
+        <item name="android:background">@drawable/title_background</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:padding">@dimen/widget_title_margin</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/widget_title_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

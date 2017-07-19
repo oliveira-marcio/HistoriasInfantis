@@ -2,23 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
+    style="@style/WidgetTheme"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/abc_action_bar_default_height_material"
         android:background="@color/colorPrimary"
-        android:elevation="8dp"
+        android:elevation="@dimen/app_bar_elevation"
         android:gravity="center_vertical">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/app_name"
-            android:padding="@dimen/widget_title_margin"
+            android:padding="@dimen/widget_default_padding"
             android:src="@mipmap/ic_launcher_round" />
 
         <TextView
@@ -29,15 +28,15 @@
             android:maxLines="1"
             android:text="@string/app_name"
             android:textAppearance="?android:textAppearanceLarge"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorWhite"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/appwidget_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:padding="4dp"
+            android:layout_margin="@dimen/widget_default_padding"
+            android:padding="@dimen/widget_fab_padding"
             android:src="@drawable/ic_settings_widget" />
     </LinearLayout>
 
@@ -48,23 +47,15 @@
 
         <ListView
             android:id="@+id/widget_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            style="@style/WidgetTheme"
             android:dividerHeight="2dp"
             tools:listitem="@layout/list_history_widget_item" />
 
         <TextView
             android:id="@+id/empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/widget_error_background"
-            android:gravity="center"
-            android:padding="8dp"
+            style="@style/WidgetTheme.Error"
             android:text="@string/list_widget_error"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textStyle="bold"
-            android:visibility="visible"
-            tools:visibility="visible" />
+            tools:visibility="invisible" />
 
     </FrameLayout>
 

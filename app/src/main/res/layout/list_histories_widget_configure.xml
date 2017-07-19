@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    style="@style/WidgetTheme"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="@dimen/activity_horizontal_margin">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -16,69 +15,46 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="@string/widget_config_category_label"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textStyle="bold" />
+                style="@style/WidgetTheme.Config.Title"
+                android:text="@string/widget_config_category_label" />
 
             <RadioGroup
                 android:id="@+id/category_radio_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                style="@style/WidgetTheme.Radio">
 
                 <RadioButton
                     android:id="@+id/all_radio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/WidgetTheme.Radio.Button"
                     android:checked="true"
-                    android:text="@string/category_histories_label"
-                    android:textAppearance="?android:textAppearanceMedium" />
+                    android:text="@string/category_histories_label" />
 
                 <RadioButton
                     android:id="@+id/favorites_radio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/category_favorites_label"
-                    android:textAppearance="?android:textAppearanceMedium" />
+                    style="@style/WidgetTheme.Radio.Button"
+                    android:text="@string/category_favorites_label" />
 
             </RadioGroup>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@android:color/darker_gray" />
+            <View style="@style/WidgetTheme.Config.Divider" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="@string/widget_config_order_label"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textStyle="bold" />
+                style="@style/WidgetTheme.Config.Title"
+                android:text="@string/widget_config_order_label" />
 
             <RadioGroup
                 android:id="@+id/order_radio_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                style="@style/WidgetTheme.Radio">
 
                 <RadioButton
                     android:id="@+id/date_radio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    style="@style/WidgetTheme.Radio.Button"
                     android:checked="true"
-                    android:text="@string/pref_order_label_date"
-                    android:textAppearance="?android:textAppearanceMedium" />
+                    android:text="@string/pref_order_label_date" />
 
                 <RadioButton
                     android:id="@+id/title_radio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pref_order_label_title"
-                    android:textAppearance="?android:textAppearanceMedium" />
+                    style="@style/WidgetTheme.Radio.Button"
+                    android:text="@string/pref_order_label_title" />
 
             </RadioGroup>
 
@@ -86,38 +62,6 @@
 
     </ScrollView>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@android:color/darker_gray" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_gravity="center_horizontal">
-
-        <Button
-            android:id="@+id/button_cancel"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/widget_button_cancel" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@android:color/darker_gray" />
-
-        <Button
-            android:id="@+id/button_ok"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/widget_button_ok" />
-    </LinearLayout>
+    <include layout="@layout/widget_configure_buttons" />
 
 </LinearLayout>

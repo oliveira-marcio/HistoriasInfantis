@@ -6,6 +6,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ProgressBarTheme" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:visibility">invisible</item>
+    </style>
+
     <style name="SettingsTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -14,6 +21,7 @@
     </style>
 
     <!-- Temas para os cards apresentados no grid principal -->
+
     <style name="ListItemTheme">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -64,6 +72,89 @@
         <item name="android:paddingBottom">@dimen/item_title_margins</item>
         <item name="android:paddingTop">@dimen/item_title_margins</item>
         <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <!-- Temas para os Widgets -->
+
+    <style name="WidgetTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="WidgetTheme.Image" parent="WidgetTheme">
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:src">@drawable/img_about</item>
+    </style>
+
+    <style name="WidgetTheme.Title" parent="WidgetTheme">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center|bottom</item>
+        <item name="android:background">@drawable/title_background</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:padding">@dimen/widget_title_margin</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/widget_title_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="WidgetTheme.FAB">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">top|end</item>
+        <item name="android:layout_margin">@dimen/widget_title_margin</item>
+        <item name="android:background">@drawable/background_circle</item>
+        <item name="android:padding">@dimen/widget_fab_padding</item>
+        <item name="android:src">@drawable/ic_settings_widget</item>
+    </style>
+
+    <style name="WidgetTheme.Error" parent="WidgetTheme">
+        <item name="android:background">@drawable/widget_error_background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/widget_default_padding</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:visibility">visible</item>
+    </style>
+
+    <style name="WidgetTheme.Config">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="WidgetTheme.Config.Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginBottom">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginTop">@dimen/activity_horizontal_margin</item>
+        <item name="android:background">@color/colorDivider</item>
+    </style>
+
+    <style name="WidgetTheme.Config.Title" parent="WidgetTheme.Config">
+        <item name="android:layout_marginBottom">@dimen/activity_horizontal_margin</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="WidgetTheme.Config.Error" parent="WidgetTheme.Config">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:visibility">invisible</item>
+    </style>
+
+    <style name="WidgetTheme.Config.Button" parent="Base.Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="WidgetTheme.Radio">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="WidgetTheme.Radio.Button" parent="WidgetTheme.Radio">
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
 
 </resources>

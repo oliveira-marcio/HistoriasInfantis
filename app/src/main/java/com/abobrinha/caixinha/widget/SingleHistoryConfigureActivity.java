@@ -95,6 +95,7 @@ public class SingleHistoryConfigureActivity extends AppCompatActivity implements
         });
 
         mOkButton = (Button) findViewById(R.id.button_ok);
+        mOkButton.setEnabled(false);
         mOkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

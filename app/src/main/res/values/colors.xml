@@ -11,4 +11,5 @@
     <color name="colorTransparent">@android:color/transparent</color>
     <color name="colorSwipeBackground">#D32F2F</color>
     <color name="colorWhite">@android:color/white</color>
+    <color name="colorDivider">@android:color/darker_gray</color>
 </resources>

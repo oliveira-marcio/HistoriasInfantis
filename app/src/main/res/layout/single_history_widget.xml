@@ -1,53 +1,27 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    style="@style/WidgetTheme">
 
     <ImageView
         android:id="@+id/appwidget_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/img_about" />
+        style="@style/WidgetTheme.Image" />
 
     <TextView
         android:id="@+id/appwidget_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|bottom"
-        android:background="@drawable/title_background"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:padding="8dp"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        style="@style/WidgetTheme.Title"
         android:visibility="gone"
         tools:text="Miguel Caramelo e mais um título estupidamente grande pra testar a quebra de linha e a hifenização do android"
         tools:visibility="visible" />
 
     <TextView
         android:id="@+id/appwidget_error"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/widget_error_background"
-        android:gravity="center"
-        android:padding="8dp"
+        style="@style/WidgetTheme.Error"
         android:text="@string/widget_loading"
-        android:textAppearance="?android:textAppearanceSmall"
-        android:textStyle="bold"
-        android:visibility="visible"
-        tools:visibility="visible" />
+        tools:visibility="invisible" />
 
     <ImageView
         android:id="@+id/appwidget_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:layout_margin="8dp"
-        android:background="@drawable/background_circle"
-        android:padding="4dp"
-        android:src="@drawable/ic_settings_widget" />
+        style="@style/WidgetTheme.FAB" />
 
 </FrameLayout>
