@@ -1,10 +1,12 @@
 package com.abobrinha.caixinha.ui;
 
+import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -94,6 +96,20 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 
         mAdapter = new HistoryAdapter(getActivity());
         mHistoryView.setAdapter(mAdapter);
+
+        final View parallaxView = rootView.findViewById(R.id.parallax_image);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mHistoryView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    int max = parallaxView.getHeight();
+                    parallaxView.setTranslationY(Math.max(-max, -mHistoryView.computeVerticalScrollOffset() / 2));
+                }
+            });
+        }
 
         showLoading();
 

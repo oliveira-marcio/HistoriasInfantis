@@ -4,12 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryLight"
     tools:context="com.abobrinha.caixinha.ui.HistoryActivity">
+
+    <ImageView
+        android:id="@+id/parallax_image"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:src="@drawable/img_about"
+        android:scaleType="centerCrop" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_history"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:listitem="@layout/history_paragraph_text" />
 
     <!-- Indicador de progresso de carregamento dos dados -->
     <ProgressBar
