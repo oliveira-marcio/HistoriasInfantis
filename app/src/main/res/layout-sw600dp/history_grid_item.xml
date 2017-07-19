@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    style="@style/ListItemTheme.Card.Landscape">
+
+    <FrameLayout style="@style/ListItemTheme.Group">
+
+        <ImageView
+            android:id="@+id/thumbnail"
+            style="@style/ListItemTheme.Image.Landscape"
+            tools:src="@drawable/post_placeholder" />
+
+        <TextView
+            android:id="@+id/title_text_view"
+            style="@style/ListItemTheme.Title.Landscape"
+            tools:text="Miguel Caramelo e mais um título estupidamente grande pra testar a quebra de linha e a hifenização do android" />
+
+    </FrameLayout>
+
+</android.support.v7.widget.CardView>

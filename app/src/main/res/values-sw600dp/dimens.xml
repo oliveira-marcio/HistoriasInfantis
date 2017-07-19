@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="activity_horizontal_margin">24dp</dimen>
+    <dimen name="activity_vertical_margin">24dp</dimen>
+
+    <dimen name="app_bar_collapsed_height">270dp</dimen>
+
+    <dimen name="grid_margins_horizontal">6dp</dimen>
+    <dimen name="grid_margins_vertical">6dp</dimen>
+
+    <dimen name="item_card_padding">12dp</dimen>
+    <dimen name="item_image_height">170dp</dimen>
+    <dimen name="item_title_margins">12dp</dimen>
+    <dimen name="item_title_size">20sp</dimen>
+
+    <dimen name="widget_title_margin">12dp</dimen>
+    <dimen name="widget_default_padding">10dp</dimen>
+    <dimen name="widget_title_size">18sp</dimen>
+    <dimen name="widget_list_item_height">170dp</dimen>
+    <dimen name="widget_fab_elevation">8dp</dimen>
+    <dimen name="widget_fab_padding">8dp</dimen>
+    <dimen name="widget_config_bottom_height">40dp</dimen>
+</resources>
