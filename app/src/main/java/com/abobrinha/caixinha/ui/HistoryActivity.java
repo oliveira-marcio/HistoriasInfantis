@@ -17,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
@@ -87,15 +86,6 @@ public class HistoryActivity extends AppCompatActivity implements
 
         if (mHistoryId == INVALID_ID) throw
                 new NullPointerException("id da história inválido.");
-
-        ImageView upButton = (ImageView) findViewById(R.id.action_up);
-
-        upButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
 
         getSupportLoaderManager().initLoader(HISTORY_LOADER_ID, null, this);
 

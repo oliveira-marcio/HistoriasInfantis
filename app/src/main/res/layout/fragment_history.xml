@@ -11,8 +11,8 @@
         android:id="@+id/parallax_image"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:src="@drawable/img_about"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_about" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_history"
@@ -28,6 +28,24 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="invisible"
+        tools:visibility="visible" />
+
+    <ImageButton
+        android:id="@+id/action_up"
+        android:layout_width="@dimen/up_button_size"
+        android:layout_height="?actionBarSize"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="drawer"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:srcCompat="@drawable/ic_arrow_back" />
+
+    <View
+        android:id="@+id/status_bar_background"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorTransparent"
+        tools:background="@color/colorPrimaryDark"
+        tools:layout_height="24dp"
         tools:visibility="visible" />
 
     <android.support.design.widget.FloatingActionButton
