@@ -18,6 +18,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,8 @@ import android.widget.Toast;
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.HistoryContract;
 import com.abobrinha.caixinha.sync.NotificationUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.jsoup.Jsoup;
 
@@ -70,7 +73,7 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 
     private int mStatusBarHeight;
     private int mUpButtonBaseTop = 0;
-    private View mParallaxView;
+    private ImageView mParallaxView;
     private View mStatusBar;
     private ImageView mUpButton;
     private int mScrollY;
@@ -79,6 +82,13 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int statusBarResId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (statusBarResId > 0) {
+            mStatusBarHeight = getResources().getDimensionPixelSize(statusBarResId);
+            return;
+        }
+
+        // Outra tentativa de obter a altura da Status Bar caso a primeira falhe.
         Rect rectangle = new Rect();
         Window window = getActivity().getWindow();
         window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
@@ -132,17 +142,20 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
             mUpButtonBaseTop += mStatusBarHeight;
             mStatusBar = rootView.findViewById(R.id.status_bar_background);
             mStatusBar.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, mStatusBarHeight));
+            mStatusBar.setVisibility(View.VISIBLE);
             updateUpButtonPostition();
         }
 
-        mParallaxView = rootView.findViewById(R.id.parallax_image);
+        mParallaxView = (ImageView) rootView.findViewById(R.id.parallax_image);
 
         mHistoryView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 mScrollY = mHistoryView.computeVerticalScrollOffset();
-                updateParallaxViewPosition();
+                Log.v("SCROLL_STATUS", "(FV, FCV): (" + mLayoutManager.findFirstVisibleItemPosition()
+                        + ", " + mLayoutManager.findFirstCompletelyVisibleItemPosition() + ")");
+                updateParallaxViewPosition(dy);
                 updateUpButtonPostition();
             }
         });
@@ -191,11 +204,19 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         }
     }
 
-    private void updateParallaxViewPosition() {
+    private void updateParallaxViewPosition(int dY) {
         final int PARALLAX_FACTOR = 2;
         final int MAX = mParallaxView.getHeight();
 
-        mParallaxView.setTranslationY(Math.max(-MAX, -mScrollY / PARALLAX_FACTOR));
+        if (getResources().getBoolean(R.bool.is_landscape)) {
+            if (dY > 0) {
+                mParallaxView.setTranslationY(Math.max(-MAX, mParallaxView.getTranslationY() - dY / PARALLAX_FACTOR));
+            } else {
+                mParallaxView.setTranslationY(Math.min(0, mParallaxView.getTranslationY() - dY / PARALLAX_FACTOR));
+            }
+        } else {
+            mParallaxView.setTranslationY(Math.max(-MAX, -mScrollY / PARALLAX_FACTOR));
+        }
     }
 
     @Override
@@ -257,6 +278,14 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
             case HISTORY_LOADER_ID:
                 mAdapter.setTitle(Jsoup.parse(data.getString(INDEX_HISTORY_TITLE)).text());
                 mIsFavorite = (data.getInt(INDEX_FAVORITE) == HistoryContract.IS_FAVORITE);
+
+                Glide.with(getActivity().getApplicationContext())
+                        .load(data.getString(INDEX_HISTORY_IMAGE))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .thumbnail(0.1f)
+                        .error(R.drawable.img_expanded_toolbar)
+                        .into(mParallaxView);
+
                 setFavoriteFabColor();
                 break;
 

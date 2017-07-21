@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/parallax_image"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="@dimen/history_header_image_height"
         android:scaleType="centerCrop"
         android:src="@drawable/img_about" />
 
@@ -18,6 +18,9 @@
         android:id="@+id/rv_history"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/history_vertical_margins"
+        android:layout_marginRight="@dimen/history_vertical_margins"
+        android:maxWidth="@dimen/history_max_width"
         tools:listitem="@layout/history_paragraph_text" />
 
     <!-- Indicador de progresso de carregamento dos dados -->
@@ -44,6 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/colorTransparent"
+        android:visibility="gone"
         tools:background="@color/colorPrimaryDark"
         tools:layout_height="24dp"
         tools:visibility="visible" />
@@ -54,9 +58,10 @@
         android:layout_height="@dimen/fab_size"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/activity_horizontal_margin"
-        android:clickable="true"
         android:src="@drawable/ic_about"
         android:tint="@android:color/background_light"
         app:borderWidth="0dp"
-        app:fabSize="auto" />
+        app:elevation="@dimen/fab_elevation"
+        app:fabSize="auto"
+        app:pressedTranslationZ="@dimen/fab_press_translation_z" />
 </FrameLayout>

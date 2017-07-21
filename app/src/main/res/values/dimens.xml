@@ -3,11 +3,15 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="fab_size">56dp</dimen>
-    <dimen name="page_margin">32dp</dimen>
-    <dimen name="up_button_size">56dp</dimen>
     <dimen name="app_bar_elevation">8dp</dimen>
     <dimen name="app_bar_collapsed_height">200dp</dimen>
+
+    <dimen name="page_margin">32dp</dimen>
+    <dimen name="up_button_size">56dp</dimen>
+
+    <dimen name="fab_size">56dp</dimen>
+    <dimen name="fab_press_translation_z">12dp</dimen>
+    <dimen name="fab_elevation">6dp</dimen>
 
     <dimen name="grid_animation_offset_y">300dp</dimen>
     <dimen name="grid_margins_horizontal">2dp</dimen>
@@ -20,13 +24,16 @@
     <dimen name="item_title_size">24sp</dimen>
 
     <dimen name="history_title_offset">300dp</dimen>
+    <dimen name="history_header_image_height">@dimen/history_title_offset</dimen>
+    <dimen name="history_images_loading_height">200dp</dimen>
+    <dimen name="history_vertical_margins">0dp</dimen>
+    <dimen name="history_max_width">10000dp</dimen>
 
     <dimen name="widget_title_margin">8dp</dimen>
     <dimen name="widget_default_padding">8dp</dimen>
     <dimen name="widget_title_size">16sp</dimen>
     <dimen name="widget_list_item_height">120dp</dimen>
-    <dimen name="widget_fab_elevation">4dp</dimen>
     <dimen name="widget_fab_padding">4dp</dimen>
     <dimen name="widget_config_bottom_height">40dp</dimen>
-
+    <dimen name="widget_fab_elevation">4dp</dimen>
 </resources>
