@@ -17,7 +17,6 @@
     <string name="category_histories_group">Histórias</string>
     <string name="category_histories_label">Todas</string>
     <string name="category_favorites_label">Favoritas</string>
-    <string name="category_contact_group">Contato</string>
     <string name="category_settings_label">Configurações</string>
     <string name="category_share_label">Compartilhar</string>
     <string name="category_about_label">Sobre</string>
@@ -74,5 +73,6 @@
     <string name="list_widget_error">Nenhuma história encontrada.\n\nTente selecionar outra categoria.</string>
     <string name="widget_button_ok">OK</string>
     <string name="widget_button_cancel">Cancelar</string>
+    <string name="widget_fab_description">Configurações do widget</string>
 
 </resources>

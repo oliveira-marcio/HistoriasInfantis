@@ -123,6 +123,7 @@ class ListHistoriesRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
             image = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.img_about);
         }
         views.setImageViewBitmap(R.id.history_image, image);
+        views.setContentDescription(R.id.history_image, mCursor.getString(INDEX_HISTORY_TITLE));
 
         views.setTextViewText(R.id.history_title, mCursor.getString(INDEX_HISTORY_TITLE));
 

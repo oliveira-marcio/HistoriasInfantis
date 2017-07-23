@@ -1,11 +1,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_view"
-    style="@style/WidgetTheme">
+    style="@style/WidgetTheme"
+    android:padding="@dimen/widget_margin">
 
     <ImageView
         android:id="@+id/appwidget_background"
-        style="@style/WidgetTheme.Image" />
+        style="@style/WidgetTheme.Image"
+        tools:ignore="contentDescription" />
 
     <TextView
         android:id="@+id/appwidget_title"
@@ -22,6 +24,7 @@
 
     <ImageView
         android:id="@+id/appwidget_button"
-        style="@style/WidgetTheme.FAB" />
+        style="@style/WidgetTheme.FAB"
+        tools:ignore="contentDescription" />
 
 </FrameLayout>

@@ -11,4 +11,5 @@
     <dimen name="history_header_image_height">300dp</dimen>
     <dimen name="history_vertical_margins">@dimen/activity_vertical_margin</dimen>
 
+    <dimen name="widget_toolbar_height">48dp</dimen>
 </resources>

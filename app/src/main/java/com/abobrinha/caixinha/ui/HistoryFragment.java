@@ -18,7 +18,9 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -241,7 +243,26 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         mLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
+    private void keepHistoryPortraitWidth() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        int screenHeight;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            getActivity().getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+            screenHeight = metrics.heightPixels;
+        } else {
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            screenHeight = metrics.heightPixels + 2 * mStatusBarHeight;
+        }
+
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(screenHeight, FrameLayout.LayoutParams.MATCH_PARENT);
+        layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+        mHistoryView.setLayoutParams(layoutParams);
+    }
+
     private void showHistoryDataView() {
+        if (getResources().getInteger(R.integer.grid_columns) > 2) {
+            keepHistoryPortraitWidth();
+        }
         mHistoryView.setVisibility(View.VISIBLE);
         mLoadingIndicator.setVisibility(View.INVISIBLE);
     }

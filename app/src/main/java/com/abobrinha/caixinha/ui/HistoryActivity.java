@@ -189,6 +189,8 @@ public class HistoryActivity extends AppCompatActivity implements
         HistoryFragmentAdapter adapter = new HistoryFragmentAdapter(getSupportFragmentManager(), mCursor);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(position);
+        viewPager.setPageMargin(getResources().getDimensionPixelOffset(R.dimen.page_margin));
+        viewPager.setPageMarginDrawable(R.color.colorPrimaryLight);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {

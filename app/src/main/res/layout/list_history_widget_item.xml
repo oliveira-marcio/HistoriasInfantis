@@ -7,7 +7,8 @@
 
     <ImageView
         android:id="@+id/history_image"
-        style="@style/WidgetTheme.Image" />
+        style="@style/WidgetTheme.Image"
+        tools:ignore="contentDescription" />
 
     <TextView
         android:id="@+id/history_title"

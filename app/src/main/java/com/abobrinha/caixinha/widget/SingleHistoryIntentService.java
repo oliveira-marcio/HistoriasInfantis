@@ -103,6 +103,7 @@ public class SingleHistoryIntentService extends IntentService {
                 image = BitmapFactory.decodeResource(getResources(), R.drawable.img_about);
             }
             views.setImageViewBitmap(R.id.appwidget_background, image);
+            views.setContentDescription(R.id.appwidget_background, historyData[1]);
 
             historyIntent = new Intent(this, HistoryActivity.class);
             historyIntent.putExtra(Intent.EXTRA_TEXT, Long.valueOf(historyData[0]));
@@ -117,6 +118,7 @@ public class SingleHistoryIntentService extends IntentService {
             views.setViewVisibility(R.id.appwidget_error, View.VISIBLE);
 
             views.setImageViewResource(R.id.appwidget_background, R.drawable.img_about);
+            views.setContentDescription(R.id.appwidget_background, getString(R.string.single_widget_error));
 
             historyIntent = new Intent(this, MainActivity.class);
         }

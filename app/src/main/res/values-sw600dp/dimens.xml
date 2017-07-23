@@ -13,7 +13,12 @@
     <dimen name="item_title_margins">12dp</dimen>
     <dimen name="item_title_size">20sp</dimen>
 
+    <dimen name="history_title_offset">400dp</dimen>
+    <dimen name="history_horizontal_outter_padding">52dp</dimen>
+    <dimen name="history_vertical_padding">64dp</dimen>
+
     <dimen name="widget_title_margin">12dp</dimen>
+    <dimen name="widget_toolbar_height">64dp</dimen>
     <dimen name="widget_default_padding">10dp</dimen>
     <dimen name="widget_title_size">18sp</dimen>
     <dimen name="widget_list_item_height">170dp</dimen>

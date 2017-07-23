@@ -28,6 +28,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private Context mContext;
     private String mTitle;
     private int mTitleVisibility;
+    private int mBottomPaddingVisibility;
 
     private int mIndexParagraphType;
     private int mIndexParagraphContent;
@@ -82,11 +83,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 ParagraphTextViewHolder aHolder = (ParagraphTextViewHolder) holder;
                 prepareContentView(aHolder.historyContent, paragraphContent, Typeface.BOLD_ITALIC);
                 prepareTitleView(aHolder.historyTitleContainer, aHolder.historyTitle);
+                aHolder.bottomPadding.setVisibility(mBottomPaddingVisibility);
                 break;
             case HistoryContract.ParagraphsEntry.TYPE_END:
                 ParagraphTextViewHolder eHolder = (ParagraphTextViewHolder) holder;
                 prepareContentView(eHolder.historyContent, paragraphContent, Typeface.BOLD);
                 prepareTitleView(eHolder.historyTitleContainer, eHolder.historyTitle);
+                eHolder.bottomPadding.setVisibility(mBottomPaddingVisibility);
                 break;
             case HistoryContract.ParagraphsEntry.TYPE_IMAGE:
                 final ParagraphImageViewHolder iHolder = (ParagraphImageViewHolder) holder;
@@ -98,6 +101,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         .listener(new RequestListener<String, GlideDrawable>() {
                             @Override
                             public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                iHolder.imageContainer.setVisibility(View.GONE);
                                 return false;
                             }
 
@@ -107,29 +111,29 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                                 double multiplier = (double) resource.getIntrinsicHeight() / (double) resource.getIntrinsicWidth();
                                 int finalHeight = (int) Math.round(currentWidth * multiplier);
                                 iHolder.historyImage.setLayoutParams(new FrameLayout.LayoutParams(currentWidth, finalHeight));
-//                                Toast.makeText(mContext,
-//                                        "size:" + resource.getIntrinsicWidth() + " x " + resource.getIntrinsicHeight() +
-//                                        "\niv_size:" +  iHolder.historyImage.getWidth() + " x " + iHolder.historyImage.getHeight()
-//                                        , Toast.LENGTH_SHORT).show();
+                                iHolder.historyImage.setContentDescription(mTitle);
                                 iHolder.historyImage.setVisibility(View.VISIBLE);
                                 iHolder.loadingIndicator.setVisibility(View.GONE);
+                                iHolder.imageContainer.setVisibility(View.VISIBLE);
                                 return false;
                             }
                         })
                         .into(iHolder.historyImage);
 
+                iHolder.bottomPadding.setVisibility(mBottomPaddingVisibility);
                 break;
             default:
                 ParagraphTextViewHolder tHolder = (ParagraphTextViewHolder) holder;
                 prepareContentView(tHolder.historyContent, paragraphContent, Typeface.NORMAL);
                 prepareTitleView(tHolder.historyTitleContainer, tHolder.historyTitle);
+                tHolder.bottomPadding.setVisibility(mBottomPaddingVisibility);
                 break;
         }
     }
 
     private void prepareContentView(TextView contentView, String text, int style) {
-        contentView.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "Rosario-Regular.ttf"));
-        contentView.setTypeface(Typeface.DEFAULT, style);
+        Typeface typeface = Typeface.createFromAsset(mContext.getAssets(), "Rosario-Regular.ttf");
+        contentView.setTypeface(typeface, style);
         contentView.setText(text);
     }
 
@@ -148,6 +152,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public int getItemViewType(int position) {
         mCursor.moveToPosition(position);
         mTitleVisibility = (position == 0) ? View.VISIBLE : View.GONE;
+        mBottomPaddingVisibility = (position < getItemCount() - 1) ? View.GONE : View.VISIBLE;
         return mCursor.getInt(mIndexParagraphType);
     }
 
@@ -156,28 +161,35 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public TextView historyContent;
         public TextView historyTitle;
         public LinearLayout historyTitleContainer;
+        private View bottomPadding;
 
         public ParagraphTextViewHolder(View itemView) {
             super(itemView);
             historyContent = (TextView) itemView.findViewById(R.id.content_text_view);
             historyTitle = (TextView) itemView.findViewById(R.id.title_text_view);
             historyTitleContainer = (LinearLayout) itemView.findViewById(R.id.title_container);
+            bottomPadding = itemView.findViewById(R.id.bottom_padding);
         }
     }
 
     public class ParagraphImageViewHolder extends RecyclerView.ViewHolder {
 
+        public FrameLayout imageContainer;
         public ImageView historyImage;
         public TextView historyTitle;
         public LinearLayout historyTitleContainer;
         public ProgressBar loadingIndicator;
+        private View bottomPadding;
+
 
         public ParagraphImageViewHolder(View itemView) {
             super(itemView);
+            imageContainer = (FrameLayout) itemView.findViewById(R.id.image_container);
             historyImage = (ImageView) itemView.findViewById(R.id.image_view);
             historyTitle = (TextView) itemView.findViewById(R.id.title_text_view);
             historyTitleContainer = (LinearLayout) itemView.findViewById(R.id.title_container);
             loadingIndicator = (ProgressBar) itemView.findViewById(R.id.loading_indicator);
+            bottomPadding = itemView.findViewById(R.id.bottom_padding);
         }
     }
 }

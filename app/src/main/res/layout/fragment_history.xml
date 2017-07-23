@@ -18,9 +18,9 @@
         android:id="@+id/rv_history"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
         android:layout_marginLeft="@dimen/history_vertical_margins"
         android:layout_marginRight="@dimen/history_vertical_margins"
-        android:maxWidth="@dimen/history_max_width"
         tools:listitem="@layout/history_paragraph_text" />
 
     <!-- Indicador de progresso de carregamento dos dados -->
