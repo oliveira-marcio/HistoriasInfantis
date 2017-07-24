@@ -20,7 +20,7 @@
         android:padding="@dimen/activity_horizontal_margin"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="40sp"
+        android:textSize="@dimen/history_title_font_size"
         tools:text="Título da história" />
 
     <View

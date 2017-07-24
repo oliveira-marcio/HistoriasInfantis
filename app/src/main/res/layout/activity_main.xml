@@ -35,6 +35,7 @@
                     android:id="@+id/expandedImage"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/app_bar_collapsed_height"
+                    android:contentDescription="@string/app_name"
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
                     android:src="@drawable/img_expanded_toolbar"
@@ -53,7 +54,6 @@
             </android.support.design.widget.CollapsingToolbarLayout>
 
         </android.support.design.widget.AppBarLayout>
-
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/nested_scroll_view"

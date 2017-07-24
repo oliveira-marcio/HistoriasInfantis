@@ -2,17 +2,20 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryLight"
     tools:context="com.abobrinha.caixinha.ui.HistoryActivity">
+
 
     <ImageView
         android:id="@+id/parallax_image"
         android:layout_width="match_parent"
         android:layout_height="@dimen/history_header_image_height"
         android:scaleType="centerCrop"
-        android:src="@drawable/img_about" />
+        android:src="@drawable/img_about"
+        tools:ignore="ContentDescription" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_history"
@@ -26,11 +29,7 @@
     <!-- Indicador de progresso de carregamento dos dados -->
     <ProgressBar
         android:id="@+id/loading_indicator"
-        style="@style/Widget.AppCompat.ProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="invisible"
+        style="@style/ProgressBarTheme"
         tools:visibility="visible" />
 
     <ImageButton
@@ -38,7 +37,7 @@
         android:layout_width="@dimen/up_button_size"
         android:layout_height="?actionBarSize"
         android:background="?selectableItemBackgroundBorderless"
-        android:contentDescription="drawer"
+        android:contentDescription="@string/up_button"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:srcCompat="@drawable/ic_arrow_back" />
 

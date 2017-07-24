@@ -19,7 +19,7 @@
         android:paddingStart="@dimen/history_vertical_padding"
         android:paddingTop="@dimen/history_horizontal_inner_padding"
         android:textColorLink="@color/colorAccent"
-        android:textSize="20sp"
+        android:textSize="@dimen/history_body_font_size"
         tools:text="conteúdo da história" />
 
     <View

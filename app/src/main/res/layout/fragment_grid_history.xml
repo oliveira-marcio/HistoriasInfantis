@@ -11,13 +11,14 @@
         android:layout_height="match_parent"
         android:background="@color/colorPrimaryLight"
         android:clipToPadding="false"
-        android:paddingLeft="@dimen/grid_margins_vertical"
-        android:paddingRight="@dimen/grid_margins_vertical"
         android:paddingBottom="@dimen/grid_margins_horizontal"
+        android:paddingEnd="@dimen/grid_margins_vertical"
+        android:paddingStart="@dimen/grid_margins_vertical"
         android:paddingTop="@dimen/grid_margins_horizontal"
         android:scrollbarStyle="outsideOverlay"
         tools:listitem="@layout/history_grid_item" />
 
+    <!-- ToDo: Substituir por uma emptyView mais elaborada -->
     <!-- View para exibição de erros -->
     <TextView
         android:id="@+id/empty_view"
@@ -32,10 +33,7 @@
     <!-- Indicador de progresso de carregamento dos dados -->
     <ProgressBar
         android:id="@+id/loading_indicator"
-        style="@style/Widget.AppCompat.ProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        style="@style/ProgressBarTheme"
         android:visibility="invisible" />
 
 </FrameLayout>

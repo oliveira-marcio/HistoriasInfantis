@@ -8,6 +8,7 @@
 
     <dimen name="page_margin">16dp</dimen>
     <dimen name="up_button_size">56dp</dimen>
+    <dimen name="drawer_header_height">190dp</dimen>
 
     <dimen name="fab_size">56dp</dimen>
     <dimen name="fab_press_translation_z">12dp</dimen>
@@ -30,7 +31,13 @@
     <dimen name="history_horizontal_inner_padding">12dp</dimen>
     <dimen name="history_horizontal_outter_padding">20dp</dimen>
     <dimen name="history_vertical_padding">32dp</dimen>
+    <dimen name="history_title_font_size">40sp</dimen>
+    <dimen name="history_body_font_size">20sp</dimen>
 
+    <dimen name="single_widget_min_width">110dp</dimen>
+    <dimen name="single_widget_min_height">40dp</dimen>
+    <dimen name="list_widget_min_width">180dp</dimen>
+    <dimen name="list_widget_min_height">180dp</dimen>
     <dimen name="widget_title_margin">8dp</dimen>
     <dimen name="widget_toolbar_height">56dp</dimen>
     <dimen name="widget_default_padding">8dp</dimen>

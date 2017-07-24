@@ -24,6 +24,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -136,7 +137,7 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         mUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().finish();
+                ActivityCompat.finishAfterTransition(getActivity());
             }
         });
 
@@ -306,6 +307,18 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
                         .thumbnail(0.1f)
                         .error(R.drawable.img_expanded_toolbar)
                         .into(mParallaxView);
+
+                mParallaxView.setContentDescription(data.getString(INDEX_HISTORY_TITLE));
+
+                mParallaxView.getViewTreeObserver().addOnPreDrawListener(
+                        new ViewTreeObserver.OnPreDrawListener() {
+                            @Override
+                            public boolean onPreDraw() {
+                                mParallaxView.getViewTreeObserver().removeOnPreDrawListener(this);
+                                ActivityCompat.startPostponedEnterTransition(getActivity());
+                                return true;
+                            }
+                        });
 
                 setFavoriteFabColor();
                 break;

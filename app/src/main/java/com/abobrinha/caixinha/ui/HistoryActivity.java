@@ -91,6 +91,8 @@ public class HistoryActivity extends AppCompatActivity implements
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         sp.registerOnSharedPreferenceChangeListener(this);
+
+        supportPostponeEnterTransition();
     }
 
     @Override

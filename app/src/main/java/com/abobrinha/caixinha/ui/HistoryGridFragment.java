@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -330,7 +331,9 @@ public class HistoryGridFragment extends Fragment implements
     public void onListItemClick(long historyId, int position) {
         Intent intent = new Intent(getActivity(), HistoryActivity.class);
         intent.putExtra(Intent.EXTRA_TEXT, historyId);
-        startActivity(intent);
+        ActivityOptionsCompat activityOptions =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity());
+        ActivityCompat.startActivity(getActivity(), intent, activityOptions.toBundle());
     }
 
     private void showAppBarLoading() {

@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@color/colorTransparent</item>
-<!--        <item name="actionBarStyle">@style/HistoriesAppBarStyle</item> -->
+        <item name="android:windowContentTransitions">true</item>
     </style>
-    <!-- Tema da AppBar -->
-<!--
-    <style name="HistoriesAppBarStyle" parent="style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="elevation">0dp</item>
+
+    <style name="HistoryTheme" parent="AppTheme">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowEnterTransition">@transition/history_window_enter_transition</item>
+        <item name="android:windowReturnTransition">@transition/history_window_return_transition</item>
     </style>
--->
 
     <style name="WidgetTheme.FAB">
         <item name="android:layout_width">wrap_content</item>

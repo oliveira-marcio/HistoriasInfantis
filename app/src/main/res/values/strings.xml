@@ -1,17 +1,20 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Histórias Infantis</string>
-
     <string name="content_authority" translatable="false">com.abobrinha.caixinha</string>
     <string name="history_raw_content" translatable="false">history_raw_content</string>
+    <string name="shortcut_intent" translatable="false">shortcut_intent</string>
+    <string name="fcm_extra_key" translatable="false">URL</string>
 
+    <string name="up_button">Retornar</string>
+
+    <!-- Labels para os menus da App Bar -->
     <string name="action_refresh">Atualizar</string>
     <string name="action_delete">Remover todos</string>
 
-    <string name="notification_new_history">Nova história adicionada.</string>
-    <string name="notification_new_histories"><xliff:g id="history_number">%d</xliff:g> novas histórias adicionadas.</string>
-    <string name="notification_intent" translatable="false">notification_intent</string>
-    <string name="shortcut_intent" translatable="false">shortcut_intent</string>
-    <string name="fcm_extra_key" translatable="false">URL</string>
+    <!-- Labels a caixa de diálogo de remoção em lote dos favoritos -->
+    <string name="delete_all_favorites_msg">Deseja remover todas as histórias dos favoritos?</string>
+    <string name="delete">Remover</string>
+    <string name="cancel">Cancelar</string>
 
     <!-- Labels para as abas do Main Drawer -->
     <string name="category_histories_group">Histórias</string>
@@ -31,12 +34,9 @@
     <string name="favorite_added">História adicionada aos favoritos</string>
     <string name="favorite_removed">História removida dos favoritos</string>
 
+    <!-- Descriptions para Navigation Drawer -->
     <string name="close_main_drawer">Menu de navegação principal</string>
     <string name="open_main_drawer">Menu de navegação principal fechado</string>
-
-    <string name="delete_all_favorites_msg">Deseja remover todas as histórias dos favoritos?</string>
-    <string name="delete">Remover</string>
-    <string name="cancel">Cancelar</string>
 
     <!-- Label para a configuração de ordenação das histórias -->
     <string name="pref_order_label">Ordenação das histórias</string>
@@ -45,6 +45,11 @@
     <string name="pref_order_key" translatable="false">order</string>
     <string name="pref_order_title" translatable="false">title</string>
     <string name="pref_order_date" translatable="false">date</string>
+
+    <!-- Strings relacionadas à exibição de notificações -->
+    <string name="notification_new_history">Nova história adicionada.</string>
+    <string name="notification_new_histories"><xliff:g id="history_number">%d</xliff:g> novas histórias adicionadas.</string>
+    <string name="notification_intent" translatable="false">notification_intent</string>
 
     <!-- Strings relacionadas à configuração de notificações -->
     <string name="pref_enable_notifications_key" translatable="false">enable_notifications</string>

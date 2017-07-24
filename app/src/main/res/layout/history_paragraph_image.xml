@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:background="@color/colorWhite"
         android:paddingBottom="@dimen/history_horizontal_inner_padding"
-        android:paddingLeft="@dimen/history_vertical_padding"
-        android:paddingRight="@dimen/history_vertical_padding"
+        android:paddingEnd="@dimen/history_vertical_padding"
+        android:paddingStart="@dimen/history_vertical_padding"
         android:paddingTop="@dimen/history_horizontal_inner_padding">
 
         <ImageView
