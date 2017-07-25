@@ -55,7 +55,7 @@
             tools:listitem="@layout/list_history_widget_item" />
 
         <TextView
-            android:id="@+id/empty_view"
+            android:id="@+id/empty_view_text"
             style="@style/WidgetTheme.Error"
             android:text="@string/list_widget_error"
             tools:visibility="invisible" />

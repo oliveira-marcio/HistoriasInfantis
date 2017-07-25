@@ -6,11 +6,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 
 
-public class HistoryDbHelper extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "histories.db";
+class HistoryDbHelper extends SQLiteOpenHelper {
+    static final String DATABASE_NAME = "histories.db";
     private static final int DATABASE_VERSION = 1;
 
-    public HistoryDbHelper(Context context) {
+    HistoryDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

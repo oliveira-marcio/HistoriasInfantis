@@ -156,8 +156,6 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 mScrollY = mHistoryView.computeVerticalScrollOffset();
-                Log.v("SCROLL_STATUS", "(FV, FCV): (" + mLayoutManager.findFirstVisibleItemPosition()
-                        + ", " + mLayoutManager.findFirstCompletelyVisibleItemPosition() + ")");
                 updateParallaxViewPosition(dy);
                 updateUpButtonPostition();
             }

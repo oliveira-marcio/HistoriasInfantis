@@ -81,6 +81,7 @@ public class HistoryGridFragment extends Fragment implements
     //ToDo: Passar linha acima para free flavor
 //    private HistoryGridAdapter mAdapter;
 
+    private View mEmptyStateView;
     private TextView mEmptyStateTextView;
     private ProgressBar mLoadingIndicator;
     private GridLayoutManager mLayoutManager;
@@ -107,7 +108,8 @@ public class HistoryGridFragment extends Fragment implements
         View rootView = inflater.inflate(R.layout.fragment_grid_history, container, false);
 
         mHistoriesList = (RecyclerView) rootView.findViewById(R.id.rv_histories);
-        mEmptyStateTextView = (TextView) rootView.findViewById(R.id.empty_view);
+        mEmptyStateView = rootView.findViewById(R.id.empty_view);
+        mEmptyStateTextView = (TextView) rootView.findViewById(R.id.empty_view_text);
         mLoadingIndicator = (ProgressBar) rootView.findViewById(R.id.loading_indicator);
 
         mLayoutManager = new GridLayoutManager(getActivity(),
@@ -152,7 +154,7 @@ public class HistoryGridFragment extends Fragment implements
     }
 
     private void showLoading() {
-        mEmptyStateTextView.setVisibility(View.INVISIBLE);
+        mEmptyStateView.setVisibility(View.INVISIBLE);
         mHistoriesList.setVisibility(View.INVISIBLE);
         mLoadingIndicator.setVisibility(View.VISIBLE);
     }
@@ -188,7 +190,7 @@ public class HistoryGridFragment extends Fragment implements
         } else {
             mEmptyStateTextView.setText(message);
             mLoadingIndicator.setVisibility(View.INVISIBLE);
-            mEmptyStateTextView.setVisibility(View.VISIBLE);
+            mEmptyStateView.setVisibility(View.VISIBLE);
             mHistoriesList.setVisibility(View.INVISIBLE);
         }
     }
@@ -288,7 +290,7 @@ public class HistoryGridFragment extends Fragment implements
         if (mPosition != RecyclerView.NO_POSITION)
             mHistoriesList.scrollToPosition(mPosition);
 
-        mEmptyStateTextView.setVisibility(View.INVISIBLE);
+        mEmptyStateView.setVisibility(View.INVISIBLE);
         mHistoriesList.setVisibility(View.VISIBLE);
         mLoadingIndicator.setVisibility(View.INVISIBLE);
 

@@ -26,9 +26,6 @@ public class HistorySyncTask {
      * 5) Indicar quantidade de novas histórias     */
     synchronized public static void syncHistories(Context context) {
         try {
-            //ToDo: Remover LOGS
-            Log.v("SYNC_HIST", "Sincronizando...");
-
             PreferencesUtils.setHistoryStatus(context, PreferencesUtils.HISTORY_STATUS_UNKNOWN);
 
             ContentValues[] historiesValues = WordPressUtils.getDataFromAllApiPages(context);

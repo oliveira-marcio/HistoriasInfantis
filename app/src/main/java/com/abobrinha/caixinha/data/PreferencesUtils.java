@@ -29,7 +29,10 @@ public class PreferencesUtils {
     private static final String CATEGORY_PREFIX_KEY = "category";
     private static final String ORDER_PREFIX_KEY = "order_";
 
-
+    /**
+     * Os 2 métodos abaixo respectivamente guardam e recuperam os possíves status de retorno
+     * do servidor da API. Constantes HISTORY_STATUS_*
+     */
     public static void setHistoryStatus(Context c, int historyStatus) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
         SharedPreferences.Editor spe = sp.edit();
@@ -42,6 +45,10 @@ public class PreferencesUtils {
         return sp.getInt(c.getString(R.string.pref_history_status_key), HISTORY_STATUS_UNKNOWN);
     }
 
+    /**
+     * Os 2 métodos abaixo respectivamente guardam e recuperam a última visualização da tela
+     * principal pelo usuário. Constantes CATEGORY_*
+     */
     public static void setMainHistoryCategory(Context c, int category) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
         SharedPreferences.Editor spe = sp.edit();
@@ -54,6 +61,9 @@ public class PreferencesUtils {
         return sp.getInt(c.getString(R.string.pref_history_category_key), CATEGORY_HISTORIES);
     }
 
+    /**
+     * Os 2 métodos abaixo recuperam as configurações de usuário do aplicativo
+     */
     public static String getGridHistoryOrder(Context c) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
         String orderByPreference = sp.getString(
@@ -73,12 +83,13 @@ public class PreferencesUtils {
                 .getBoolean(R.bool.show_notifications_by_default);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean shouldDisplayNotifications = sp
-                .getBoolean(displayNotificationsKey, shouldDisplayNotificationsByDefault);
-
-        return shouldDisplayNotifications;
+        return sp.getBoolean(displayNotificationsKey, shouldDisplayNotificationsByDefault);
     }
 
+    /**
+     * Os 3 métodos abaixo respectivamente guardam, recuperam e deletam a preferência da história
+     * selecionada na tela de configuração do Widget simples
+     */
     public static void saveWidgetHistoryPref(Context c, int appWidgetId, long historyId) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
         SharedPreferences.Editor spe = sp.edit();
@@ -99,6 +110,10 @@ public class PreferencesUtils {
         spe.apply();
     }
 
+    /**
+     * Os 3 métodos abaixo respectivamente guardam, recuperam e deletam a preferência de categoria
+     * selecionada na tela de configuração do Widget de Lista
+     */
     public static void saveWidgetCategoryPref(Context c, int appWidgetId, int category) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
         SharedPreferences.Editor spe = sp.edit();
@@ -119,6 +134,10 @@ public class PreferencesUtils {
         spe.apply();
     }
 
+    /**
+     * Os 3 métodos abaixo respectivamente guardam, recuperam e deletam a preferência de ordenação
+     * selecionada na tela de configuração do Widget de Lista
+     */
     public static void saveWidgetOrderPref(Context c, int appWidgetId, int category) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
         SharedPreferences.Editor spe = sp.edit();
@@ -136,12 +155,6 @@ public class PreferencesUtils {
 
     }
 
-    public static String getDatabaseOrderByPref(Context c, int appWidgetId) {
-        return loadWidgetOrderPref(c, appWidgetId) == ORDER_TITLE
-                ? HistoryContract.HistoriesEntry.COLUMN_HISTORY_TITLE + " ASC"
-                : HistoryContract.HistoriesEntry.COLUMN_HISTORY_DATE + " DESC";
-    }
-
     public static void deleteWidgetOrderPref(Context c, int appWidgetId) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
         SharedPreferences.Editor spe = sp.edit();
@@ -149,4 +162,13 @@ public class PreferencesUtils {
         spe.apply();
     }
 
+    /**
+     * O método recupera a coluna do banco de dados referente à ordenação seleciona na tela
+     * de configuração do Widget de Lista
+     */
+    public static String getDatabaseOrderByPref(Context c, int appWidgetId) {
+        return loadWidgetOrderPref(c, appWidgetId) == ORDER_TITLE
+                ? HistoryContract.HistoriesEntry.COLUMN_HISTORY_TITLE + " ASC"
+                : HistoryContract.HistoriesEntry.COLUMN_HISTORY_DATE + " DESC";
+    }
 }

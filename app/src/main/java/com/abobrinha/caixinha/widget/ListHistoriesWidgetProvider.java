@@ -37,7 +37,7 @@ public class ListHistoriesWidgetProvider extends AppWidgetProvider {
         remoteViewsIntent.setData(Uri.fromParts("content", String.valueOf(appWidgetId), null));
 
         views.setRemoteAdapter(R.id.widget_list, remoteViewsIntent);
-        views.setEmptyView(R.id.widget_list, R.id.empty_view);
+        views.setEmptyView(R.id.widget_list, R.id.empty_view_text);
 
         Intent listIntent = new Intent(context, HistoryActivity.class);
         listIntent.putExtra(context.getString(R.string.notification_intent),

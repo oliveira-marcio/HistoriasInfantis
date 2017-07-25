@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryLight"
     tools:context="com.abobrinha.caixinha.ui.MainActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_histories"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimaryLight"
         android:clipToPadding="false"
         android:paddingBottom="@dimen/grid_margins_horizontal"
         android:paddingEnd="@dimen/grid_margins_vertical"
@@ -18,17 +18,8 @@
         android:scrollbarStyle="outsideOverlay"
         tools:listitem="@layout/history_grid_item" />
 
-    <!-- ToDo: Substituir por uma emptyView mais elaborada -->
     <!-- View para exibição de erros -->
-    <TextView
-        android:id="@+id/empty_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/empty_history_list"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:textStyle="bold"
-        android:visibility="invisible" />
+    <include layout="@layout/fragment_grid_empty_view" />
 
     <!-- Indicador de progresso de carregamento dos dados -->
     <ProgressBar

@@ -79,7 +79,7 @@ public class SingleHistoryConfigureActivity extends AppCompatActivity implements
         }
 
         mHistoriesList = (RecyclerView) findViewById(R.id.rv_histories);
-        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view_text);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
 
         mLayoutManager = new LinearLayoutManager(this);

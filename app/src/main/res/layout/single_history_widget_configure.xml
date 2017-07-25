@@ -22,7 +22,7 @@
 
         <!-- View para exibição de erros -->
         <TextView
-            android:id="@+id/empty_view"
+            android:id="@+id/empty_view_text"
             style="@style/WidgetTheme.Config.Error"
             android:text="@string/empty_history_list"
             tools:visibility="invisible" />
