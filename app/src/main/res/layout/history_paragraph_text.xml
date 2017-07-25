@@ -1,32 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    style="@style/ParagraphItemTheme.Group">
 
-    <include layout="@layout/history_paragraph_title" />
+    <TextView
+        android:id="@+id/title_text_view"
+        style="@style/ParagraphItemTheme.Title"
+        tools:text="Título da história" />
+
+    <View
+        android:id="@+id/title_bottom_padding"
+        style="@style/ParagraphItemTheme.Space" />
 
     <TextView
         android:id="@+id/content_text_view"
-        style="?android:attr/textAppearanceMedium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
-        android:lineSpacingMultiplier="1.25"
-        android:paddingBottom="@dimen/history_horizontal_inner_padding"
-        android:paddingEnd="@dimen/history_vertical_padding"
-        android:paddingStart="@dimen/history_vertical_padding"
-        android:paddingTop="@dimen/history_horizontal_inner_padding"
-        android:textColorLink="@color/colorAccent"
-        android:textSize="@dimen/history_body_font_size"
+        style="@style/ParagraphItemTheme.Body"
         tools:text="conteúdo da história" />
 
     <View
-        android:id="@+id/bottom_padding"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/history_horizontal_outter_padding"
-        android:background="@color/colorWhite"
+        android:id="@+id/body_bottom_padding"
+        style="@style/ParagraphItemTheme.Space"
         android:visibility="gone" />
 
 </LinearLayout>

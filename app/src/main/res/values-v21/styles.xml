@@ -10,9 +10,13 @@
     </style>
 
     <style name="HistoryTheme" parent="AppTheme">
-        <item name="android:windowContentTransitions">true</item>
         <item name="android:windowEnterTransition">@transition/history_window_enter_transition</item>
         <item name="android:windowReturnTransition">@transition/history_window_return_transition</item>
+    </style>
+
+    <style name="ParagraphItemTheme" parent="ListItemTheme">
+        <item name="android:background">@color/colorWhite</item>
+        <item name="android:elevation">@dimen/history_elevation</item>
     </style>
 
     <style name="WidgetTheme.FAB">

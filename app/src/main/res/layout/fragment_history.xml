@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryLight"
+    android:transitionGroup="false"
     tools:context="com.abobrinha.caixinha.ui.HistoryActivity">
-
 
     <ImageView
         android:id="@+id/parallax_image"
@@ -22,8 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="@dimen/history_vertical_margins"
-        android:layout_marginRight="@dimen/history_vertical_margins"
+        android:background="@color/colorTransparent"
         tools:listitem="@layout/history_paragraph_text" />
 
     <!-- Indicador de progresso de carregamento dos dados -->

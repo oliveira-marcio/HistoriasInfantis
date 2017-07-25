@@ -2,15 +2,17 @@ package com.abobrinha.caixinha.ui;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Outline;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -22,7 +24,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
-public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Cursor mCursor;
     private Context mContext;
@@ -34,7 +36,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private int mIndexParagraphContent;
 
 
-    public HistoryAdapter(@NonNull Context context) {
+    HistoryAdapter(@NonNull Context context) {
         mContext = context;
     }
 
@@ -42,7 +44,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mTitle = title;
     }
 
-    public void swapCursor(Cursor newCursor) {
+    void swapCursor(Cursor newCursor) {
         mCursor = newCursor;
         if (mCursor != null) {
             mIndexParagraphType = mCursor.getColumnIndex(
@@ -82,18 +84,20 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case HistoryContract.ParagraphsEntry.TYPE_AUTHOR:
                 ParagraphTextViewHolder aHolder = (ParagraphTextViewHolder) holder;
                 prepareContentView(aHolder.historyContent, paragraphContent, Typeface.BOLD_ITALIC);
-                prepareTitleView(aHolder.historyTitleContainer, aHolder.historyTitle);
-                aHolder.bottomPadding.setVisibility(mBottomPaddingVisibility);
+                prepareTitleView(aHolder.historyTitle, aHolder.titleBottomPadding);
+                aHolder.bodyBottomPadding.setVisibility(mBottomPaddingVisibility);
+                fixShadowOverlap(aHolder.bodyBottomPadding);
                 break;
             case HistoryContract.ParagraphsEntry.TYPE_END:
                 ParagraphTextViewHolder eHolder = (ParagraphTextViewHolder) holder;
                 prepareContentView(eHolder.historyContent, paragraphContent, Typeface.BOLD);
-                prepareTitleView(eHolder.historyTitleContainer, eHolder.historyTitle);
-                eHolder.bottomPadding.setVisibility(mBottomPaddingVisibility);
+                prepareTitleView(eHolder.historyTitle, eHolder.titleBottomPadding);
+                eHolder.bodyBottomPadding.setVisibility(mBottomPaddingVisibility);
+                fixShadowOverlap(eHolder.bodyBottomPadding);
                 break;
             case HistoryContract.ParagraphsEntry.TYPE_IMAGE:
                 final ParagraphImageViewHolder iHolder = (ParagraphImageViewHolder) holder;
-                prepareTitleView(iHolder.historyTitleContainer, iHolder.historyTitle);
+                prepareTitleView(iHolder.historyTitle, iHolder.titleBottomPadding);
 
                 Glide.with(mContext.getApplicationContext())
                         .load(paragraphContent)
@@ -120,13 +124,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         })
                         .into(iHolder.historyImage);
 
-                iHolder.bottomPadding.setVisibility(mBottomPaddingVisibility);
+                iHolder.bodyBottomPadding.setVisibility(mBottomPaddingVisibility);
+                fixShadowOverlap(iHolder.bodyBottomPadding);
                 break;
             default:
                 ParagraphTextViewHolder tHolder = (ParagraphTextViewHolder) holder;
                 prepareContentView(tHolder.historyContent, paragraphContent, Typeface.NORMAL);
-                prepareTitleView(tHolder.historyTitleContainer, tHolder.historyTitle);
-                tHolder.bottomPadding.setVisibility(mBottomPaddingVisibility);
+                prepareTitleView(tHolder.historyTitle, tHolder.titleBottomPadding);
+                tHolder.bodyBottomPadding.setVisibility(mBottomPaddingVisibility);
+                fixShadowOverlap(tHolder.bodyBottomPadding);
                 break;
         }
     }
@@ -137,10 +143,24 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         contentView.setText(text);
     }
 
-    private void prepareTitleView(LinearLayout titleContainer, TextView titleView) {
+    private void prepareTitleView(TextView titleView, View titleBottomView) {
         titleView.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "AmaticSC-Bold.ttf"));
         titleView.setText(mTitle);
-        titleContainer.setVisibility(mTitleVisibility);
+        titleView.setVisibility(mTitleVisibility);
+        titleBottomView.setVisibility(mTitleVisibility);
+        fixShadowOverlap(titleBottomView);
+    }
+
+    private void fixShadowOverlap(View view) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        view.setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                int topOffset = mContext.getResources().getDimensionPixelSize(R.dimen.history_elevation);
+                outline.setRect(0, topOffset, view.getWidth(), view.getHeight() - topOffset);
+            }
+        });
+
     }
 
     @Override
@@ -156,40 +176,40 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return mCursor.getInt(mIndexParagraphType);
     }
 
-    public class ParagraphTextViewHolder extends RecyclerView.ViewHolder {
+    private class ParagraphTextViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView historyContent;
-        public TextView historyTitle;
-        public LinearLayout historyTitleContainer;
-        private View bottomPadding;
+        private TextView historyContent;
+        private TextView historyTitle;
+        private View titleBottomPadding;
+        private View bodyBottomPadding;
 
-        public ParagraphTextViewHolder(View itemView) {
+        private ParagraphTextViewHolder(View itemView) {
             super(itemView);
             historyContent = (TextView) itemView.findViewById(R.id.content_text_view);
             historyTitle = (TextView) itemView.findViewById(R.id.title_text_view);
-            historyTitleContainer = (LinearLayout) itemView.findViewById(R.id.title_container);
-            bottomPadding = itemView.findViewById(R.id.bottom_padding);
+            titleBottomPadding = itemView.findViewById(R.id.title_bottom_padding);
+            bodyBottomPadding = itemView.findViewById(R.id.body_bottom_padding);
         }
     }
 
-    public class ParagraphImageViewHolder extends RecyclerView.ViewHolder {
+    private class ParagraphImageViewHolder extends RecyclerView.ViewHolder {
 
-        public FrameLayout imageContainer;
-        public ImageView historyImage;
-        public TextView historyTitle;
-        public LinearLayout historyTitleContainer;
-        public ProgressBar loadingIndicator;
-        private View bottomPadding;
+        private FrameLayout imageContainer;
+        private ImageView historyImage;
+        private TextView historyTitle;
+        private View titleBottomPadding;
+        private ProgressBar loadingIndicator;
+        private View bodyBottomPadding;
 
 
-        public ParagraphImageViewHolder(View itemView) {
+        private ParagraphImageViewHolder(View itemView) {
             super(itemView);
             imageContainer = (FrameLayout) itemView.findViewById(R.id.image_container);
             historyImage = (ImageView) itemView.findViewById(R.id.image_view);
             historyTitle = (TextView) itemView.findViewById(R.id.title_text_view);
-            historyTitleContainer = (LinearLayout) itemView.findViewById(R.id.title_container);
+            titleBottomPadding = itemView.findViewById(R.id.title_bottom_padding);
             loadingIndicator = (ProgressBar) itemView.findViewById(R.id.loading_indicator);
-            bottomPadding = itemView.findViewById(R.id.bottom_padding);
+            bodyBottomPadding = itemView.findViewById(R.id.body_bottom_padding);
         }
     }
 }

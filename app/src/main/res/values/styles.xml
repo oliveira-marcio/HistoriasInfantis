@@ -78,6 +78,46 @@
         <item name="android:textColor">@color/colorWhite</item>
     </style>
 
+    <!-- Temas para o conteúdo da história -->
+
+    <style name="ParagraphItemTheme" parent="ListItemTheme">
+        <item name="android:background">@color/colorWhite</item>
+    </style>
+
+    <style name="ParagraphItemTheme.Group" parent="ListItemTheme">
+        <item name="android:clipToPadding">false</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingLeft">@dimen/history_vertical_margins</item>
+        <item name="android:paddingRight">@dimen/history_vertical_margins</item>
+    </style>
+
+    <style name="ParagraphItemTheme.Title" parent="ParagraphItemTheme">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:layout_marginTop">@dimen/history_title_offset</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:padding">@dimen/activity_horizontal_margin</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/history_title_font_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ParagraphItemTheme.Space" parent="ParagraphItemTheme">
+        <item name="android:layout_height">@dimen/history_horizontal_outter_padding</item>
+    </style>
+
+    <style name="ParagraphItemTheme.Body" parent="ParagraphItemTheme">
+        <item name="android:lineSpacingMultiplier">1.25</item>
+        <item name="android:paddingBottom">@dimen/history_horizontal_inner_padding</item>
+        <item name="android:paddingLeft">@dimen/history_vertical_padding</item>
+        <item name="android:paddingRight">@dimen/history_vertical_padding</item>
+        <item name="android:paddingTop">@dimen/history_horizontal_inner_padding</item>
+        <item name="android:textColorLink">@color/colorAccent</item>
+        <item name="android:textSize">@dimen/history_body_font_size</item>
+    </style>
+
     <!-- Temas para os Widgets -->
 
     <style name="WidgetTheme">

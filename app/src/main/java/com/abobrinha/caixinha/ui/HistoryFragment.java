@@ -166,7 +166,6 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         showLoading();
 
         getLoaderManager().initLoader(HISTORY_LOADER_ID, null, this);
-        getLoaderManager().initLoader(PARAGRAPH_LOADER_ID, null, this);
 
         return rootView;
     }
@@ -266,6 +265,15 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         }
         mHistoryView.setVisibility(View.VISIBLE);
         mLoadingIndicator.setVisibility(View.INVISIBLE);
+
+        mHistoryView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                mHistoryView.getViewTreeObserver().removeOnPreDrawListener(this);
+                ActivityCompat.startPostponedEnterTransition(getActivity());
+                return true;
+            }
+        });
     }
 
     @Override
@@ -310,17 +318,9 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 
                 mParallaxView.setContentDescription(data.getString(INDEX_HISTORY_TITLE));
 
-                mParallaxView.getViewTreeObserver().addOnPreDrawListener(
-                        new ViewTreeObserver.OnPreDrawListener() {
-                            @Override
-                            public boolean onPreDraw() {
-                                mParallaxView.getViewTreeObserver().removeOnPreDrawListener(this);
-                                ActivityCompat.startPostponedEnterTransition(getActivity());
-                                return true;
-                            }
-                        });
-
                 setFavoriteFabColor();
+
+                getLoaderManager().initLoader(PARAGRAPH_LOADER_ID, null, this);
                 break;
 
             case PARAGRAPH_LOADER_ID:

@@ -33,6 +33,7 @@
     <dimen name="history_vertical_padding">32dp</dimen>
     <dimen name="history_title_font_size">40sp</dimen>
     <dimen name="history_body_font_size">20sp</dimen>
+    <dimen name="history_elevation">4dp</dimen>
 
     <dimen name="single_widget_min_width">110dp</dimen>
     <dimen name="single_widget_min_height">40dp</dimen>
