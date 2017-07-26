@@ -2,17 +2,19 @@ package com.abobrinha.caixinha.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
-import android.widget.Toast;
 
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.data.PreferencesUtils;
@@ -22,6 +24,9 @@ import com.abobrinha.caixinha.sync.HistorySyncUtils;
 public class MainActivity extends AppCompatActivity {
 
     private NavigationView mNavigationView;
+    private boolean mIsMainPage = true;
+
+    private final String IS_MAIN_PAGE = "is_main_page";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +52,17 @@ public class MainActivity extends AppCompatActivity {
             int itemId = mNavigationView.getMenu().getItem(0).getSubMenu().getItem(category).getItemId();
             mNavigationView.setCheckedItem(itemId);
             loadHistories();
+        } else {
+            mIsMainPage = savedInstanceState.getBoolean(IS_MAIN_PAGE, true);
         }
 
         HistorySyncUtils.initialize(this);
+    }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(IS_MAIN_PAGE, mIsMainPage);
+        super.onSaveInstanceState(outState);
     }
 
     private void initializeUIElements() {
@@ -90,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.menu_all_histories:
                         if (!menuItem.isChecked()) {
+                            menuItem.setChecked(true);
                             PreferencesUtils.setMainHistoryCategory(MainActivity.this,
                                     PreferencesUtils.CATEGORY_HISTORIES);
                             loadHistories();
@@ -98,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.menu_favorites:
                         if (!menuItem.isChecked()) {
+                            menuItem.setChecked(true);
                             PreferencesUtils.setMainHistoryCategory(MainActivity.this,
                                     PreferencesUtils.CATEGORY_FAVORITES);
                             loadHistories();
@@ -113,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.menu_about:
-                        Toast.makeText(MainActivity.this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+                        loadContacts();
                         break;
                 }
                 return true;
@@ -141,8 +155,39 @@ public class MainActivity extends AppCompatActivity {
         HistoryGridFragment historyGridFragment = new HistoryGridFragment();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
+
         fragmentManager.beginTransaction()
                 .replace(R.id.frame, historyGridFragment)
                 .commit();
+    }
+
+    private void loadContacts() {
+        mIsMainPage = false;
+        SubMenu drawerSubMenu = mNavigationView.getMenu().getItem(0).getSubMenu();
+        for (int i = 0; i < drawerSubMenu.size(); i++) {
+            drawerSubMenu.getItem(i).setChecked(false);
+        }
+
+        Fragment contactsFragment = new ContactsFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame, contactsFragment)
+                .commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mIsMainPage) {
+            super.onBackPressed();
+            return;
+        }
+
+        mIsMainPage = true;
+        int category = PreferencesUtils.getMainHistoryCategory(this);
+        SubMenu drawerSubMenu = mNavigationView.getMenu().getItem(0).getSubMenu();
+        int itemId = drawerSubMenu.getItem(category).getItemId();
+        drawerSubMenu.getItem(category).setChecked(true);
+        mNavigationView.setCheckedItem(itemId);
+        loadHistories();
     }
 }

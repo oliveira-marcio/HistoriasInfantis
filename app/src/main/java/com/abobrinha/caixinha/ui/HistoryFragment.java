@@ -243,13 +243,19 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 
     private void keepHistoryPortraitWidth() {
         DisplayMetrics metrics = new DisplayMetrics();
-        int screenHeight;
+        int screenHeight = 0;
+
+        int navBarResId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (navBarResId > 0) {
+            screenHeight += getResources().getDimensionPixelSize(navBarResId);
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getActivity().getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
-            screenHeight = metrics.heightPixels;
+            screenHeight += metrics.heightPixels;
         } else {
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            screenHeight = metrics.heightPixels + 2 * mStatusBarHeight;
+            screenHeight += metrics.heightPixels + 2 * mStatusBarHeight;
         }
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(screenHeight, FrameLayout.LayoutParams.MATCH_PARENT);

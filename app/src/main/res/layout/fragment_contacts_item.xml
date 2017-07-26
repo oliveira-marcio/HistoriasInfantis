@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    style="@style/ContactItemTheme.Card">
+
+    <LinearLayout style="@style/ContactItemTheme.Group">
+
+        <ImageView
+            android:id="@+id/thumbnail"
+            style="@style/ContactItemTheme.Image"
+            tools:src="@drawable/ic_wordpress" />
+
+        <TextView
+            android:id="@+id/title_text_view"
+            style="@style/ContactItemTheme.Title"
+            tools:text="Blog" />
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

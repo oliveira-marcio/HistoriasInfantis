@@ -18,6 +18,11 @@
     <dimen name="grid_margins_horizontal">2dp</dimen>
     <dimen name="grid_margins_vertical">4dp</dimen>
 
+    <dimen name="contacts_inner_margins_horizontal">@dimen/grid_margins_horizontal</dimen>
+    <dimen name="contacts_inner_margins_vertical">0dp</dimen>
+    <dimen name="contacts_inner_padding">@dimen/activity_horizontal_margin</dimen>
+    <dimen name="contacts_image_size">40dp</dimen>
+
     <dimen name="item_card_padding">8dp</dimen>
     <dimen name="item_image_width">120dp</dimen>
     <dimen name="item_image_height">72dp</dimen>

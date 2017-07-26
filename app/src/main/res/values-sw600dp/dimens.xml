@@ -8,6 +8,8 @@
     <dimen name="grid_margins_horizontal">6dp</dimen>
     <dimen name="grid_margins_vertical">6dp</dimen>
 
+    <dimen name="contacts_inner_margins_vertical">@dimen/grid_margins_vertical</dimen>
+
     <dimen name="item_card_padding">12dp</dimen>
     <dimen name="item_image_height">170dp</dimen>
     <dimen name="item_title_margins">12dp</dimen>

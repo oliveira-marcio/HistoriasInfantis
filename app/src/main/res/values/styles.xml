@@ -4,6 +4,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
     <style name="HistoryTheme" parent="AppTheme">
@@ -116,6 +117,45 @@
         <item name="android:paddingTop">@dimen/history_horizontal_inner_padding</item>
         <item name="android:textColorLink">@color/colorAccent</item>
         <item name="android:textSize">@dimen/history_body_font_size</item>
+    </style>
+
+    <!-- Temas para os contatos -->
+
+    <style name="ContactItemTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ContactItemTheme.Card" parent="ContactItemTheme">
+        <item name="android:layout_marginBottom">@dimen/contacts_inner_margins_horizontal</item>
+        <item name="android:layout_marginTop">@dimen/contacts_inner_margins_horizontal</item>
+        <item name="android:layout_marginLeft">@dimen/contacts_inner_margins_vertical</item>
+        <item name="android:layout_marginRight">@dimen/contacts_inner_margins_vertical</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:foreground">?selectableItemBackground</item>
+    </style>
+
+    <style name="ContactItemTheme.Group" parent="ContactItemTheme">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">@dimen/contacts_inner_padding</item>
+    </style>
+
+    <style name="ContactItemTheme.Image">
+        <item name="android:layout_width">@dimen/contacts_image_size</item>
+        <item name="android:layout_height">@dimen/contacts_image_size</item>
+        <item name="android:scaleType">fitXY</item>
+    </style>
+
+    <style name="ContactItemTheme.Title" parent="ContactItemTheme">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:paddingLeft">@dimen/contacts_inner_padding</item>
+        <item name="android:paddingRight">@dimen/contacts_inner_padding</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textAppearance">?android:textAppearanceLarge</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- Temas para os Widgets -->

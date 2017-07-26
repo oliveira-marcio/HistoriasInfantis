@@ -15,14 +15,34 @@ import java.util.List;
 
 public class SocialUtils {
 
-    public static final int WEB = 0;
+    public static final int WEB = -1;
+    public static final int EMAIL = 0;
     public static final int BLOG = 1;
-    public static final int EMAIL = 2;
-    public static final int YOUTUBE = 3;
-    public static final int FACEBOOK = 4;
-    public static final int TWITTER = 5;
-    public static final int INSTAGRAM = 6;
-    public static final int PINTEREST = 7;
+    public static final int YOUTUBE = 2;
+    public static final int FACEBOOK = 3;
+    public static final int TWITTER = 4;
+    public static final int INSTAGRAM = 5;
+    public static final int PINTEREST = 6;
+
+    public static final int[] SOCIAL_IMAGE_IDS = {
+            R.drawable.ic_email,
+            R.drawable.ic_wordpress,
+            R.drawable.ic_youtube,
+            R.drawable.ic_facebook,
+            R.drawable.ic_twitter,
+            R.drawable.ic_instagram,
+            R.drawable.ic_pinterest
+    };
+
+    public static final String[] SOCIAL_NAMES = new String[]{
+            "E-mail",
+            "Blog",
+            "YouTube",
+            "Facebok",
+            "Twitter",
+            "Instagram",
+            "Pinterest"
+    };
 
     private SocialUtils() {
     }
@@ -43,7 +63,7 @@ public class SocialUtils {
     }
 
     public static void openExternalLink(Context c, int linkType, String url) {
-        final String EMAIL_BLOG = "contato@historiasinfantisabobrinha.com";
+        final String EMAIL_BLOG = "abobrinhastudios@gmail.com";
 
         final String USER_YOUTUBE = "UC9P5Q7CsPk0JUOvZF-uTQZA/";
         final String USER_FACEBOOK_WEB = "abobrinhastudios";

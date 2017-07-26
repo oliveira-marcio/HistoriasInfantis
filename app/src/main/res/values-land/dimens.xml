@@ -3,6 +3,8 @@
     <dimen name="grid_margins_horizontal">4dp</dimen>
     <dimen name="grid_margins_vertical">4dp</dimen>
 
+    <dimen name="contacts_inner_margins_vertical">@dimen/grid_margins_vertical</dimen>
+
     <dimen name="item_image_height">150dp</dimen>
     <dimen name="item_title_margins">8dp</dimen>
     <dimen name="item_title_size">16sp</dimen>
