@@ -22,7 +22,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.jsoup.Jsoup;
 
-public class HistoryGridAdAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     final private GridOnItemClickListener mOnClickListener;
 
@@ -41,7 +41,7 @@ public class HistoryGridAdAdapter extends RecyclerView.Adapter<RecyclerView.View
         void onListItemClick(long historyId, int position);
     }
 
-    public HistoryGridAdAdapter(@NonNull Context context, GridOnItemClickListener listener) {
+    public HistoryGridAdapter(@NonNull Context context, GridOnItemClickListener listener) {
         mContext = context;
         mOnClickListener = listener;
         mOffset = mContext.getResources().getDimensionPixelSize(R.dimen.grid_animation_offset_y);

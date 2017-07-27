@@ -46,9 +46,7 @@ import com.abobrinha.caixinha.sync.NotificationUtils;
 public class HistoryGridFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>,
         SharedPreferences.OnSharedPreferenceChangeListener,
-        HistoryGridAdAdapter.GridOnItemClickListener {
-//ToDo: Passar linha acima para free flavor
-//        HistoryGridAdapter.GridOnItemClickListener {
+        HistoryGridAdapter.GridOnItemClickListener {
 
     public HistoryGridFragment() {
     }
@@ -77,9 +75,7 @@ public class HistoryGridFragment extends Fragment implements
     public static final int INDEX_HISTORY_DATE = 3;
 
     private RecyclerView mHistoriesList;
-    private HistoryGridAdAdapter mAdapter;
-    //ToDo: Passar linha acima para free flavor
-//    private HistoryGridAdapter mAdapter;
+    private HistoryGridAdapter mAdapter;
 
     private View mEmptyStateView;
     private TextView mEmptyStateTextView;
@@ -114,9 +110,7 @@ public class HistoryGridFragment extends Fragment implements
 
         mLayoutManager = new GridLayoutManager(getActivity(),
                 getActivity().getResources().getInteger(R.integer.grid_columns));
-        mAdapter = new HistoryGridAdAdapter(getActivity(), this);
-        //ToDo: Passar linha acima para free flavor
-//        mAdapter = new HistoryGridAdapter(getActivity(), this);
+        mAdapter = new HistoryGridAdapter(getActivity(), this);
 
         showLoading();
 

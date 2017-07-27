@@ -27,6 +27,14 @@ android {
             signingConfig signingConfigs.config
         }
     }
+    productFlavors{
+        free {
+            applicationId "com.abobrinha.caixinha"
+        }
+        paid {
+            applicationId "com.abobrinha.caixinha"
+        }
+    }
 }
 
 ext {
