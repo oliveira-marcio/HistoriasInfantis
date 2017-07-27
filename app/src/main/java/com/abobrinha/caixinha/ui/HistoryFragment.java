@@ -1,5 +1,6 @@
 package com.abobrinha.caixinha.ui;
 
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.res.ColorStateList;
@@ -19,7 +20,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -274,7 +274,9 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
             @Override
             public boolean onPreDraw() {
                 mHistoryView.getViewTreeObserver().removeOnPreDrawListener(this);
-                ActivityCompat.startPostponedEnterTransition(getActivity());
+                Activity activity = getActivity();
+                if (activity != null)
+                    ActivityCompat.startPostponedEnterTransition(activity);
                 return true;
             }
         });

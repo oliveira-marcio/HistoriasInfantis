@@ -387,9 +387,7 @@ public class HistoryGridFragment extends Fragment implements
             return true;
         }
 
-        // Métodos para teste de sincronização e notificação.
-        // Deve ser deletado na versão final
-        // ToDo: Remover código abaixo até o return super e remover entradas do menu
+        // Métodos para teste de sincronização e notificação (Apenas na variante Debug).
         Long lastId = null;
         Long beforeLastId = null;
 
@@ -441,10 +439,7 @@ public class HistoryGridFragment extends Fragment implements
             }
         });
 
-        // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 }
-
-// ToDo: Verificar se Gson ainda será utilizado e removê-lo.

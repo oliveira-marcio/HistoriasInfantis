@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 import com.abobrinha.caixinha.R;
 import com.abobrinha.caixinha.ui.HistoryGridFragment;

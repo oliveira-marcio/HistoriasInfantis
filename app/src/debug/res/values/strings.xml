@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Histórias Infantis (Debug)</string>
+    <string name="debug_menu_delete_one">Deletar último item</string>
+    <string name="debug_menu_delete_two">Deletar 2 últimos itens</string>
+</resources>

@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias key_alias
+            keyPassword key_password
+            storeFile file(store_file)
+            storePassword store_password
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "26.0.0"
     defaultConfig {
@@ -16,6 +24,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 }
@@ -27,7 +36,6 @@ ext {
     testLibVersion = '0.5'
     junitLibVersion = '4.12'
     glideLibVersion = '3.8.0'
-    gsonLibVersion = '2.8.0'
     jsoupLibVersion = '1.10.3'
     firebaseJobDispatcherLibVersion = '0.6.0'
     firebaseMessagingLibVersion = '11.0.2'
@@ -45,7 +53,6 @@ dependencies {
     compile "com.android.support:preference-v7:${supportLibVersion}"
     compile "com.android.support.constraint:constraint-layout:${constraintLayoutLibVersion}"
     compile "com.github.bumptech.glide:glide:${glideLibVersion}"
-    compile "com.google.code.gson:gson:${gsonLibVersion}"
     compile "org.jsoup:jsoup:${jsoupLibVersion}"
     compile "com.firebase:firebase-jobdispatcher:${firebaseJobDispatcherLibVersion}"
     compile "com.google.firebase:firebase-messaging:${firebaseMessagingLibVersion}"
