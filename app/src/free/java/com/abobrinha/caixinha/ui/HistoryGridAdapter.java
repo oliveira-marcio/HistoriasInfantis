@@ -2,23 +2,29 @@ package com.abobrinha.caixinha.ui;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.abobrinha.caixinha.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.NativeExpressAdView;
 
 import org.jsoup.Jsoup;
 
@@ -99,10 +105,44 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 animateViewsIn(rHolder.cardView, position);
             }
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            AdViewHolder aHolder = (AdViewHolder) holder;
-            animateViewsIn(aHolder.cardView, position);
+        } else {
+            final AdViewHolder aHolder = (AdViewHolder) holder;
+
+            final NativeExpressAdView adView = new NativeExpressAdView(mContext);
+
+            aHolder.adContainer.addView(adView);
+
+            adView.setAdSize(getComputedAdSize());
+            adView.setAdUnitId(mContext.getString(R.string.banner_ad_unit_id));
+            adView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+            adView.loadAd(aHolder.adRequest);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                animateViewsIn(aHolder.cardView, position);
+            }
         }
+    }
+
+    private AdSize getComputedAdSize() {
+        Resources res = mContext.getResources();
+        DisplayMetrics metrics = res.getDisplayMetrics();
+        float screenWidth = (float) metrics.widthPixels;
+
+        int itemMargins =
+                2 * (res.getDimensionPixelSize(R.dimen.item_card_padding) +
+                        res.getDimensionPixelSize(R.dimen.grid_margins_vertical));
+
+        int parentMargins = 2 * res.getDimensionPixelSize(R.dimen.grid_margins_vertical);
+
+        int totalCols = res.getInteger(R.integer.grid_columns);
+
+        double itemWidth = (screenWidth - (totalCols * itemMargins) - parentMargins) / totalCols;
+
+        int widthDp = (int) (itemWidth / metrics.density);
+        int heightDp = (int) (
+                res.getDimensionPixelSize(R.dimen.item_image_height) /
+                        metrics.density);
+        return new AdSize(widthDp, heightDp);
     }
 
     @Override
@@ -174,10 +214,17 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class AdViewHolder extends RecyclerView.ViewHolder {
         public CardView cardView;
+        public FrameLayout adContainer;
+        public AdRequest adRequest;
 
         public AdViewHolder(View itemView) {
             super(itemView);
             cardView = (CardView) itemView.findViewById(R.id.card_view);
+            adContainer = (FrameLayout) itemView.findViewById(R.id.ad_container);
+
+            adRequest = new AdRequest.Builder()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .build();
         }
     }
 }

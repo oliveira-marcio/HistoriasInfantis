@@ -33,6 +33,8 @@
     </style>
 
     <style name="ListItemTheme.Card" parent="ListItemTheme">
+        <item name="android:layout_marginLeft">@dimen/grid_margins_vertical</item>
+        <item name="android:layout_marginRight">@dimen/grid_margins_vertical</item>
         <item name="android:layout_marginBottom">@dimen/grid_margins_horizontal</item>
         <item name="android:layout_marginTop">@dimen/grid_margins_horizontal</item>
         <item name="android:clickable">true</item>
@@ -41,14 +43,9 @@
     </style>
 
     <style name="ListItemTheme.Group" parent="ListItemTheme">
-        <item name="android:gravity">center_vertical</item>
+        <item name="android:gravity">center</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:padding">@dimen/item_card_padding</item>
-    </style>
-
-    <style name="ListItemTheme.Card.Landscape" parent="ListItemTheme.Card">
-        <item name="android:layout_marginLeft">@dimen/grid_margins_vertical</item>
-        <item name="android:layout_marginRight">@dimen/grid_margins_vertical</item>
     </style>
 
     <style name="ListItemTheme.Image">

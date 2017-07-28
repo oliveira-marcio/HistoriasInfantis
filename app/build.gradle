@@ -46,7 +46,7 @@ ext {
     glideLibVersion = '3.8.0'
     jsoupLibVersion = '1.10.3'
     firebaseJobDispatcherLibVersion = '0.6.0'
-    firebaseMessagingLibVersion = '11.0.2'
+    firebaseLibVersion = '11.0.2'
 }
 
 dependencies {
@@ -63,9 +63,10 @@ dependencies {
     compile "com.github.bumptech.glide:glide:${glideLibVersion}"
     compile "org.jsoup:jsoup:${jsoupLibVersion}"
     compile "com.firebase:firebase-jobdispatcher:${firebaseJobDispatcherLibVersion}"
-    compile "com.google.firebase:firebase-messaging:${firebaseMessagingLibVersion}"
+    compile "com.google.firebase:firebase-messaging:${firebaseLibVersion}"
     compile "com.android.support.test.espresso:espresso-idling-resource:${espressoLibVersion}"
 
+    freeCompile "com.google.firebase:firebase-ads:${firebaseLibVersion}"
     testCompile "junit:junit:${junitLibVersion}"
 
     androidTestCompile "com.android.support:support-annotations:${supportLibVersion}"

@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
-    style="@style/ListItemTheme.Card.Landscape">
+    style="@style/ListItemTheme.Card">
 
     <FrameLayout style="@style/ListItemTheme.Group">
 

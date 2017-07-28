@@ -16,7 +16,7 @@
 
     <dimen name="grid_animation_offset_y">300dp</dimen>
     <dimen name="grid_margins_horizontal">2dp</dimen>
-    <dimen name="grid_margins_vertical">4dp</dimen>
+    <dimen name="grid_margins_vertical">2dp</dimen>
 
     <dimen name="contacts_inner_margins_horizontal">@dimen/grid_margins_horizontal</dimen>
     <dimen name="contacts_inner_margins_vertical">0dp</dimen>
