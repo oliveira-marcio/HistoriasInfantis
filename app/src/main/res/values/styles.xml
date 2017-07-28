@@ -33,6 +33,7 @@
     </style>
 
     <style name="ListItemTheme.Card" parent="ListItemTheme">
+        <item name="android:background">@color/colorWhite</item>
         <item name="android:layout_marginLeft">@dimen/grid_margins_vertical</item>
         <item name="android:layout_marginRight">@dimen/grid_margins_vertical</item>
         <item name="android:layout_marginBottom">@dimen/grid_margins_horizontal</item>
@@ -124,6 +125,7 @@
     </style>
 
     <style name="ContactItemTheme.Card" parent="ContactItemTheme">
+        <item name="android:background">@color/colorWhite</item>
         <item name="android:layout_marginBottom">@dimen/contacts_inner_margins_horizontal</item>
         <item name="android:layout_marginTop">@dimen/contacts_inner_margins_horizontal</item>
         <item name="android:layout_marginLeft">@dimen/contacts_inner_margins_vertical</item>

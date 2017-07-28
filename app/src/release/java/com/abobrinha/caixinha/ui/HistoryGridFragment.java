@@ -324,7 +324,7 @@ public class HistoryGridFragment extends Fragment implements
     }
 
     @Override
-    public void onListItemClick(long historyId, int position) {
+    public void onListItemClick(long historyId) {
         Intent intent = new Intent(getActivity(), HistoryActivity.class);
         intent.putExtra(Intent.EXTRA_TEXT, historyId);
         ActivityOptionsCompat activityOptions =

@@ -22,11 +22,16 @@ import android.widget.TextView;
 import com.abobrinha.caixinha.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.NativeExpressAdView;
 
 import org.jsoup.Jsoup;
+
+import java.util.Random;
 
 public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -36,6 +41,8 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context mContext;
     private float mOffset;
     private int lastPosition = -1;
+    private InterstitialAd mInterstitialAd;
+    private int mPosition;
 
     private final int AD_INTERVAL = 8;
     private final int AD_INITIAL_OFFSET = 3;
@@ -43,19 +50,48 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private final int ITEM_AD = 0;
     private final int ITEM_REGULAR = 1;
 
+    private final int INTERSTITIAL_RANGE = 100;
+    private final int INTERSTITIAL_FREQUENCY = 20;
+
     public interface GridOnItemClickListener {
-        void onListItemClick(long historyId, int position);
+        void onListItemClick(long historyId);
     }
 
     public HistoryGridAdapter(@NonNull Context context, GridOnItemClickListener listener) {
         mContext = context;
         mOnClickListener = listener;
         mOffset = mContext.getResources().getDimensionPixelSize(R.dimen.grid_animation_offset_y);
+        MobileAds.initialize(context.getApplicationContext(),
+                context.getString(R.string.admob_app_id));
+
+        mInterstitialAd = new InterstitialAd(mContext);
+        mInterstitialAd.setAdUnitId(mContext.getString(R.string.interstitial_ad_unit_id));
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestNewInterstitial();
+                doRegularClick();
+            }
+        });
+        requestNewInterstitial();
     }
 
     public void swapCursor(Cursor newCursor) {
         mCursor = newCursor;
         notifyDataSetChanged();
+    }
+
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+
+        mInterstitialAd.loadAd(adRequest);
+    }
+
+    private void doRegularClick() {
+        int offsetPosition = getOffsetPosition(mPosition);
+        mCursor.moveToPosition(offsetPosition);
+        mOnClickListener.onListItemClick(mCursor.getLong(HistoryGridFragment.INDEX_HISTORY_ID));
     }
 
     @Override
@@ -205,10 +241,14 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         @Override
         public void onClick(View v) {
-            int offsetPosition = getOffsetPosition(getAdapterPosition());
-            mCursor.moveToPosition(offsetPosition);
-            mOnClickListener.onListItemClick(mCursor
-                    .getLong(HistoryGridFragment.INDEX_HISTORY_ID), getAdapterPosition());
+            mPosition = getAdapterPosition();
+            int randomValue = new Random().nextInt(INTERSTITIAL_RANGE);
+
+            if (randomValue < INTERSTITIAL_FREQUENCY && mInterstitialAd.isLoaded()) {
+                mInterstitialAd.show();
+                return;
+            }
+            doRegularClick();
         }
     }
 
@@ -222,9 +262,7 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             cardView = (CardView) itemView.findViewById(R.id.card_view);
             adContainer = (FrameLayout) itemView.findViewById(R.id.ad_container);
 
-            adRequest = new AdRequest.Builder()
-                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                    .build();
+            adRequest = new AdRequest.Builder().build();
         }
     }
 }
