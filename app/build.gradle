@@ -15,8 +15,8 @@ android {
         applicationId "com.abobrinha.caixinha"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 16
+        versionName "3.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -46,7 +46,7 @@ ext {
     glideLibVersion = '3.8.0'
     jsoupLibVersion = '1.10.3'
     firebaseJobDispatcherLibVersion = '0.6.0'
-    firebaseLibVersion = '11.0.2'
+    firebaseLibVersion = '11.0.4'
 }
 
 dependencies {

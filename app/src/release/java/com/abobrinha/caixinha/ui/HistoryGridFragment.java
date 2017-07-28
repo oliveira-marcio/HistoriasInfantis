@@ -249,7 +249,7 @@ public class HistoryGridFragment extends Fragment implements
                             background = new RectF(
                                     (float) itemView.getLeft(),
                                     (float) itemView.getTop(),
-                                    dX,
+                                    (float) itemView.getLeft() + dX,
                                     (float) itemView.getBottom());
                             icon_dest = new RectF(
                                     (float) itemView.getLeft() + width,
@@ -268,6 +268,7 @@ public class HistoryGridFragment extends Fragment implements
                                     (float) itemView.getRight() - width,
                                     (float) itemView.getBottom() - width);
                         }
+
                         c.drawRect(background, p);
                         c.clipRect(background);
                         icon = BitmapFactory.decodeResource(getResources(),
