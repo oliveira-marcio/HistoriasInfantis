@@ -13,7 +13,7 @@ public class HistoryFirebaseJobService extends JobService {
 
     @Override
     public boolean onStartJob(final JobParameters jobParameters) {
-        mFetchHistoriesTask = new AsyncTask<Void, Void, Void>(){
+        mFetchHistoriesTask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
                 Context context = getApplicationContext();

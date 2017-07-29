@@ -28,14 +28,11 @@ public class NotificationUtils {
     private static final int HISTORY_NOTIFICATION_ID = 1234;
     public static final String ACTION_DATA_UPDATED = "com.abobrinha.caixinha.ACTION_DATA_UPDATED";
 
-    /**
+    /*
      * Cria notificações de acordo com a quantidade de novas histórias adicionadas.
      * Caso seja 1, mostra o título e a imagem da mesma e o clique leva diretamente para a
      * leitura da história. Caso sejam mais, mostra o total de novas histórias e o clique leva
      * para a tela principal.
-     *
-     * @param context
-     * @param quantity é a quantidade de novas histórias adicionadas.
      */
     public static void notifyUserOfNewHistories(Context context, int quantity) {
         String notificationTitle, notificationText;
@@ -65,7 +62,7 @@ public class NotificationUtils {
                     HistoryContract.HistoriesEntry.COLUMN_HISTORY_DATE + " DESC"
             );
 
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 long historyId = cursor.getLong(HistoryGridFragment.INDEX_HISTORY_ID);
                 String historyTitle = cursor.getString(HistoryGridFragment.INDEX_HISTORY_TITLE);
                 String imageUrl = cursor.getString(HistoryGridFragment.INDEX_HISTORY_IMAGE);
@@ -93,9 +90,9 @@ public class NotificationUtils {
                         PreferencesUtils.CATEGORY_HISTORIES);
 
                 makeNotification(context, notificationTitle, notificationText, largeIcon, historyIntent);
-            }
 
-            cursor.close();
+                cursor.close();
+            }
         }
     }
 
@@ -124,7 +121,6 @@ public class NotificationUtils {
 
         notificationManager.notify(HISTORY_NOTIFICATION_ID, notificationBuilder.build());
     }
-
 
     public static void updateWidgets(Context context) {
         Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)

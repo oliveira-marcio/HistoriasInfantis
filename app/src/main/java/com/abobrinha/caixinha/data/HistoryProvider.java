@@ -114,6 +114,13 @@ public class HistoryProvider extends ContentProvider {
         return true;
     }
 
+    /**
+     * Método faz parsing do conteúdo HTML da história retornardo pela API do Wordpress e tenta
+     * gerar um conteúdo sem tags, quebrado em parágrados e identificados por tipos específicos
+     * como texto da história, autor, imagem e fim da história para serem guardados no banco dessa
+     * forma e posteriormentente utilizados na RecyclerView da história com os layouts apropriados
+     * por tipo.
+     */
     public static ContentValues[] historyContentParser(long id, String htmlContent) {
 
         final String BR_TOKEN = "#!#br2n#!#";
@@ -167,7 +174,7 @@ public class HistoryProvider extends ContentProvider {
     }
 
     @Override
-    public int bulkInsert(@NonNull Uri uri, ContentValues[] values) {
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         switch (sUriMatcher.match(uri)) {
             case CODE_HISTORIES:
                 final String historyTableName = HistoryContract.HistoriesEntry.TABLE_NAME;
@@ -318,8 +325,8 @@ public class HistoryProvider extends ContentProvider {
                 selectedValues.put(favoriteColumnName, HistoryContract.IS_NOT_FAVORITE);
                 break;
 
+            // Update de uma história específica deverá ser apenas do status de favorito
             case CODE_SINGLE_HISTORY:
-                // Update de uma história específica deverá ser apenas do status de favorito
                 selection = HistoryContract.HistoriesEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
@@ -335,8 +342,8 @@ public class HistoryProvider extends ContentProvider {
 
                 break;
 
+            // Marca todas as histórias selecionadas como favoritas
             case CODE_FAVORITES_HISTORIES:
-                // Marca todas as histórias selecionadas como favoritas
                 selection = HistoryContract.HistoriesEntry._ID + " IN (" +
                         TextUtils.join(",", selectionArgs) + ")";
                 selectionArgs = null;

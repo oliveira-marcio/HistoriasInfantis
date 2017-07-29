@@ -20,6 +20,8 @@ public class HistoryContract {
                 .appendPath(PATH_HISTORIES)
                 .build();
 
+        public static final int INVALID_ID = -1;
+
         public static final String TABLE_NAME = "histories";
 
         public static final String COLUMN_HISTORY_TITLE = "title";

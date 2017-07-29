@@ -168,6 +168,18 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         return rootView;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        mPosition = mLayoutManager.findFirstVisibleItemPosition();
+        if (mPosition != RecyclerView.NO_POSITION) {
+            outState.putInt(VISIBLE_POSITION, mPosition);
+        }
+        outState.putParcelable(HISTORY_URI, mHistoryUri);
+        outState.putInt(STATUS_BAR_HEIGHT, mStatusBarHeight);
+
+        super.onSaveInstanceState(outState);
+    }
+
     private void updateStatusBar(float progress) {
         if (mStatusBar == null) return;
 
@@ -190,6 +202,7 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         }
     }
 
+    // Desloca o Up Button para fora da tela e seta a transparência da Status Bar proporcionalmente.
     private void updateUpButtonPostition() {
         final int TITLE_OFFSET = getResources().getDimensionPixelSize(R.dimen.history_title_offset);
         final int MAX = mUpButton.getHeight();
@@ -204,6 +217,8 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         }
     }
 
+    // Se a orientação for PORTRAIT o efeito de parallax ocorre apenas quando o título da história
+    // está visível, caso contrário, acontece independente.
     private void updateParallaxViewPosition(int dY) {
         final int PARALLAX_FACTOR = 2;
         final int MAX = mParallaxView.getHeight();
@@ -219,28 +234,8 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        mPosition = mLayoutManager.findFirstVisibleItemPosition();
-        if (mPosition != RecyclerView.NO_POSITION) {
-            outState.putInt(VISIBLE_POSITION, mPosition);
-        }
-        outState.putParcelable(HISTORY_URI, mHistoryUri);
-        outState.putInt(STATUS_BAR_HEIGHT, mStatusBarHeight);
-
-        super.onSaveInstanceState(outState);
-    }
-
-
-    public void setHistoryUri(Uri uri) {
-        mHistoryUri = uri;
-    }
-
-    private void showLoading() {
-        mHistoryView.setVisibility(View.INVISIBLE);
-        mLoadingIndicator.setVisibility(View.VISIBLE);
-    }
-
+    // Para tablets, tenta manter em LANDSCAPE a mesma largura da página da história quando em
+    // PORTRAIT
     private void keepHistoryPortraitWidth() {
         DisplayMetrics metrics = new DisplayMetrics();
         int screenHeight = 0;
@@ -258,9 +253,19 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
             screenHeight += metrics.heightPixels + 2 * mStatusBarHeight;
         }
 
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(screenHeight, FrameLayout.LayoutParams.MATCH_PARENT);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(screenHeight,
+                FrameLayout.LayoutParams.MATCH_PARENT);
         layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
         mHistoryView.setLayoutParams(layoutParams);
+    }
+
+    public void setHistoryUri(Uri uri) {
+        mHistoryUri = uri;
+    }
+
+    private void showLoading() {
+        mHistoryView.setVisibility(View.INVISIBLE);
+        mLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
     private void showHistoryDataView() {

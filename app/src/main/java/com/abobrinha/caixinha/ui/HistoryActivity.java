@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -51,9 +52,7 @@ public class HistoryActivity extends AppCompatActivity implements
 
     public static final int INDEX_HISTORY_ID = 0;
     public static final int INDEX_HISTORY_TITLE = 1;
-    public static final int INDEX_HISTORY_DATE = 2;
 
-    private final int INVALID_ID = -1;
     private final String SELECTED_HISTORY = "selected_history";
 
     private NavigationView mNavigationView;
@@ -70,22 +69,25 @@ public class HistoryActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_history);
 
         if (savedInstanceState == null) {
-            mHistoryId = getIntent().getLongExtra(Intent.EXTRA_TEXT, INVALID_ID);
+            mHistoryId = getIntent().getLongExtra(Intent.EXTRA_TEXT,
+                    HistoryContract.HistoriesEntry.INVALID_ID);
             // Se esta Activity foi aberta por uma notificação e a última categoria aberta pelo
             // usuário foi a de favoritos, é necessário setar a categoria para "Todas", pois a
-            // nova história ainda não consta nos favoritos do usuário.
+            // nova história ainda não consta nos favoritos do usuário. Se foi aberta por um widget,
+            // troca a categoria de acordo com a configuração do widget
             int categoryByNotification = getIntent().
                     getIntExtra(getString(R.string.notification_intent),
                             PreferencesUtils.getMainHistoryCategory(this));
             PreferencesUtils.setMainHistoryCategory(this, categoryByNotification);
 
         } else {
-            mHistoryId = savedInstanceState.getLong(SELECTED_HISTORY, INVALID_ID);
+            mHistoryId = savedInstanceState.getLong(SELECTED_HISTORY,
+                    HistoryContract.HistoriesEntry.INVALID_ID);
         }
 
         mCategory = PreferencesUtils.getMainHistoryCategory(this);
 
-        if (mHistoryId == INVALID_ID) throw
+        if (mHistoryId == HistoryContract.HistoriesEntry.INVALID_ID) throw
                 new NullPointerException("id da história inválido.");
 
         getSupportLoaderManager().initLoader(HISTORY_LOADER_ID, null, this);
@@ -139,6 +141,7 @@ public class HistoryActivity extends AppCompatActivity implements
             }
         } while (data.moveToNext());
 
+        // Ajuste necessário, pois o drawer perde o favorito removido, assim como como o Pager.
         if (favoriteRemoved) {
             if (mPosition == data.getCount()) mPosition--;
             position = mPosition;
@@ -174,7 +177,7 @@ public class HistoryActivity extends AppCompatActivity implements
 
             mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
-                public boolean onNavigationItemSelected(MenuItem menuItem) {
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                     drawerLayout.closeDrawers();
                     if (menuItem.getItemId() == R.id.menu_settings) {
                         startActivity(new Intent(HistoryActivity.this, SettingsActivity.class));

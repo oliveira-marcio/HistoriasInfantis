@@ -4,11 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
 import com.abobrinha.caixinha.data.HistoryContract;
 import com.abobrinha.caixinha.data.PreferencesUtils;
-import com.abobrinha.caixinha.network.WordPressUtils;
+import com.abobrinha.caixinha.network.WordPressConn;
 
 import org.json.JSONException;
 
@@ -28,7 +27,7 @@ public class HistorySyncTask {
         try {
             PreferencesUtils.setHistoryStatus(context, PreferencesUtils.HISTORY_STATUS_UNKNOWN);
 
-            ContentValues[] historiesValues = WordPressUtils.getDataFromAllApiPages(context);
+            ContentValues[] historiesValues = WordPressConn.getDataFromAllApiPages(context);
             if (historiesValues == null) {
                 PreferencesUtils.setHistoryStatus(context, PreferencesUtils.HISTORY_STATUS_SERVER_DOWN);
                 return;
@@ -46,11 +45,13 @@ public class HistorySyncTask {
             if (cursor != null && cursor.moveToFirst()) {
                 int i = 0;
                 favoritesSaved = new String[cursor.getCount()];
+
                 do {
                     favoritesSaved[i++] = cursor.getString(0);
                 } while (cursor.moveToNext());
+
+                cursor.close();
             }
-            cursor.close();
 
             int oldHistoryQuantity = context.getContentResolver()
                     .delete(allHistoriesUri, null, null);

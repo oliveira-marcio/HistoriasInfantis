@@ -23,9 +23,9 @@ import com.abobrinha.caixinha.sync.HistorySyncUtils;
 public class MainActivity extends AppCompatActivity {
 
     private NavigationView mNavigationView;
-    private boolean mIsMainPage = true;
+    private boolean mIsHistoryPage = true;
 
-    private final String IS_MAIN_PAGE = "is_main_page";
+    private final String IS_HISTORY_PAGE = "is_history_page";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         initializeUIElements();
 
         if (savedInstanceState == null) {
+            // possível intent recebido de um App Shortcut
             if (getIntent().hasExtra(getString(R.string.shortcut_intent))) {
                 PreferencesUtils.setMainHistoryCategory(this,
                         getIntent()
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
                                         PreferencesUtils.CATEGORY_HISTORIES));
             }
 
+            // possível intent recebido do FCM
             if (getIntent().hasExtra(getString(R.string.fcm_extra_key))) {
                 SocialUtils.openExternalLink(this, SocialUtils.WEB, getIntent()
                         .getStringExtra(getString(R.string.fcm_extra_key)));
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             mNavigationView.setCheckedItem(itemId);
             loadHistories();
         } else {
-            mIsMainPage = savedInstanceState.getBoolean(IS_MAIN_PAGE, true);
+            mIsHistoryPage = savedInstanceState.getBoolean(IS_HISTORY_PAGE, true);
         }
 
         HistorySyncUtils.initialize(this);
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(IS_MAIN_PAGE, mIsMainPage);
+        outState.putBoolean(IS_HISTORY_PAGE, mIsHistoryPage);
         super.onSaveInstanceState(outState);
     }
 
@@ -161,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadContacts() {
-        mIsMainPage = false;
+        mIsHistoryPage = false;
         SubMenu drawerSubMenu = mNavigationView.getMenu().getItem(0).getSubMenu();
         for (int i = 0; i < drawerSubMenu.size(); i++) {
             drawerSubMenu.getItem(i).setChecked(false);
@@ -174,14 +176,20 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
+    /*
+     * Controla o comportamento do botão Back. Como o drawer permite exibir outras opções além de
+     * histórias, é esperado que o aplicativo se encerre com o Back apenas quando estiver exibindo
+     * uma categoria de histórias, caso contrário, retorna para a última categoria aberta pelo
+     * usuário.
+     */
     @Override
     public void onBackPressed() {
-        if (mIsMainPage) {
+        if (mIsHistoryPage) {
             super.onBackPressed();
             return;
         }
 
-        mIsMainPage = true;
+        mIsHistoryPage = true;
         int category = PreferencesUtils.getMainHistoryCategory(this);
         SubMenu drawerSubMenu = mNavigationView.getMenu().getItem(0).getSubMenu();
         int itemId = drawerSubMenu.getItem(category).getItemId();

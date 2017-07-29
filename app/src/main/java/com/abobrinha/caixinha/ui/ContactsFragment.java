@@ -21,6 +21,7 @@ import com.abobrinha.caixinha.network.SocialUtils;
 
 
 public class ContactsFragment extends Fragment {
+
     public ContactsFragment() {
     }
 
@@ -55,9 +56,8 @@ public class ContactsFragment extends Fragment {
         public ContactsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             int layoutIdForListItem = R.layout.fragment_contacts_item;
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            boolean shouldAttachToParentImmediately = false;
 
-            View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
+            View view = inflater.inflate(layoutIdForListItem, viewGroup, false);
             final ContactsViewHolder holder = new ContactsViewHolder(view);
 
             view.setOnClickListener(new View.OnClickListener() {

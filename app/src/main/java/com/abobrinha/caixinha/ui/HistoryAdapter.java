@@ -1,5 +1,6 @@
 package com.abobrinha.caixinha.ui;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Outline;
@@ -153,7 +154,9 @@ class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private void fixShadowOverlap(View view) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+
         view.setOutlineProvider(new ViewOutlineProvider() {
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void getOutline(View view, Outline outline) {
                 int topOffset = mContext.getResources().getDimensionPixelSize(R.dimen.history_elevation);
@@ -200,7 +203,6 @@ class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private View titleBottomPadding;
         private ProgressBar loadingIndicator;
         private View bodyBottomPadding;
-
 
         private ParagraphImageViewHolder(View itemView) {
             super(itemView);

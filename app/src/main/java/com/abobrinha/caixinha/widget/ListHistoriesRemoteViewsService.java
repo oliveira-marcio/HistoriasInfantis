@@ -34,33 +34,29 @@ public class ListHistoriesRemoteViewsService extends RemoteViewsService {
 
 class ListHistoriesRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    public static final String[] MAIN_HISTORIES_PROJECTION = {
+    private static final String[] MAIN_HISTORIES_PROJECTION = {
             HistoryContract.HistoriesEntry._ID,
             HistoryContract.HistoriesEntry.COLUMN_HISTORY_TITLE,
             HistoryContract.HistoriesEntry.COLUMN_HISTORY_IMAGE,
             HistoryContract.HistoriesEntry.COLUMN_HISTORY_DATE
     };
 
-    public static final int INDEX_HISTORY_ID = 0;
-    public static final int INDEX_HISTORY_TITLE = 1;
-    public static final int INDEX_HISTORY_IMAGE = 2;
-    public static final int INDEX_HISTORY_DATE = 3;
+    private static final int INDEX_HISTORY_ID = 0;
+    private static final int INDEX_HISTORY_TITLE = 1;
+    private static final int INDEX_HISTORY_IMAGE = 2;
 
-    public final Uri[] mCategoryUri = new Uri[]{
+    private final Uri[] mCategoryUri = new Uri[]{
             HistoryContract.HistoriesEntry.CONTENT_URI,
             HistoryContract.HistoriesEntry.buildFavoritesUri()
     };
 
-    Context mContext;
+    private Context mContext;
     private Cursor mCursor = null;
-    private int mCategory;
-    private int mOrder;
     private int mAppWidgetId;
 
     public ListHistoriesRemoteViewsFactory(Context applicationContext, int appWidgetId) {
         mContext = applicationContext;
         mAppWidgetId = appWidgetId;
-//        mCategory = PreferencesUtils.loadWidgetCategoryPref(applicationContext, appWidgetId);
     }
 
     @Override
@@ -73,11 +69,11 @@ class ListHistoriesRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
             mCursor.close();
         }
 
-        mCategory = PreferencesUtils.loadWidgetCategoryPref(mContext, mAppWidgetId);
+        int category = PreferencesUtils.loadWidgetCategoryPref(mContext, mAppWidgetId);
 
         final long identityToken = Binder.clearCallingIdentity();
 
-        mCursor = mContext.getContentResolver().query(mCategoryUri[mCategory],
+        mCursor = mContext.getContentResolver().query(mCategoryUri[category],
                 MAIN_HISTORIES_PROJECTION,
                 null,
                 null,

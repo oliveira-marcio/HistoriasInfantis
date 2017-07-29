@@ -22,14 +22,12 @@ public class HistorySyncUtils {
     private static final int SYNC_INTERVAL_HOURS = 24;
     private static final int SYNC_INTERVAL_SECONDS = (int) TimeUnit.HOURS.toSeconds(SYNC_INTERVAL_HOURS);
     private static final int SYNC_FLEXTIME_SECONDS = SYNC_INTERVAL_SECONDS / 3;
-//    private static final int SYNC_INTERVAL_SECONDS = 30;
-//    private static final int SYNC_FLEXTIME_SECONDS = 10;
 
     private static boolean sInitialized;
 
     private static final String HISTORY_SYNC_TAG = "history-sync";
 
-    static void scheduleFirebaseJobDispatcherSync(@NonNull final Context context) {
+    private static void scheduleFirebaseJobDispatcherSync(@NonNull final Context context) {
         Driver driver = new GooglePlayDriver(context);
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
 
@@ -71,7 +69,7 @@ public class HistorySyncUtils {
                     startImmediateSync(context);
                 }
 
-                cursor.close();
+                if (cursor != null) cursor.close();
             }
         });
 

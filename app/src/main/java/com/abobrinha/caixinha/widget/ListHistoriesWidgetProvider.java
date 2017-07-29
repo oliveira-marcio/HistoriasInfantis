@@ -25,12 +25,14 @@ public class ListHistoriesWidgetProvider extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.list_histories_widget);
 
         Intent mainIntent = new Intent(context, MainActivity.class);
-        PendingIntent pendingMainIntent = PendingIntent.getActivity(context, appWidgetId, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingMainIntent = PendingIntent.getActivity(context,
+                appWidgetId, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.widget, pendingMainIntent);
 
         Intent configIntent = new Intent(context, ListHistoriesConfigureActivity.class);
         configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent pendingConfigIntent = PendingIntent.getActivity(context, appWidgetId, configIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingConfigIntent = PendingIntent.getActivity(context, appWidgetId,
+                configIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.appwidget_button, pendingConfigIntent);
 
         Intent remoteViewsIntent = new Intent(context, ListHistoriesRemoteViewsService.class);
@@ -54,7 +56,6 @@ public class ListHistoriesWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
@@ -73,7 +74,6 @@ public class ListHistoriesWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
-        // When the user deletes the widget, delete the preference associated with it.
         for (int appWidgetId : appWidgetIds) {
             PreferencesUtils.deleteWidgetCategoryPref(context, appWidgetId);
             PreferencesUtils.deleteWidgetOrderPref(context, appWidgetId);

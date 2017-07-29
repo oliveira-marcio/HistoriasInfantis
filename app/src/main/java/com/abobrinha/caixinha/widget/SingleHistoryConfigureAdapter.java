@@ -52,9 +52,8 @@ public class SingleHistoryConfigureAdapter extends
     public HistoryConfigWidgetViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         int layoutIdForListItem = R.layout.single_history_widget_item;
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        boolean shouldAttachToParentImmediately = false;
 
-        View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
+        View view = inflater.inflate(layoutIdForListItem, viewGroup, false);
         return new HistoryConfigWidgetViewHolder(view);
     }
 

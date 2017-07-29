@@ -84,6 +84,7 @@ public class SingleHistoryIntentService extends IntentService {
             for (int i = 0; i < historyData.length; i++) {
                 historyData[i] = cursor.getString(i);
             }
+            cursor.close();
 
             views.setTextViewText(R.id.appwidget_title, historyData[1]);
             views.setViewVisibility(R.id.appwidget_title, View.VISIBLE);
@@ -122,8 +123,6 @@ public class SingleHistoryIntentService extends IntentService {
 
             historyIntent = new Intent(this, MainActivity.class);
         }
-
-        cursor.close();
 
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
         taskStackBuilder.addNextIntentWithParentStack(historyIntent);
