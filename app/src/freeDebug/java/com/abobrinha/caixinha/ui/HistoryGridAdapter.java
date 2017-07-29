@@ -44,14 +44,17 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private InterstitialAd mInterstitialAd;
     private int mPosition;
 
+    // Define o intervalo de distribuição dos ad's e em qual posição se iniciará a distribuição
     private final int AD_INTERVAL = 8;
     private final int AD_INITIAL_OFFSET = 3;
 
     private final int ITEM_AD = 0;
     private final int ITEM_REGULAR = 1;
 
+    // Escala e frequência que os anúncios interstitiais devem aparecer
+    // Ex: É sorteado um número de 0 até o range. Se for menor que a frequência, exibe o ad
     private final int INTERSTITIAL_RANGE = 100;
-    private final int INTERSTITIAL_FREQUENCY = 20;
+    private final int INTERSTITIAL_FREQUENCY = 30;
 
     public interface GridOnItemClickListener {
         void onListItemClick(long historyId);
@@ -112,6 +115,8 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return viewHolder;
     }
 
+    // Calcula a posição correta do BD a ser utilizada de acordo com a posição do item na lista
+    // e considerando a distribuição dos ad's.
     private int getOffsetPosition(int position) {
         return (position < AD_INITIAL_OFFSET || AD_INTERVAL <= 0) ? position :
                 position - (int) Math.ceil((position - AD_INITIAL_OFFSET) / (double) (AD_INTERVAL + 1));
@@ -160,6 +165,13 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    /**
+     * Calcula o maior width possivel do ad de forma a ocupar completamente o espaço do container.
+     * O cálculo é baseado no tamanho da tela, número de colunas do grid e todas as possíveis
+     * margens e paddings definidos para o layout de uma linha completa do grid.
+     * Teve que ser implementado desta forma por não ser possível obter neste ponto o tamanho final
+     * do container cujo width está definido como MATCH_PARENT.
+     */
     private AdSize getComputedAdSize() {
         Resources res = mContext.getResources();
         DisplayMetrics metrics = res.getDisplayMetrics();
@@ -176,12 +188,13 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         double itemWidth = (screenWidth - (totalCols * itemMargins) - parentMargins) / totalCols;
 
         int widthDp = (int) (itemWidth / metrics.density);
-        int heightDp = (int) (
-                res.getDimensionPixelSize(R.dimen.item_image_height) /
-                        metrics.density);
+        int heightDp = (int) (res.getDimensionPixelSize(R.dimen.item_image_height) /
+                metrics.density);
+
         return new AdSize(widthDp, heightDp);
     }
 
+    // Retorna o tamanho total da lista considerando a distribuição dos ad's
     @Override
     public int getItemCount() {
         if (null == mCursor) return 0;
@@ -190,6 +203,7 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 : 0);
     }
 
+    // Define a distribuição dos ad's em itens próprios de acordo com as constantes definidas
     @Override
     public int getItemViewType(int position) {
         return (position >= AD_INITIAL_OFFSET &&

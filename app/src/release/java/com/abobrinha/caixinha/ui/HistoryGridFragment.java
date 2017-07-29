@@ -60,7 +60,6 @@ public class HistoryGridFragment extends Fragment implements
     };
 
     private final String SELECTED_KEY = "selected_position";
-    private final String SELECTED_CATEGORY = "selected_category";
 
     public static final String[] MAIN_HISTORIES_PROJECTION = {
             HistoryContract.HistoriesEntry._ID,
@@ -72,7 +71,6 @@ public class HistoryGridFragment extends Fragment implements
     public static final int INDEX_HISTORY_ID = 0;
     public static final int INDEX_HISTORY_TITLE = 1;
     public static final int INDEX_HISTORY_IMAGE = 2;
-    public static final int INDEX_HISTORY_DATE = 3;
 
     private RecyclerView mHistoriesList;
     private HistoryGridAdapter mAdapter;
@@ -189,6 +187,93 @@ public class HistoryGridFragment extends Fragment implements
         }
     }
 
+    // Cria um efeito de background por trás do item deslizado
+    private void prepareSwipeAnimation() {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                long historyId = mAdapter.getHistoryIdAtPosition(viewHolder.getAdapterPosition());
+                if (historyId == -1) return;
+
+                ContentValues values = new ContentValues();
+                values.put(HistoryContract.HistoriesEntry.COLUMN_FAVORITE,
+                        HistoryContract.IS_NOT_FAVORITE);
+
+                getActivity().getContentResolver().update(
+                        HistoryContract.HistoriesEntry.buildSingleHistoryUri(historyId),
+                        values,
+                        null,
+                        null);
+
+                NotificationUtils.updateWidgets(getActivity());
+            }
+
+            @Override
+            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                int position = viewHolder.getAdapterPosition();
+                if (position >= 0 && mAdapter.getHistoryIdAtPosition(position) == -1)
+                    return 0;
+                return super.getSwipeDirs(recyclerView, viewHolder);
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView,
+                                    RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                    int actionState, boolean isCurrentlyActive) {
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    View itemView = viewHolder.itemView;
+                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
+                    float width = height / 3;
+                    Bitmap icon;
+                    Paint p = new Paint();
+                    RectF background, icon_dest;
+                    p.setColor(ActivityCompat.getColor(getActivity(),
+                            R.color.colorSwipeBackground));
+
+                    if (dX > 0) {
+                        background = new RectF(
+                                (float) itemView.getLeft(),
+                                (float) itemView.getTop(),
+                                (float) itemView.getLeft() + dX,
+                                (float) itemView.getBottom());
+                        icon_dest = new RectF(
+                                (float) itemView.getLeft() + width,
+                                (float) itemView.getTop() + width,
+                                (float) itemView.getLeft() + 2 * width,
+                                (float) itemView.getBottom() - width);
+                    } else {
+                        background = new RectF(
+                                (float) itemView.getRight() + dX,
+                                (float) itemView.getTop(),
+                                (float) itemView.getRight(),
+                                (float) itemView.getBottom());
+                        icon_dest = new RectF(
+                                (float) itemView.getRight() - 2 * width,
+                                (float) itemView.getTop() + width,
+                                (float) itemView.getRight() - width,
+                                (float) itemView.getBottom() - width);
+                    }
+
+                    c.drawRect(background, p);
+                    c.clipRect(background);
+                    icon = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.ic_delete_white);
+                    c.drawBitmap(icon, null, icon_dest, p);
+                    c.restore();
+                }
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState,
+                        isCurrentlyActive);
+            }
+        }).attachToRecyclerView(mHistoriesList);
+    }
+
     private void showHistoriesDataView() {
         mHistoriesList.setLayoutManager(mLayoutManager);
         mHistoriesList.setHasFixedSize(true);
@@ -196,91 +281,8 @@ public class HistoryGridFragment extends Fragment implements
 
         mHistoriesList.setAdapter(mAdapter);
 
-        if (mCategory == PreferencesUtils.CATEGORY_FAVORITES) {
-            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                    ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-                @Override
-                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
-                                      RecyclerView.ViewHolder target) {
-                    return false;
-                }
-
-                @Override
-                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                    long historyId = mAdapter.getHistoryIdAtPosition(viewHolder.getAdapterPosition());
-                    if (historyId == -1) return;
-
-                    ContentValues values = new ContentValues();
-                    values.put(HistoryContract.HistoriesEntry.COLUMN_FAVORITE,
-                            HistoryContract.IS_NOT_FAVORITE);
-
-                    getActivity().getContentResolver().update(
-                            HistoryContract.HistoriesEntry.buildSingleHistoryUri(historyId),
-                            values,
-                            null,
-                            null);
-
-                    NotificationUtils.updateWidgets(getActivity());
-                }
-
-                @Override
-                public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                    int position = viewHolder.getAdapterPosition();
-                    if (position >= 0 && mAdapter.getHistoryIdAtPosition(position) == -1)
-                        return 0;
-                    return super.getSwipeDirs(recyclerView, viewHolder);
-                }
-
-                @Override
-                public void onChildDraw(Canvas c, RecyclerView recyclerView,
-                                        RecyclerView.ViewHolder viewHolder, float dX, float dY,
-                                        int actionState, boolean isCurrentlyActive) {
-                    if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-                        View itemView = viewHolder.itemView;
-                        float height = (float) itemView.getBottom() - (float) itemView.getTop();
-                        float width = height / 3;
-                        Bitmap icon;
-                        Paint p = new Paint();
-                        RectF background, icon_dest;
-                        p.setColor(ActivityCompat.getColor(getActivity(),
-                                R.color.colorSwipeBackground));
-
-                        if (dX > 0) {
-                            background = new RectF(
-                                    (float) itemView.getLeft(),
-                                    (float) itemView.getTop(),
-                                    (float) itemView.getLeft() + dX,
-                                    (float) itemView.getBottom());
-                            icon_dest = new RectF(
-                                    (float) itemView.getLeft() + width,
-                                    (float) itemView.getTop() + width,
-                                    (float) itemView.getLeft() + 2 * width,
-                                    (float) itemView.getBottom() - width);
-                        } else {
-                            background = new RectF(
-                                    (float) itemView.getRight() + dX,
-                                    (float) itemView.getTop(),
-                                    (float) itemView.getRight(),
-                                    (float) itemView.getBottom());
-                            icon_dest = new RectF(
-                                    (float) itemView.getRight() - 2 * width,
-                                    (float) itemView.getTop() + width,
-                                    (float) itemView.getRight() - width,
-                                    (float) itemView.getBottom() - width);
-                        }
-
-                        c.drawRect(background, p);
-                        c.clipRect(background);
-                        icon = BitmapFactory.decodeResource(getResources(),
-                                R.drawable.ic_delete_white);
-                        c.drawBitmap(icon, null, icon_dest, p);
-                        c.restore();
-                    }
-                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState,
-                            isCurrentlyActive);
-                }
-            }).attachToRecyclerView(mHistoriesList);
-        }
+        if (mCategory == PreferencesUtils.CATEGORY_FAVORITES)
+            prepareSwipeAnimation();
 
         if (mPosition != RecyclerView.NO_POSITION)
             mHistoriesList.scrollToPosition(mPosition);
