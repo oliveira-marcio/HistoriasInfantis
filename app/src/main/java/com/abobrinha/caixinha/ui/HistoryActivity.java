@@ -163,7 +163,7 @@ public class HistoryActivity extends AppCompatActivity implements
             SubMenu menu = mNavigationView.getMenu().getItem(0).getSubMenu();
             menu.clear();
 
-            int i = 0;
+            int i = 1;
             do {
                 MenuItem item = menu.add(R.id.history_group, i, i, mCursor.getString(INDEX_HISTORY_TITLE));
                 item.setIcon(mCategoryIcon[mCategory]);
@@ -182,7 +182,7 @@ public class HistoryActivity extends AppCompatActivity implements
                     if (menuItem.getItemId() == R.id.menu_settings) {
                         startActivity(new Intent(HistoryActivity.this, SettingsActivity.class));
                     } else {
-                        loadHistory(menuItem.getItemId());
+                        loadHistory(menuItem.getItemId() - 1);
                     }
                     return true;
                 }

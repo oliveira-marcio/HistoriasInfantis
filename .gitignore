@@ -1,8 +1,12 @@
 *.iml
+*.pem
+*.jks
 .gradle
+/pepk.jar
+/keytool.exe
+/jli.dll
 /local.properties
-/gradle.properties
-/abobrinha.keystore.release.jks
+/keystore.properties
 /.idea/workspace.xml
 /.idea/libraries
 .DS_Store
