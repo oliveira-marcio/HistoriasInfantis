@@ -6,6 +6,7 @@
 /keytool.exe
 /jli.dll
 /local.properties
+/dummy.keystore.properties
 /keystore.properties
 /.idea/workspace.xml
 /.idea/libraries

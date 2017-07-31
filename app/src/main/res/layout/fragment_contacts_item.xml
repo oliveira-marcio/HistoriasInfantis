@@ -9,6 +9,7 @@
         <ImageView
             android:id="@+id/thumbnail"
             style="@style/ContactItemTheme.Image"
+            tools:ignore="ContentDescription"
             tools:src="@drawable/ic_wordpress" />
 
         <TextView

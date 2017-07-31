@@ -17,10 +17,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:background="@drawable/background_circle_empty_view"
+        android:contentDescription="@string/app_name"
         android:elevation="@dimen/fab_elevation"
         android:padding="@dimen/activity_horizontal_margin"
-        android:src="@drawable/ic_about"
-        tools:ignore="ContentDescription" />
+        android:src="@drawable/ic_about" />
 
     <TextView
         android:id="@+id/empty_view_text"

@@ -22,13 +22,17 @@
     <string name="category_favorites_label">Favoritas</string>
     <string name="category_settings_label">Configurações</string>
     <string name="category_share_label">Compartilhar</string>
-    <string name="category_about_label">Sobre</string>
+    <string name="category_about_label">Contato</string>
 
     <!-- Mensagens de erro a serem exibidas na tela principal -->
     <string name="empty_history_list">Nenhuma história encontrada.</string>
     <string name="empty_history_list_no_network">Nenhuma história encontrada. Não há conexão internet.</string>
     <string name="empty_history_list_server_down">Nenhuma história encontrada. O servidor não está retornando nenhum dado.</string>
     <string name="empty_history_list_server_error">Nenhuma história encontrada. O servidor está retornando dados inválidos. Procure por uma nova versão de nosso app.</string>
+
+    <!-- Content Descriptions para o FAB de marcação de favoritos -->
+    <string name="fab_add_favorite">Adicionar história aos favoritos</string>
+    <string name="fab_remove_remove">Remover história dos favoritos</string>
 
     <!-- Mensagens para o Toast quando o status de favorito de uma história é modificado -->
     <string name="favorite_added">História adicionada aos favoritos</string>

@@ -352,6 +352,8 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         int color = ActivityCompat
                 .getColor(getActivity(), mIsFavorite ? R.color.colorFavorite : R.color.colorAccent);
         mFabFavorite.setBackgroundTintList(ColorStateList.valueOf(color));
+        mFabFavorite.setContentDescription(mIsFavorite ?
+                getString(R.string.fab_remove_remove) : getString(R.string.fab_add_favorite));
     }
 
     public void toggleFavoriteStatus() {

@@ -9,6 +9,7 @@
         <ImageView
             android:id="@+id/thumbnail"
             style="@style/ListItemTheme.Image"
+            tools:ignore="ContentDescription"
             tools:src="@drawable/post_placeholder" />
 
         <TextView

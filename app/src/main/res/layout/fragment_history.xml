@@ -61,5 +61,6 @@
         app:borderWidth="0dp"
         app:elevation="@dimen/fab_elevation"
         app:fabSize="auto"
-        app:pressedTranslationZ="@dimen/fab_press_translation_z" />
+        app:pressedTranslationZ="@dimen/fab_press_translation_z"
+        tools:ignore="ContentDescription" />
 </FrameLayout>
