@@ -1,6 +1,8 @@
 package com.abobrinha.caixinha.sync;
 
 
+import android.annotation.TargetApi;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -9,7 +11,9 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 
@@ -27,6 +31,7 @@ public class NotificationUtils {
 
     private static final int HISTORY_NOTIFICATION_ID = 1234;
     public static final String ACTION_DATA_UPDATED = "com.abobrinha.caixinha.ACTION_DATA_UPDATED";
+    public static final String CHANNEL_ID = "com.abobrinha.caixinha.notifications";
 
     /*
      * Cria notificações de acordo com a quantidade de novas histórias adicionadas.
@@ -101,7 +106,7 @@ public class NotificationUtils {
                                          Intent historyIntent) {
         int smallArtResourceId = R.drawable.ic_about;
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .setSmallIcon(smallArtResourceId)
                 .setLargeIcon(largeIcon)
@@ -119,7 +124,21 @@ public class NotificationUtils {
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            makeNotificationChannel(context, notificationManager);
+        }
+
         notificationManager.notify(HISTORY_NOTIFICATION_ID, notificationBuilder.build());
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private static void makeNotificationChannel(Context context, NotificationManager notificationManager){
+        CharSequence name = context.getString(R.string.channel_name);
+        String description = context.getString(R.string.channel_description);
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+        channel.setDescription(description);
+        notificationManager.createNotificationChannel(channel);
     }
 
     public static void updateWidgets(Context context) {

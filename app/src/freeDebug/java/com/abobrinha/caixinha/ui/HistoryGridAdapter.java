@@ -2,20 +2,17 @@ package com.abobrinha.caixinha.ui;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,10 +21,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.NativeExpressAdView;
 
 import org.jsoup.Jsoup;
 
@@ -45,8 +41,8 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private int mPosition;
 
     // Define o intervalo de distribuição dos ad's e em qual posição se iniciará a distribuição
-    private final int AD_INTERVAL = 8;
-    private final int AD_INITIAL_OFFSET = 3;
+    private final int AD_INTERVAL = 0;
+    private final int AD_INITIAL_OFFSET = 0;
 
     private final int ITEM_AD = 0;
     private final int ITEM_REGULAR = 1;
@@ -54,7 +50,7 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     // Escala e frequência que os anúncios interstitiais devem aparecer
     // Ex: É sorteado um número de 0 até o range. Se for menor que a frequência, exibe o ad
     private final int INTERSTITIAL_RANGE = 100;
-    private final int INTERSTITIAL_FREQUENCY = 30;
+    private final int INTERSTITIAL_FREQUENCY = 50;
 
     public interface GridOnItemClickListener {
         void onListItemClick(long historyId);
@@ -148,51 +144,13 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 animateViewsIn(rHolder.cardView, position);
             }
         } else {
-            final AdViewHolder aHolder = (AdViewHolder) holder;
-
-            final NativeExpressAdView adView = new NativeExpressAdView(mContext);
-
-            aHolder.adContainer.addView(adView);
-
-            adView.setAdSize(getComputedAdSize());
-            adView.setAdUnitId(mContext.getString(R.string.banner_ad_unit_id));
-            adView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-            adView.loadAd(aHolder.adRequest);
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                final AdViewHolder aHolder = (AdViewHolder) holder;
                 animateViewsIn(aHolder.cardView, position);
             }
         }
     }
 
-    /**
-     * Calcula o maior width possivel do ad de forma a ocupar completamente o espaço do container.
-     * O cálculo é baseado no tamanho da tela, número de colunas do grid e todas as possíveis
-     * margens e paddings definidos para o layout de uma linha completa do grid.
-     * Teve que ser implementado desta forma por não ser possível obter neste ponto o tamanho final
-     * do container cujo width está definido como MATCH_PARENT.
-     */
-    private AdSize getComputedAdSize() {
-        Resources res = mContext.getResources();
-        DisplayMetrics metrics = res.getDisplayMetrics();
-        float screenWidth = (float) metrics.widthPixels;
-
-        int itemMargins =
-                2 * (res.getDimensionPixelSize(R.dimen.item_card_padding) +
-                        res.getDimensionPixelSize(R.dimen.grid_margins_vertical));
-
-        int parentMargins = 2 * res.getDimensionPixelSize(R.dimen.grid_margins_vertical);
-
-        int totalCols = res.getInteger(R.integer.grid_columns);
-
-        double itemWidth = (screenWidth - (totalCols * itemMargins) - parentMargins) / totalCols;
-
-        int widthDp = (int) (itemWidth / metrics.density);
-        int heightDp = (int) (res.getDimensionPixelSize(R.dimen.item_image_height) /
-                metrics.density);
-
-        return new AdSize(widthDp, heightDp);
-    }
 
     // Retorna o tamanho total da lista considerando a distribuição dos ad's
     @Override
@@ -269,17 +227,19 @@ public class HistoryGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class AdViewHolder extends RecyclerView.ViewHolder {
         public CardView cardView;
-        public FrameLayout adContainer;
+        public AdView adView;
         public AdRequest adRequest;
 
         public AdViewHolder(View itemView) {
             super(itemView);
             cardView = (CardView) itemView.findViewById(R.id.card_view);
-            adContainer = (FrameLayout) itemView.findViewById(R.id.ad_container);
+            adView = (AdView) itemView.findViewById(R.id.adView);
 
             adRequest = new AdRequest.Builder()
                     .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                     .build();
+
+            adView.loadAd(adRequest);
         }
     }
 }

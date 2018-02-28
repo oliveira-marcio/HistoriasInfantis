@@ -4,6 +4,14 @@ def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
+
+repositories {
+    mavenLocal()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 android {
     signingConfigs {
         config {
@@ -13,14 +21,14 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
-    compileSdkVersion 25
-    buildToolsVersion "26.0.0"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.abobrinha.caixinha"
         minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 18
-        versionName "3.0.2"
+        targetSdkVersion 27
+        versionCode 19
+        versionName "3.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -31,26 +39,29 @@ android {
             signingConfig signingConfigs.config
         }
     }
+    flavorDimensions "tier"
     productFlavors{
         free {
+            dimension "tier"
             applicationId "com.abobrinha.caixinha"
         }
         paid {
+            dimension "tier"
             applicationId "com.abobrinha.caixinha"
         }
     }
 }
 
 ext {
-    supportLibVersion = '25.3.1'
+    supportLibVersion = '27.0.2'
     constraintLayoutLibVersion = '1.0.2'
-    espressoLibVersion = '2.2.2'
+    espressoLibVersion = '3.0.1'
     testLibVersion = '0.5'
     junitLibVersion = '4.12'
     glideLibVersion = '3.8.0'
-    jsoupLibVersion = '1.10.3'
+    jsoupLibVersion = '1.11.2'
     firebaseJobDispatcherLibVersion = '0.6.0'
-    firebaseLibVersion = '11.0.4'
+    firebaseLibVersion = '11.8.0'
 }
 
 dependencies {
@@ -81,5 +92,3 @@ dependencies {
     androidTestCompile "com.android.support.test:rules:${testLibVersion}"
     androidTestCompile "com.android.support.test:runner:${testLibVersion}"
 }
-
-apply plugin: 'com.google.gms.google-services'

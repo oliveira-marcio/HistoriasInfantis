@@ -1,5 +1,5 @@
 <resources>
     <string name="admob_app_id" translatable="false">ca-app-pub-7411723493485158~4658589429</string>
-    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-7411723493485158/9856043414</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-7411723493485158/8152033020</string>
     <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-7411723493485158/9088789029</string>
 </resources>

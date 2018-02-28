@@ -38,7 +38,7 @@ public class SocialUtils {
             "E-mail",
             "Blog",
             "YouTube",
-            "Facebok",
+            "Facebook",
             "Twitter",
             "Instagram",
             "Pinterest"

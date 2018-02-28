@@ -84,4 +84,8 @@
     <string name="widget_button_cancel">Cancelar</string>
     <string name="widget_fab_description">Configurações do widget</string>
 
+    <!-- Strings relacionadas ao Notification Channel -->
+    <string name="channel_name">@string/app_name</string>
+    <string name="channel_description">Canal de notificações das Histórias Infantis Abobrinha</string>
+
 </resources>
