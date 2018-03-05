@@ -101,7 +101,7 @@ public class SocialUtils {
                 break;
             case FACEBOOK:
                 openSocialApp(c, PACKAGE_FACEBOOK, INTENT_FACEBOOK + USER_FACEBOOK_APP,
-                        URL_FACEBOOK + USER_FACEBOOK_WEB, null);
+                        URL_FACEBOOK + USER_FACEBOOK_WEB, "");
                 break;
             case TWITTER:
                 openSocialApp(c, PACKAGE_TWITTER, INTENT_TWITTER, URL_TWITTER, USER_TWITTER);
