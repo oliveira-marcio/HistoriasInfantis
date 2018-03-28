@@ -38,6 +38,7 @@ public class WordPressConn {
 
     /**
      * Contrói a URL para consultar o WordPress API
+     * Ex: https://public-api.wordpress.com/rest/v1.1/sites/113100833/posts?category=historias-infantis-abobrinha&number=100&fields=ID,date,modified,title,URL,featured_image,content
      */
     private static URL buildUrl(int results_per_page, int page) {
         Uri builtUri = Uri.parse(WORDPRESS_BASE_URL).buildUpon()

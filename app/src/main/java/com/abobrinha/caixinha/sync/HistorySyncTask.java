@@ -22,7 +22,21 @@ public class HistorySyncTask {
      * 2) Deletar todas as histórias da base
      * 3) Recriar toda a base incluindo novas histórias
      * 4) Restaurar as marcações prévias de favoritos
-     * 5) Indicar quantidade de novas histórias     */
+     * 5) Indicar quantidade de novas histórias
+     *
+     * Todo: Idéias para melhor sincronia e otimizar tráfego de dados:
+     * 1) Inicialmente, buscar apenas os ID's e datas de criação e modificação na API
+     * https://public-api.wordpress.com/rest/v1.1/sites/113100833/posts?category=historias-infantis-abobrinha&number=100&fields=ID,date,modified
+     *
+     * 2) Comparar com a base e gerar lista dos ID's que estão diferentes ou ausentes e ID's que estão a mais na base (foram deletados na fonte)
+     *
+     * 3) Deletar ID's a mais da base
+     *
+     * 4) Buscar dados completos de cada ID ausente ou modificado:
+     * https://public-api.wordpress.com/rest/v1.1/sites/113100833/posts/2436?fields=ID,date,modified,title,URL,featured_image,content
+     *
+     * 5) Inserir dados ausentes e atualizar os modificados
+     */
     synchronized public static void syncHistories(Context context) {
         try {
             PreferencesUtils.setHistoryStatus(context, PreferencesUtils.HISTORY_STATUS_UNKNOWN);

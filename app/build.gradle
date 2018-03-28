@@ -4,14 +4,6 @@ def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
-
-repositories {
-    mavenLocal()
-    flatDir {
-        dirs 'libs'
-    }
-}
-
 android {
     signingConfigs {
         config {
@@ -22,13 +14,12 @@ android {
         }
     }
     compileSdkVersion 27
-    buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.abobrinha.caixinha"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 23
-        versionName "3.0.7"
+        versionCode 24
+        versionName "3.0.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -65,30 +56,30 @@ ext {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:appcompat-v7:${supportLibVersion}"
-    compile "com.android.support:support-v4:${supportLibVersion}"
-    compile "com.android.support:support-vector-drawable:${supportLibVersion}"
-    compile "com.android.support:design:${supportLibVersion}"
-    compile "com.android.support:support-annotations:${supportLibVersion}"
-    compile "com.android.support:recyclerview-v7:${supportLibVersion}"
-    compile "com.android.support:cardview-v7:${supportLibVersion}"
-    compile "com.android.support:preference-v7:${supportLibVersion}"
-    compile "com.android.support.constraint:constraint-layout:${constraintLayoutLibVersion}"
-    compile "com.github.bumptech.glide:glide:${glideLibVersion}"
-    compile "org.jsoup:jsoup:${jsoupLibVersion}"
-    compile "com.firebase:firebase-jobdispatcher:${firebaseJobDispatcherLibVersion}"
-    compile "com.google.firebase:firebase-messaging:${firebaseLibVersion}"
-    compile "com.android.support.test.espresso:espresso-idling-resource:${espressoLibVersion}"
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.android.support:appcompat-v7:${supportLibVersion}"
+    implementation "com.android.support:support-v4:${supportLibVersion}"
+    implementation "com.android.support:support-vector-drawable:${supportLibVersion}"
+    implementation "com.android.support:design:${supportLibVersion}"
+    implementation "com.android.support:support-annotations:${supportLibVersion}"
+    implementation "com.android.support:recyclerview-v7:${supportLibVersion}"
+    implementation "com.android.support:cardview-v7:${supportLibVersion}"
+    implementation "com.android.support:preference-v7:${supportLibVersion}"
+    implementation "com.android.support.constraint:constraint-layout:${constraintLayoutLibVersion}"
+    implementation "com.github.bumptech.glide:glide:${glideLibVersion}"
+    implementation "org.jsoup:jsoup:${jsoupLibVersion}"
+    implementation "com.firebase:firebase-jobdispatcher:${firebaseJobDispatcherLibVersion}"
+    implementation "com.google.firebase:firebase-messaging:${firebaseLibVersion}"
+    implementation "com.android.support.test.espresso:espresso-idling-resource:${espressoLibVersion}"
 
-    freeCompile "com.google.firebase:firebase-ads:${firebaseLibVersion}"
-    testCompile "junit:junit:${junitLibVersion}"
+    freeImplementation "com.google.firebase:firebase-ads:${firebaseLibVersion}"
+    testImplementation "junit:junit:${junitLibVersion}"
 
-    androidTestCompile "com.android.support:support-annotations:${supportLibVersion}"
-    androidTestCompile("com.android.support.test.espresso:espresso-core:${espressoLibVersion}", {
+    androidTestImplementation "com.android.support:support-annotations:${supportLibVersion}"
+    androidTestImplementation("com.android.support.test.espresso:espresso-core:${espressoLibVersion}", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    androidTestCompile "com.android.support.test.espresso:espresso-intents:${espressoLibVersion}"
-    androidTestCompile "com.android.support.test:rules:${testLibVersion}"
-    androidTestCompile "com.android.support.test:runner:${testLibVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:${espressoLibVersion}"
+    androidTestImplementation "com.android.support.test:rules:${testLibVersion}"
+    androidTestImplementation "com.android.support.test:runner:${testLibVersion}"
 }
