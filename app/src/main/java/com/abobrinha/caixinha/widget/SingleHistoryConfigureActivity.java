@@ -36,24 +36,18 @@ public class SingleHistoryConfigureActivity extends AppCompatActivity implements
             HistoryContract.HistoriesEntry.COLUMN_HISTORY_TITLE,
             HistoryContract.HistoriesEntry.COLUMN_HISTORY_IMAGE
     };
-
+    private final String SELECTED_KEY = "selected_position";
+    private final String SELECTED_HISTORY = "selected_history";
+    private final int HISTORY_LOADER_ID = 1;
+    int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private RecyclerView mHistoriesList;
     private SingleHistoryConfigureAdapter mAdapter;
-
     private TextView mEmptyStateTextView;
     private ProgressBar mLoadingIndicator;
     private LinearLayoutManager mLayoutManager;
     private Button mOkButton;
-
     private long mHistorySelected;
-
     private int mPosition = RecyclerView.NO_POSITION;
-    private final String SELECTED_KEY = "selected_position";
-    private final String SELECTED_HISTORY = "selected_history";
-
-    private final int HISTORY_LOADER_ID = 1;
-
-    int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     public SingleHistoryConfigureActivity() {
         super();
@@ -102,10 +96,11 @@ public class SingleHistoryConfigureActivity extends AppCompatActivity implements
                 final Context context = SingleHistoryConfigureActivity.this;
                 PreferencesUtils.saveWidgetHistoryPref(context, mAppWidgetId, mHistorySelected);
 
-                Intent getHistoryDataIntent = new Intent(context, SingleHistoryIntentService.class);
-                getHistoryDataIntent.setAction(SingleHistoryIntentService.ACTION_UPDATE_SINGLE_WIDGET);
+                Intent getHistoryDataIntent = new Intent(context, SingleHistoryJobIntentService.class);
+                getHistoryDataIntent.setAction(SingleHistoryJobIntentService.ACTION_UPDATE_SINGLE_WIDGET);
                 getHistoryDataIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-                context.startService(getHistoryDataIntent);
+                SingleHistoryJobIntentService.enqueueWork(context, SingleHistoryJobIntentService.class,
+                        SingleHistoryJobIntentService.JOB_ID, getHistoryDataIntent);
 
                 Intent resultValue = new Intent();
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);

@@ -22,10 +22,8 @@ public class HistorySyncUtils {
     private static final int SYNC_INTERVAL_HOURS = 8;
     private static final int SYNC_INTERVAL_SECONDS = (int) TimeUnit.HOURS.toSeconds(SYNC_INTERVAL_HOURS);
     private static final int SYNC_FLEXTIME_SECONDS = SYNC_INTERVAL_SECONDS / 3;
-
-    private static boolean sInitialized;
-
     private static final String HISTORY_SYNC_TAG = "history-sync";
+    private static boolean sInitialized;
 
     private static void scheduleFirebaseJobDispatcherSync(@NonNull final Context context) {
         Driver driver = new GooglePlayDriver(context);

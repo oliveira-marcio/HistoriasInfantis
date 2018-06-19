@@ -77,7 +77,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".widget.SingleHistoryIntentService" />
+        <service
+            android:name=".widget.SingleHistoryJobIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver
             android:name=".widget.ListHistoriesWidgetProvider"

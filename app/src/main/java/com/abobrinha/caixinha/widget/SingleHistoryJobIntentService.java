@@ -1,15 +1,16 @@
 package com.abobrinha.caixinha.widget;
 
 
-import android.app.IntentService;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
 import android.support.v4.app.TaskStackBuilder;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -23,17 +24,19 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 
-public class SingleHistoryIntentService extends IntentService {
+public class SingleHistoryJobIntentService extends JobIntentService {
 
     public static final String ACTION_UPDATE_SINGLE_WIDGET = "update-single-widget";
     public static final String ACTION_UPDATE_ALL_WIDGETS = "update-all-widgets";
 
-    public SingleHistoryIntentService() {
-        super("SingleHistoryIntentService");
+    static final int JOB_ID = 1000;
+
+    static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, SingleHistoryJobIntentService.class, JOB_ID, work);
     }
 
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
+    protected void onHandleWork(@NonNull Intent intent) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         String action = intent.getAction();
 

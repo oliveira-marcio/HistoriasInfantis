@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import com.abobrinha.caixinha.data.HistoryContract;
 import com.abobrinha.caixinha.data.PreferencesUtils;
@@ -15,6 +16,8 @@ import java.io.IOException;
 
 
 public class HistorySyncTask {
+
+    private final static String LOG_TAG = HistorySyncTask.class.getSimpleName();
 
     /*
      *  Essa rotina sincroniza a base de dados com a API utilizando a seguinte estratégia:
@@ -39,6 +42,7 @@ public class HistorySyncTask {
      */
     synchronized public static void syncHistories(Context context) {
         try {
+            Log.i(LOG_TAG, "Sincronizando dados...");
             PreferencesUtils.setHistoryStatus(context, PreferencesUtils.HISTORY_STATUS_UNKNOWN);
 
             ContentValues[] historiesValues = WordPressConn.getDataFromAllApiPages(context);

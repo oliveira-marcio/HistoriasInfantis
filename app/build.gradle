@@ -44,15 +44,16 @@ android {
 }
 
 ext {
-    supportLibVersion = '27.0.2'
-    constraintLayoutLibVersion = '1.0.2'
-    espressoLibVersion = '3.0.1'
+    supportLibVersion = '27.1.1'
+    constraintLayoutLibVersion = '1.1.2'
+    espressoLibVersion = '3.0.2'
     testLibVersion = '0.5'
     junitLibVersion = '4.12'
     glideLibVersion = '3.8.0'
     jsoupLibVersion = '1.11.2'
-    firebaseJobDispatcherLibVersion = '0.6.0'
-    firebaseLibVersion = '11.8.0'
+    firebaseJobDispatcherLibVersion = '0.8.5'
+    firebaseLibVersion = '17.0.0'
+    firebaseAdsVersion = '15.0.1'
 }
 
 dependencies {
@@ -60,6 +61,8 @@ dependencies {
     implementation "com.android.support:appcompat-v7:${supportLibVersion}"
     implementation "com.android.support:support-v4:${supportLibVersion}"
     implementation "com.android.support:support-vector-drawable:${supportLibVersion}"
+    implementation "com.android.support:animated-vector-drawable:${supportLibVersion}"
+    implementation "com.android.support:customtabs:${supportLibVersion}"
     implementation "com.android.support:design:${supportLibVersion}"
     implementation "com.android.support:support-annotations:${supportLibVersion}"
     implementation "com.android.support:recyclerview-v7:${supportLibVersion}"
@@ -72,7 +75,7 @@ dependencies {
     implementation "com.google.firebase:firebase-messaging:${firebaseLibVersion}"
     implementation "com.android.support.test.espresso:espresso-idling-resource:${espressoLibVersion}"
 
-    freeImplementation "com.google.firebase:firebase-ads:${firebaseLibVersion}"
+    freeImplementation "com.google.firebase:firebase-ads:${firebaseAdsVersion}"
     testImplementation "junit:junit:${junitLibVersion}"
 
     androidTestImplementation "com.android.support:support-annotations:${supportLibVersion}"
