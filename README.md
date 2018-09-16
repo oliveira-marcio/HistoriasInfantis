@@ -3,7 +3,71 @@ Projeto final (Capstone) para o Android Developer Nanodegree da Udacity.
 
 O aplicativo consulta o blog Histórias Infantis Abobrinha  (https://historiasinfantisabobrinha.wordpress.com/) e exibe as histórias no aplicativo com layout otimizado para celulares e tablets além de oferecer recursos que estendem a funcionalidade do blog para os dispositivos mobile. 
 
-Principais recursos desenvolvidos no projeto:
+<p align="center">
+   <a href="https://play.google.com/store/apps/details?id=com.abobrinha.caixinha" target="_blank">
+       <img src="https://github.com/steverichey/google-play-badge-svg/blob/master/img/pt-br_get.svg" width="300">
+   </a>
+</p>
+
+**Imagens (celular):**
+
+<table align="center">
+  <tr>
+     <td>
+       <img src="https://lh3.googleusercontent.com/PhARNd84FIOyBD4mvGFrxvdBMv7-q6oT7rqyyKAK4qKxu4EOP2Ef6MrYGaKEoJ1rdNG-=w1536-h728-rw">
+       <br><br>
+     </td>
+     <td>
+       <img src="https://lh3.googleusercontent.com/OO7eriNFU9yiH49NZO07LUM1-AyAoguyPPcZpfZ6lSnXx04GSUJx8Y0BSyc0zcn6ug=w1536-h728-rw">
+       <br><br>
+     </td>
+     <td>
+       <img src="https://lh3.googleusercontent.com/VwPLcsOsHf-cwviXrKxlwBanN-rEr6v8r3ie-kgQp8O9BPBX0DBy9hcxMZv8ntTxGrc=w1536-h728-rw">
+       <br><br>
+     </td>
+     <td>
+       <img src="https://lh3.googleusercontent.com/Jtx_wVl9HJbNDPjvAjCm-UPR8l0bAxp1e8sjqa_WT3T70lR5p6N-FqtzE_-2DRZdUzk=w1536-h728-rw">
+       <br><br>
+     </td>
+  </tr>
+</table>
+<table align="center">
+  <tr>
+     <td>
+       <img src="https://lh3.googleusercontent.com/LLaxYjIa1Bu7S8CYLft85fJVrZ3izb-1xQDg8zsXILM2kOGSIcCs3P-XsDhY00nzSys=w1536-h728-rw">
+     </td>
+     <td>
+       <img src="https://lh3.googleusercontent.com/ooYRQFLpPplglWGR0ZN2-Xb7vDYcPgXwFBUezGmNdAOf9saJgJ4OnLLvap8qrdve8zJ-=w1536-h728-rw">
+     </td>
+  </tr>
+</table>
+
+
+**Imagens (tablet):**
+
+<table align="center">
+  <tr>
+     <td>
+       <img src="https://lh3.googleusercontent.com/o1pBE00YXrU1ogK0v0P8OqjWbhiGQgCc2fF2YeQ76OI_IVSv9X-3yZUwtqCl6cNZqA=w1536-h728-rw">
+     </td>
+     <td>
+       <img src="https://lh3.googleusercontent.com/qX9ryqD4g8jI3h7kEgJ9t7Cs42GfnXucAYMDCqyxNFlHRU_PM6TkizXqe_WS5e-ugRo=w1536-h728-rw">
+     </td>
+  </tr>
+</table>
+<table align="center">
+  <tr>
+     <td>
+       <img src="https://lh3.googleusercontent.com/r0tViebArcdFm-nCOIxKh4mQqhDBEtKsqVWfOkPyNBRfJxxHBcjxfUi0eORzddyzFB0=w1536-h728-rw">
+     </td>
+     <td>
+       <img src="https://lh3.googleusercontent.com/5WQNaS0doeoFMiO8F0I2u4aj6NcnUv1I9mGnxbUlBGiDKA0p0TXaJiieqmieg2Wb30WE=w1536-h728-rw">
+     </td>
+  </tr>
+</table>
+
+**Principais recursos desenvolvidos no projeto:**
+
 - Os dados do blog são obtidos da Wordpress REST API via JSON.
 - Opção de salvar as histórias preferidas como favoritas que são visualizadas numa listagem própria
 - Uso de ContentProviders, Services e JobScheduler para sincronização periódica dos dados do blog com a base SQLite local, o que permite leitura offline.
