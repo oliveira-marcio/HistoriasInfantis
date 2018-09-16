@@ -1,4 +1,4 @@
-# Histórias Infantis
+# Histórias Infantis - Abobrinha
 Projeto final (Capstone) para o Android Developer Nanodegree da Udacity.
 
 O aplicativo consulta o blog Histórias Infantis Abobrinha  (https://historiasinfantisabobrinha.wordpress.com/) e exibe as histórias no aplicativo com layout otimizado para celulares e tablets além de oferecer recursos que estendem a funcionalidade do blog para os dispositivos mobile. 
@@ -66,7 +66,11 @@ O aplicativo consulta o blog Histórias Infantis Abobrinha  (https://historiasin
   </tr>
 </table>
 
-**Principais recursos desenvolvidos no projeto:**
+## Instalação
+
+É necessário instalar o [Android Studio](https://developer.android.com/studio/). Após a instalação, faça um clone deste repositório para uma pasta local do seu computador, use a opção `Import Project (Gradle, Eclipse ADT, etc)` na tela inicial do Android Studio e selecione a pasta do projeto.
+
+## Principais recursos desenvolvidos no projeto:
 
 - Os dados do blog são obtidos da Wordpress REST API via JSON.
 - Opção de salvar as histórias preferidas como favoritas que são visualizadas numa listagem própria
@@ -96,7 +100,7 @@ O aplicativo consulta o blog Histórias Infantis Abobrinha  (https://historiasin
    - Exibição dos principais links de contatos do cliente (Abobrinha Studios) nas redes sociais que abrem o navegador ou os respectivos aplicativos (se disponíveis) na página do cliente.
 - Testes JUnit e Espresso implementados principalmente para testar a obtenção de dados da API e sincronização com o banco de dados.
 
-# Comentários sobre as principais estratégias de implementação no aplicativo
+## Comentários sobre as principais estratégias de implementação no aplicativo
 
 **Sincronização da API com o banco de dados**
 
