@@ -17,7 +17,7 @@
         android:src="@drawable/img_about"
         tools:ignore="ContentDescription" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_history"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -50,7 +50,7 @@
         tools:layout_height="24dp"
         tools:visibility="visible" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabFavorite"
         android:layout_width="@dimen/fab_size"
         android:layout_height="@dimen/fab_size"

@@ -3,8 +3,8 @@ package com.abobrinha.caixinha.sync;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.abobrinha.caixinha.data.PreferencesUtils;
 import com.abobrinha.caixinha.network.WordPressConn;

@@ -1,7 +1,7 @@
 package com.abobrinha.caixinha.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.abobrinha.caixinha.R;
