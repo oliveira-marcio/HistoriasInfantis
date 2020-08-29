@@ -120,6 +120,10 @@ public class HistoryProvider extends ContentProvider {
      * como texto da história, autor, imagem e fim da história para serem guardados no banco dessa
      * forma e posteriormentente utilizados na RecyclerView da história com os layouts apropriados
      * por tipo.
+     *
+     * Por conta de alterações recentes no editor online do Wordpress, as imagens são geradas em
+     * tags FIGURE fora de parágrafos (P), então para que as imagens sejam corretamente parseadas,
+     * as tags FIGURE serão renomeadas para P antes do parsing.
      */
     public static ContentValues[] historyContentParser(long id, String htmlContent) {
 
@@ -127,10 +131,16 @@ public class HistoryProvider extends ContentProvider {
         final String TAG_P = "p";
         final String TAG_IMG = "img";
         final String TAG_SRC = "src";
+        final String TAG_FIGURE = "figure";
 
         List<ContentValues> historyValues = new ArrayList<>();
 
-        Document doc = Jsoup.parse(htmlContent.replaceAll("(?i)<br[^>]*>", BR_TOKEN));
+        Document doc = Jsoup.parse(
+                htmlContent
+                        .replaceAll("(?i)<br[^>]*>", BR_TOKEN)
+                        .replaceAll("<((\\\\/)?)" + TAG_FIGURE, "<$1" + TAG_P)
+        );
+
         for (Element p : doc.select(TAG_P)) {
             if (!p.text().trim().isEmpty()) {
                 String paragraphString = p.text().replaceAll(BR_TOKEN, "\n");
