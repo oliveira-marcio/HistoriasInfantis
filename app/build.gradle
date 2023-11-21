@@ -13,13 +13,13 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
-    compileSdkVersion 31
+    compileSdk 34
     defaultConfig {
         applicationId "com.abobrinha.caixinha"
-        minSdkVersion 21
-        targetSdkVersion 31
-        versionCode 26
-        versionName "3.1.0"
+        minSdk 21
+        targetSdk 34
+        versionCode 27
+        versionName "3.1.1"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -31,7 +31,7 @@ android {
             signingConfig signingConfigs.config
         }
     }
-    flavorDimensions "tier"
+    flavorDimensions = ["tier"]
     productFlavors{
         free {
             dimension "tier"
@@ -42,38 +42,41 @@ android {
             applicationId "com.abobrinha.caixinha"
         }
     }
+    namespace 'com.abobrinha.caixinha'
 }
 
 ext {
-    appCompatLibVersion = '1.2.0'
+    appCompatLibVersion = '1.6.1'
     cardViewLibVersion = '1.0.0'
-    constraintLayoutLibVersion = '2.0.1'
+    constraintLayoutLibVersion = '2.1.4'
     firebaseJobDispatcherLibVersion = '0.8.5'
-    firebaseLibVersion = '20.2.4'
+    firebaseLibVersion = '23.3.1'
     firebaseAdsVersion = '19.3.0'
     glideLibVersion = '3.8.0'
-    jetpackLibVersion = '1.1.0'
+    vectorDrawableVersion = '1.1.0'
+    jetpackLibVersion = '1.7.0'
+    recyclerViewVersion = '1.3.2'
     jsoupLibVersion = '1.13.1'
     legacySupportLibVersion = '1.0.0'
-    materialLibVersion = '1.2.0'
+    materialLibVersion = '1.10.0'
     multiDexLibVersion = '2.0.1'
-    preferenceLibVersion = '1.1.1'
+    preferenceLibVersion = '1.2.1'
     espressoCoreLibVersion = '3.1.0'
-    espressoIntentsLibVersion = '3.3.0'
-    junitLibVersion = '4.13'
-    junitExtLibVersion = '1.1.2'
-    testRulesLibVersion = '1.3.0'
+    espressoIntentsLibVersion = '3.5.1'
+    junitLibVersion = '4.13.2'
+    junitExtLibVersion = '1.1.5'
+    testRulesLibVersion = '1.5.0'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "androidx.appcompat:appcompat:${appCompatLibVersion}"
     implementation "androidx.legacy:legacy-support-v4:${legacySupportLibVersion}"
-    implementation "androidx.vectordrawable:vectordrawable:${jetpackLibVersion}"
-    implementation "androidx.vectordrawable:vectordrawable-animated:${jetpackLibVersion}"
+    implementation "androidx.vectordrawable:vectordrawable:${vectorDrawableVersion}"
+    implementation "androidx.vectordrawable:vectordrawable-animated:${vectorDrawableVersion}"
     implementation "com.google.android.material:material:${materialLibVersion}"
     implementation "androidx.annotation:annotation:${jetpackLibVersion}"
-    implementation "androidx.recyclerview:recyclerview:${jetpackLibVersion}"
+    implementation "androidx.recyclerview:recyclerview:${recyclerViewVersion}"
     implementation "androidx.cardview:cardview:${cardViewLibVersion}"
     implementation "androidx.preference:preference:${preferenceLibVersion}"
     implementation "androidx.constraintlayout:constraintlayout:${constraintLayoutLibVersion}"
