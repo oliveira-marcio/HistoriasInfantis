@@ -5,43 +5,32 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+
 import androidx.annotation.NonNull;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.abobrinha.caixinha.data.HistoryContract;
-import com.firebase.jobdispatcher.Constraint;
-import com.firebase.jobdispatcher.Driver;
-import com.firebase.jobdispatcher.FirebaseJobDispatcher;
-import com.firebase.jobdispatcher.GooglePlayDriver;
-import com.firebase.jobdispatcher.Job;
-import com.firebase.jobdispatcher.Lifetime;
-import com.firebase.jobdispatcher.Trigger;
 
 import java.util.concurrent.TimeUnit;
 
 public class HistorySyncUtils {
     private static final int SYNC_INTERVAL_HOURS = 8;
-    private static final int SYNC_INTERVAL_SECONDS = (int) TimeUnit.HOURS.toSeconds(SYNC_INTERVAL_HOURS);
-    private static final int SYNC_FLEXTIME_SECONDS = SYNC_INTERVAL_SECONDS / 3;
     private static final String HISTORY_SYNC_TAG = "history-sync";
     private static boolean sInitialized;
 
-    private static void scheduleFirebaseJobDispatcherSync(@NonNull final Context context) {
-        Driver driver = new GooglePlayDriver(context);
-        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
-
-        Job syncHistoryJob = dispatcher.newJobBuilder()
-                .setService(HistoryFirebaseJobService.class)
-                .setTag(HISTORY_SYNC_TAG)
-                .setConstraints(Constraint.ON_ANY_NETWORK)
-                .setLifetime(Lifetime.FOREVER)
-                .setRecurring(true)
-                .setTrigger(Trigger.executionWindow(
-                        SYNC_INTERVAL_SECONDS,
-                        SYNC_INTERVAL_SECONDS + SYNC_FLEXTIME_SECONDS))
-                .setReplaceCurrent(true)
+    private static void scheduleWorkRequest(@NonNull final Context context) {
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
-
-        dispatcher.schedule(syncHistoryJob);
+        PeriodicWorkRequest request = new PeriodicWorkRequest.Builder(HistoryWorker.class, SYNC_INTERVAL_HOURS, TimeUnit.HOURS)
+                .setConstraints(constraints)
+                .build();
+        WorkManager.getInstance(context)
+                .enqueueUniquePeriodicWork(HISTORY_SYNC_TAG, ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE, request);
     }
 
     /*
@@ -53,7 +42,7 @@ public class HistorySyncUtils {
         if (sInitialized) return;
 
         sInitialized = true;
-        scheduleFirebaseJobDispatcherSync(context);
+        scheduleWorkRequest(context);
 
         Thread checkForEmpty = new Thread(new Runnable() {
             @Override

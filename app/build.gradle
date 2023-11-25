@@ -18,7 +18,7 @@ android {
         applicationId "com.abobrinha.caixinha"
         minSdk 21
         targetSdk 34
-        versionCode 27
+        versionCode 28
         versionName "3.1.1"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary = true
@@ -49,9 +49,9 @@ ext {
     appCompatLibVersion = '1.6.1'
     cardViewLibVersion = '1.0.0'
     constraintLayoutLibVersion = '2.1.4'
-    firebaseJobDispatcherLibVersion = '0.8.5'
     firebaseLibVersion = '23.3.1'
     firebaseAdsVersion = '19.3.0'
+    workManagerLibVersion = '2.8.1'
     glideLibVersion = '3.8.0'
     vectorDrawableVersion = '1.1.0'
     jetpackLibVersion = '1.7.0'
@@ -83,7 +83,7 @@ dependencies {
     implementation "androidx.multidex:multidex:${multiDexLibVersion}"
     implementation "com.github.bumptech.glide:glide:${glideLibVersion}"
     implementation "org.jsoup:jsoup:${jsoupLibVersion}"
-    implementation "com.firebase:firebase-jobdispatcher:${firebaseJobDispatcherLibVersion}"
+    implementation "androidx.work:work-runtime:${workManagerLibVersion}"
     implementation "com.google.firebase:firebase-messaging:${firebaseLibVersion}"
     implementation "androidx.test.espresso:espresso-idling-resource:${espressoIntentsLibVersion}"
 
