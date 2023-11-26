@@ -23,6 +23,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
         android:background="@color/colorTransparent"
+        android:overScrollMode="never"
         tools:listitem="@layout/history_paragraph_text" />
 
     <!-- Indicador de progresso de carregamento dos dados -->
